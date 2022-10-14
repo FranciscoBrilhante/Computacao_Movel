@@ -3,5 +3,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="edit_button">Edit Animal Info</string>
-    <string name="back_button">Save and Go Back</string>
+    <string name="back_button">Save &amp; Go Back</string>
+    <string name="owner">Owner:</string>
+    <string name="name">Name:</string>
+    <string name="age">Age:</string>
 </resources>

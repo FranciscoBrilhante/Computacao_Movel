@@ -34,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void setIndexSelected(Integer index) {
+
         this.indexSelected = index;
+        System.out.println(index);
     }
 
     protected Integer getIndexSelected() {

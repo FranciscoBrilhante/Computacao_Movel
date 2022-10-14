@@ -36,48 +36,29 @@ public class List extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
         MainActivity activity = (MainActivity) getActivity();
+        View rootView = inflater.inflate(R.layout.fragment_list, container, false);
+
         ArrayList<Animal> animals = activity.getAnimals();
-        ArrayList<String> animalNames = new ArrayList<>();
-        for (Animal animal : animals) {
-            animalNames.add(animal.getName());
-        }
+        fillValues(rootView,activity);
 
-        Spinner spinner = (Spinner) rootView.findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, animalNames);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        Spinner spinner = rootView.findViewById(R.id.spinner);
+        CustomAdapter adapter = new CustomAdapter(getContext(),animals);
         spinner.setAdapter(adapter);
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> spin, View v, int i, long id) {
                 MainActivity activity = (MainActivity) getActivity();
-                ArrayList<Animal> animals = activity.getAnimals();
-                Animal animalSelected = animals.get(i);
-
-                View fragmentView = getActivity().findViewById(R.id.list_layout);
-                TextView ownerText = fragmentView.findViewById(R.id.owner);
-                TextView nameText = fragmentView.findViewById(R.id.name);
-                TextView ageText = fragmentView.findViewById(R.id.age);
-                ImageView photo = fragmentView.findViewById(R.id.edit_photo);
-
-                ownerText.setText(animalSelected.getOwner());
-                nameText.setText(animalSelected.getName());
-                ageText.setText(animalSelected.getAge().toString());
-                photo.setImageResource(animalSelected.getImage());
+                View fragmentView = activity.findViewById(R.id.list_layout);
 
                 activity.setIndexSelected(i);
+                fillValues(fragmentView,activity);
             }
-
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
-
-        Button button = (Button) rootView.findViewById(R.id.back_button);
+        Button button = rootView.findViewById(R.id.back_button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,5 +66,19 @@ public class List extends Fragment {
             }
         });
         return rootView;
+    }
+
+    private void fillValues(View view,MainActivity mainActivity){
+        Animal animalSelected=mainActivity.getAnimal(mainActivity.getIndexSelected());
+
+        TextView ownerText = view.findViewById(R.id.owner);
+        TextView nameText = view.findViewById(R.id.name);
+        TextView ageText = view.findViewById(R.id.age);
+        ImageView photo = view.findViewById(R.id.edit_photo);
+
+        ownerText.setText(animalSelected.getOwner());
+        nameText.setText(animalSelected.getName());
+        ageText.setText(animalSelected.getAge().toString());
+        photo.setImageResource(animalSelected.getImage());
     }
 }
