@@ -2,6 +2,7 @@ package com.example.challenge1;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -18,14 +19,10 @@ import java.util.ArrayList;
 
 public class List extends Fragment {
     public List() {
-        // Required empty public constructor
     }
 
     public static List newInstance() {
-        List fragment = new List();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+        return new List();
     }
 
     @Override
@@ -41,19 +38,20 @@ public class List extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
         ArrayList<Animal> animals = activity.getAnimals();
-        fillValues(rootView,activity);
-
         Spinner spinner = rootView.findViewById(R.id.spinner);
-        CustomAdapter adapter = new CustomAdapter(getContext(),animals);
+        CustomAdapter adapter = new CustomAdapter(getContext(), animals);
         spinner.setAdapter(adapter);
+        spinner.setSelection(activity.getIndexSelected());
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> spin, View v, int i, long id) {
                 MainActivity activity = (MainActivity) getActivity();
                 View fragmentView = activity.findViewById(R.id.list_layout);
 
                 activity.setIndexSelected(i);
-                fillValues(fragmentView,activity);
+                fillValues(fragmentView, activity);
             }
+
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
@@ -68,8 +66,14 @@ public class List extends Fragment {
         return rootView;
     }
 
-    private void fillValues(View view,MainActivity mainActivity){
-        Animal animalSelected=mainActivity.getAnimal(mainActivity.getIndexSelected());
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        System.out.println("E suposto guardar");
+    }
+
+    private void fillValues(View view, MainActivity mainActivity) {
+        Animal animalSelected = mainActivity.getAnimal(mainActivity.getIndexSelected());
 
         TextView ownerText = view.findViewById(R.id.owner);
         TextView nameText = view.findViewById(R.id.name);

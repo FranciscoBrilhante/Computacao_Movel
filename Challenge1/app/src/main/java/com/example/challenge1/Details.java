@@ -18,24 +18,9 @@ import android.widget.TextView;
  * create an instance of this fragment.
  */
 public class Details extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
-
-    // TODO: Rename and change types of parameters
-
     public Details() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment Details.
-     */
-    // TODO: Rename and change types and number of parameters
     public static Details newInstance() {
         return new Details();
     }
