@@ -3,6 +3,7 @@ package com.example.challenge1;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +12,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link Details#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class Details extends Fragment {
+    AnimalsViewModel viewModel;
+
     public Details() {
     }
 
@@ -31,13 +28,12 @@ public class Details extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_details, container, false);
+        viewModel = new ViewModelProvider(requireActivity()).get(AnimalsViewModel.class);
 
-        MainActivity activity = (MainActivity) getActivity();
-        Animal animalSelected = activity.getAnimal(activity.getIndexSelected());
+
+        Animal animalSelected = viewModel.getAnimalSelected();
 
         TextView ownerText = rootView.findViewById(R.id.edit_owner);
         TextView nameText = rootView.findViewById(R.id.edit_name);
@@ -53,10 +49,26 @@ public class Details extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainActivity activity = (MainActivity) getActivity();
-                Integer index = activity.getIndexSelected();
-                activity.setAnimal(index, ownerText.getText().toString(), nameText.getText().toString(), Integer.parseInt(ageText.getText().toString()));
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new List(), null).commit();
+
+                Animal aux = viewModel.getAnimalSelected();
+                String owner = ownerText.getText().toString();
+                String name = nameText.getText().toString();
+                String age = ageText.getText().toString();
+
+                if (owner.length() > 0) {
+                    aux.setOwner(owner);
+                }
+                if (name.length() > 0) {
+                    aux.setName(name);
+                }
+                try {
+                    aux.setAge(Integer.parseInt(ageText.getText().toString()));
+                } catch (Exception ignored) {
+                }
+
+                viewModel.setAnimalSelected(aux);
+
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new List(), null).commit();
             }
         });
         return rootView;

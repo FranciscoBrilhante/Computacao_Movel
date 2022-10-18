@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class List extends Fragment {
+    AnimalsViewModel viewModel;
+
     public List() {
     }
 
@@ -34,22 +37,30 @@ public class List extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        MainActivity activity = (MainActivity) getActivity();
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
-
-        ArrayList<Animal> animals = activity.getAnimals();
         Spinner spinner = rootView.findViewById(R.id.spinner);
-        CustomAdapter adapter = new CustomAdapter(getContext(), animals);
+
+        viewModel = new ViewModelProvider(requireActivity()).get(AnimalsViewModel.class);
+        CustomAdapter adapter = new CustomAdapter(getContext(), viewModel.getAnimals());
         spinner.setAdapter(adapter);
-        spinner.setSelection(activity.getIndexSelected());
+        spinner.setSelection(viewModel.getIndexSelected());
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> spin, View v, int i, long id) {
                 MainActivity activity = (MainActivity) getActivity();
-                View fragmentView = activity.findViewById(R.id.list_layout);
+                View view = activity.findViewById(R.id.list_layout);
+                viewModel.setIndexSelected(i);
+                Animal animalSelected = viewModel.getAnimalSelected();
 
-                activity.setIndexSelected(i);
-                fillValues(fragmentView, activity);
+                TextView ownerText = view.findViewById(R.id.owner);
+                TextView nameText = view.findViewById(R.id.name);
+                TextView ageText = view.findViewById(R.id.age);
+                ImageView photo = view.findViewById(R.id.edit_photo);
+
+                ownerText.setText(animalSelected.getOwner());
+                nameText.setText(animalSelected.getName());
+                ageText.setText(animalSelected.getAge().toString());
+                photo.setImageResource(animalSelected.getImage());
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -69,20 +80,6 @@ public class List extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        System.out.println("E suposto guardar");
     }
 
-    private void fillValues(View view, MainActivity mainActivity) {
-        Animal animalSelected = mainActivity.getAnimal(mainActivity.getIndexSelected());
-
-        TextView ownerText = view.findViewById(R.id.owner);
-        TextView nameText = view.findViewById(R.id.name);
-        TextView ageText = view.findViewById(R.id.age);
-        ImageView photo = view.findViewById(R.id.edit_photo);
-
-        ownerText.setText(animalSelected.getOwner());
-        nameText.setText(animalSelected.getName());
-        ageText.setText(animalSelected.getAge().toString());
-        photo.setImageResource(animalSelected.getImage());
-    }
 }

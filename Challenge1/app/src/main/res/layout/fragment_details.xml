@@ -7,97 +7,103 @@
     android:layout_height="match_parent"
     tools:context=".Details">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
-            android:paddingTop="40dp">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/edit_photo"
-                android:layout_width="175dp"
-                android:layout_height="118dp"
-                android:layout_margin="10dp"
-                android:layout_marginTop="32dp"
-                android:src="@drawable/frog"
-                tools:src="@tools:sample/avatars" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <EditText
-                android:id="@+id/edit_owner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="0dp"
-                android:ems="10"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
                 android:gravity="center"
-                android:hint="Owner"
-                android:inputType="textPersonName" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:paddingTop="40dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+                <ImageView
+                    android:id="@+id/edit_photo"
+                    android:layout_width="175dp"
+                    android:layout_height="118dp"
+                    android:layout_margin="10dp"
+                    android:layout_marginTop="32dp"
+                    android:src="@drawable/frog"
+                    tools:src="@tools:sample/avatars" />
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/edit_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:ems="10"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
                 android:gravity="center"
-                android:hint="Name"
-                android:inputType="textPersonName" />
-        </LinearLayout>
+                android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/edit_owner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="0dp"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Owner"
+                    android:inputType="textPersonName" />
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/edit_age"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:ems="10"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
                 android:gravity="center"
-                android:hint="Age"
-                android:inputType="number" />
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/edit_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Name"
+                    android:inputType="textPersonName" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/edit_age"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="Age"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingBottom="30dp">
+
+                <Button
+                    android:id="@+id/back_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:text="@string/back_button" />
+
+            </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/back_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="30dp"
-                android:text="@string/back_button" />
-
-        </LinearLayout>
-    </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>
