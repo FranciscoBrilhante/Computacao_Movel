@@ -9,20 +9,22 @@ import androidx.recyclerview.widget.ListAdapter;
 import com.example.challenge2.notesDatabase.Note;
 
 public class NoteListAdapter extends ListAdapter<Note,NoteViewHolder> {
+    private final RecyclerViewInterface recyclerViewInterface;
 
-    public NoteListAdapter(@NonNull DiffUtil.ItemCallback<Note> diffCallback){
+    public NoteListAdapter(@NonNull DiffUtil.ItemCallback<Note> diffCallback, RecyclerViewInterface recyclerViewInterface){
         super(diffCallback);
+        this.recyclerViewInterface=recyclerViewInterface;
     }
 
     @Override
     public NoteViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
-        return NoteViewHolder.create(parent);
+        return NoteViewHolder.create(parent,recyclerViewInterface);
     }
 
     @Override
     public void onBindViewHolder(NoteViewHolder holder, int position) {
         Note current=getItem(position);
-        holder.bind(current.getTitle(),current.getBody());
+        holder.bind(current);
     }
 
     static class NoteDiff extends DiffUtil.ItemCallback<Note>{

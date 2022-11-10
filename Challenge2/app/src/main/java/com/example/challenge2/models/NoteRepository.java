@@ -29,4 +29,10 @@ public class NoteRepository {
             noteDao.insert(note);
         });
     }
+
+    void delete(Note note){
+        NoteRoomDatabase.databaseWriteExecutor.execute(()->{
+            noteDao.delete(note);
+        });
+    }
 }

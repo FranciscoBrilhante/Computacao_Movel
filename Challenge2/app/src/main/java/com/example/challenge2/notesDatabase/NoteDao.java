@@ -2,6 +2,7 @@ package com.example.challenge2.notesDatabase;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -23,4 +24,7 @@ public interface NoteDao {
 
     @Query("SELECT * FROM note_table")
     LiveData<List<Note>> getAllNotes();
+
+    @Delete
+    void delete(Note note);
 }
