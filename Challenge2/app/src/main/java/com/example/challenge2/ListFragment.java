@@ -21,7 +21,7 @@ import android.widget.PopupMenu;
 import com.example.challenge2.models.NoteViewModel;
 import com.example.challenge2.notesDatabase.Note;
 
-public class ListFragment extends Fragment implements  RecyclerViewInterface{
+public class ListFragment extends Fragment implements RecyclerViewInterface {
     private View rootview;
     private NoteViewModel noteViewModel;
 
@@ -45,17 +45,17 @@ public class ListFragment extends Fragment implements  RecyclerViewInterface{
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
         RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
-        final NoteListAdapter adapter= new NoteListAdapter(new NoteListAdapter.NoteDiff(),this);
+        final NoteListAdapter adapter = new NoteListAdapter(new NoteListAdapter.NoteDiff(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
         noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
 
-        noteViewModel.getAllNotes().observe(requireActivity(),notes->{
+        noteViewModel.getAllNotes().observe(requireActivity(), notes -> {
             adapter.submitList(notes);
         });
-        this.rootview=rootView;
+        this.rootview = rootView;
         return rootView;
     }
 
@@ -89,7 +89,7 @@ public class ListFragment extends Fragment implements  RecyclerViewInterface{
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(getContext(), R.style.PopupMenuOverlapAnchor);
         PopupMenu popup = new PopupMenu(contextThemeWrapper, rootview);
         //PopupMenu popup = new PopupMenu(getActivity().getApplicationContext(),rootview, Gravity.NO_GRAVITY, androidx.appcompat.R.attr.actionOverflowMenuStyle,0);
-        popup.getMenuInflater().inflate(R.menu.menu_popup,popup.getMenu());
+        popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
         popup.show();
 
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -102,7 +102,7 @@ public class ListFragment extends Fragment implements  RecyclerViewInterface{
                         popup.dismiss();
                         return true;
                     }
-                    case R.id.edit_option:{
+                    case R.id.edit_option: {
                         noteViewModel.setNoteSelected(note);
                         popup.dismiss();
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new AddFragment(), null).commit();
