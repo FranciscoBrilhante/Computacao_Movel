@@ -2,4 +2,6 @@
     <string name="app_name">Challenge2</string>
     <string name="add_note">Create Note</string>
     <string name="save_note">Save Note</string>
+    <string name="search_note_title">Search Note</string>
+    <string name="search_note">Search for some notes</string>
 </resources>

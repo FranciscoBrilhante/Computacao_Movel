@@ -17,13 +17,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import android.widget.SearchView;
 
 import com.example.challenge2.models.NoteViewModel;
 import com.example.challenge2.notesDatabase.Note;
 
+import java.util.List;
+
 public class ListFragment extends Fragment implements RecyclerViewInterface {
-    private View rootview;
+    private View rootView;
     private NoteViewModel noteViewModel;
+    private String searchText;
 
     public ListFragment() {
     }
@@ -43,19 +47,27 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
-
         RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
-        final NoteListAdapter adapter = new NoteListAdapter(new NoteListAdapter.NoteDiff(), this);
+        NoteListAdapter adapter = new NoteListAdapter(new NoteListAdapter.NoteDiff(), this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        this.searchText="";
 
         noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
-
         noteViewModel.getAllNotes().observe(requireActivity(), notes -> {
             adapter.submitList(notes);
         });
-        this.rootview = rootView;
+        noteViewModel.getNotesByTitle().observe(requireActivity(), notes -> {
+            if(searchText.equals("")){
+                System.out.println("Updating list with all values");
+                adapter.submitList(noteViewModel.getAllNotes().getValue());
+            }else {
+                adapter.submitList(notes);
+            }
+        });
+
+        this.rootView = rootView;
         return rootView;
     }
 
@@ -67,19 +79,30 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_list, menu);
+        SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                searchText = s;
+                noteViewModel.updateNotesByTitle(searchText);
+                return true;
+            }
+        });
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.add_note: {
-                noteViewModel.setNoteSelected(null);
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new AddFragment(), null).commit();
-                return true;
-            }
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.add_note) {
+            noteViewModel.setNoteSelected(null);
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new AddFragment(), null).commit();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
 
     }
 
@@ -87,8 +110,8 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
     public void onLongPress(Note note) {
 
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(getContext(), R.style.PopupMenuOverlapAnchor);
-        PopupMenu popup = new PopupMenu(contextThemeWrapper, rootview);
-        //PopupMenu popup = new PopupMenu(getActivity().getApplicationContext(),rootview, Gravity.NO_GRAVITY, androidx.appcompat.R.attr.actionOverflowMenuStyle,0);
+        PopupMenu popup = new PopupMenu(contextThemeWrapper, rootView);
+
         popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
         popup.show();
 
@@ -98,7 +121,6 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
                 switch (menuItem.getItemId()) {
                     case R.id.delete_option: {
                         noteViewModel.deleteNote(note);
-                        System.out.println("Pressed delete");
                         popup.dismiss();
                         return true;
                     }

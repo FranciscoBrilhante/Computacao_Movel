@@ -20,7 +20,7 @@ public interface NoteDao {
     void deleteAll();
 
     @Query("SELECT * FROM note_table WHERE title LIKE '%'||:title||'%' ")
-    LiveData<List<Note>> getNotesByTitle(String title);
+    List<Note> getNotesByTitle(String title);
 
     @Query("SELECT * FROM note_table")
     LiveData<List<Note>> getAllNotes();
