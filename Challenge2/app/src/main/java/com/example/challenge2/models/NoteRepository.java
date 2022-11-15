@@ -18,11 +18,13 @@ public class NoteRepository {
     private final LiveData<List<Note>> allNotes;
     private final MutableLiveData<List<Note>> notesByTitle;
 
+
     NoteRepository(Application application){
         NoteRoomDatabase db=NoteRoomDatabase.getDatabase(application);
         noteDao=db.noteDao();
         allNotes=noteDao.getAllNotes();
         notesByTitle=new MutableLiveData<>();
+
     }
 
     LiveData<List<Note>> getAllNotes(){
@@ -49,6 +51,8 @@ public class NoteRepository {
             notesByTitle.postValue(noteDao.getNotesByTitle(title));
         });
     }
+
+
 
 
 }

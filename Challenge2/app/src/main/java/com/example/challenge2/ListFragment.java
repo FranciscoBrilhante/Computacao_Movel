@@ -1,5 +1,6 @@
 package com.example.challenge2;
 
+import android.util.Log;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -21,13 +22,13 @@ import android.widget.SearchView;
 
 import com.example.challenge2.models.NoteViewModel;
 import com.example.challenge2.notesDatabase.Note;
+import com.example.challenge2.notesDatabase.Topic;
 
 import java.util.List;
 
 public class ListFragment extends Fragment implements RecyclerViewInterface {
     private View rootView;
     private NoteViewModel noteViewModel;
-    private String searchText;
 
     public ListFragment() {
     }
@@ -52,21 +53,22 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        this.searchText="";
-
         noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
         noteViewModel.getAllNotes().observe(requireActivity(), notes -> {
-            adapter.submitList(notes);
-        });
-        noteViewModel.getNotesByTitle().observe(requireActivity(), notes -> {
-            if(searchText.equals("")){
-                System.out.println("Updating list with all values");
-                adapter.submitList(noteViewModel.getAllNotes().getValue());
-            }else {
+            Log.w("ListFragment","Notes List Changed");
+            if(!noteViewModel.getSearchText().equals("")) {
+                noteViewModel.updateNotesByTitle();
+            }
+            else{
                 adapter.submitList(notes);
             }
         });
+        noteViewModel.getNotesByTitle().observe(requireActivity(), notes -> {
+            adapter.submitList(notes);
+        });
 
+
+        noteViewModel.subscribeToTopic("cm2022_dyn_dev_123_xpto_456");
         this.rootView = rootView;
         return rootView;
     }
@@ -79,7 +81,9 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_list, menu);
-        SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
+        MenuItem item = menu.findItem(R.id.app_bar_search);
+        SearchView searchView = (SearchView) item.getActionView();
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -88,8 +92,25 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                searchText = s;
-                noteViewModel.updateNotesByTitle(searchText);
+                noteViewModel.setSearchText(s);
+                noteViewModel.updateNotesByTitle();
+                return true;
+            }
+
+        });
+
+        item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
+                noteViewModel.setSearchText(searchView.getQuery().toString());
+                noteViewModel.updateNotesByTitle();
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
+                noteViewModel.setSearchText("");
+                noteViewModel.updateNotesByTitle();
                 return true;
             }
         });

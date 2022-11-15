@@ -12,14 +12,14 @@ import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
+
 
 
 public class MQTTHelper {
     public MqttAndroidClient mqttAndroidClient;
 
-    final String server = "IP"; //TODO - Place the IP here
-    final String TAG = "TAG"; //TODO - This is just for logs
+    final String server = "tcp://broker.hivemq.com:1883";
+    final String TAG = "TAG";
     private String name;
 
 
@@ -49,6 +49,8 @@ public class MQTTHelper {
                 disconnectedBufferOptions.setPersistBuffer(false);
                 disconnectedBufferOptions.setDeleteOldestMessages(false);
                 mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
+
+                Log.w(TAG,"Connected to b broker");
             }
 
             @Override
@@ -64,9 +66,8 @@ public class MQTTHelper {
         mqttAndroidClient.disconnect();
     }
 
-
     public void subscribeToTopic(String topic) {
-        mqttAndroidClient.subscribe(topic, 0, null, new IMqttActionListener() {
+        mqttAndroidClient.subscribe(topic, 2, null, new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
                 Log.w(TAG, "Subscribed!");

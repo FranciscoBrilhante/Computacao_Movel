@@ -11,10 +11,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Note.class},version = 1,exportSchema = false)
+@Database(entities = {Note.class,Topic.class},version = 1,exportSchema = false)
 public abstract class NoteRoomDatabase extends RoomDatabase {
 
     public abstract NoteDao noteDao();
+    public abstract  TopicDao topicDao();
 
     private static volatile NoteRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS=4;
@@ -59,6 +60,10 @@ public abstract class NoteRoomDatabase extends RoomDatabase {
                 dao.insert(note);
                 note = new Note("Title2","Body2");
                 dao.insert(note);
+
+                TopicDao dao2=INSTANCE.topicDao();
+                dao2.deleteAll();
+
 
             });
         }
