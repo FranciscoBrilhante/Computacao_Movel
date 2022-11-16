@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.ContextThemeWrapper;
@@ -51,7 +52,9 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
         RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
         NoteListAdapter adapter = new NoteListAdapter(new NoteListAdapter.NoteDiff(), this);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
         noteViewModel.getAllNotes().observe(requireActivity(), notes -> {
