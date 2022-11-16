@@ -25,6 +25,8 @@ public class NoteViewModel extends AndroidViewModel {
     private Note noteSelected;
     private String searchText;
 
+    private final MQTTHelper client;
+
     public NoteViewModel(Application application) {
         super(application);
         noteRepository = new NoteRepository(application);
@@ -32,6 +34,34 @@ public class NoteViewModel extends AndroidViewModel {
         notesByTitle=noteRepository.getNotesByTitle();
         noteSelected = null;
         searchText="";
+        client = new MQTTHelper(application.getApplicationContext(),"client");
+        client.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean reconnect, String serverURI) {
+            }
+
+            @Override
+            public void connectionLost(Throwable cause) {
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                System.out.println("message received");
+
+                JSONObject obj = new JSONObject(message.toString());
+                String title = obj.getJSONObject("message").getString("title");
+                String body = obj.getJSONObject("message").getString("body");
+
+                insert(new Note(title,body));
+                System.out.println("message saved");
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+            }
+        });
+
+        client.connect();
     }
 
     public LiveData<List<Note>> getAllNotes() {
@@ -77,40 +107,6 @@ public class NoteViewModel extends AndroidViewModel {
     }
 
     public void subscribeToTopic(String topic){
-        MQTTHelper messageHelper = new MQTTHelper(getApplication().getApplicationContext(),"cliente",topic);
-
-        messageHelper.setCallback(new MqttCallbackExtended() {
-            @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
-                messageHelper.subscribeToTopic(topic);
-            }
-
-            @Override
-            public void connectionLost(Throwable cause) {
-                messageHelper.stop();
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                System.out.println("message received");
-                JSONObject obj = new JSONObject(message.toString());
-                String title = obj.getJSONObject("message").getString("title");
-                String body = obj.getJSONObject("message").getString("body");
-                System.out.println(title);
-                System.out.println(body);
-                insert(new Note(title,body));
-                System.out.println("message saved");
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
-            }
-        });
-
-        messageHelper.connect();
+        client.subscribeToTopic(topic);
     }
-
-
-
 }
