@@ -30,7 +30,7 @@ import java.util.List;
 public class ListFragment extends Fragment implements RecyclerViewInterface {
     private View rootView;
     private NoteViewModel noteViewModel;
-
+    private NoteListAdapter adapter;
     public ListFragment() {
     }
 
@@ -50,13 +50,14 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
 
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
         RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
-        NoteListAdapter adapter = new NoteListAdapter(new NoteListAdapter.NoteDiff(), this);
+        adapter = new NoteListAdapter(new NoteListAdapter.NoteDiff(), this);
         recyclerView.setAdapter(adapter);
         //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
+        adapter.submitList(noteViewModel.getAllNotes().getValue());
         noteViewModel.getAllNotes().observe(requireActivity(), notes -> {
             Log.w("ListFragment","Notes List Changed");
             if(!noteViewModel.getSearchText().equals("")) {
@@ -82,10 +83,18 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        adapter.submitList(noteViewModel.getAllNotes().getValue());
+    }
+
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_list, menu);
         MenuItem item = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView) item.getActionView();
+        searchView.setFocusable(View.FOCUSABLE);
+        searchView.setIconified(false);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -105,13 +114,13 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
         item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
-                noteViewModel.setSearchText(searchView.getQuery().toString());
-                noteViewModel.updateNotesByTitle();
+                searchView.requestFocus();
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
+                searchView.setQuery("",true);
                 noteViewModel.setSearchText("");
                 noteViewModel.updateNotesByTitle();
                 return true;
@@ -123,6 +132,8 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.add_note) {
             noteViewModel.setNoteSelected(null);
+            noteViewModel.setSearchText("");
+            noteViewModel.updateNotesByTitle();
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new AddFragment(), null).commit();
             return true;
         }
@@ -151,6 +162,8 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
                     case R.id.edit_option: {
                         noteViewModel.setNoteSelected(note);
                         popup.dismiss();
+                        noteViewModel.setSearchText("");
+                        noteViewModel.updateNotesByTitle();
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new AddFragment(), null).commit();
                         return true;
                     }

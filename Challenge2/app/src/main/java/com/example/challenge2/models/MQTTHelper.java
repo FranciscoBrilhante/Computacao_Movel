@@ -26,7 +26,6 @@ public class MQTTHelper {
 
     public MQTTHelper(Context context, String name) {
         this.name = name;
-
         mqttAndroidClient = new MqttAndroidClient(context, server, name, Ack.AUTO_ACK);
     }
 
