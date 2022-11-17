@@ -20,10 +20,11 @@ public class MQTTHelper {
 
     final String server = "tcp://broker.hivemq.com:1883";
     final String TAG = "TAG";
+
     private String name;
 
 
-    public MQTTHelper(Context context, String name, String topic) {
+    public MQTTHelper(Context context, String name) {
         this.name = name;
 
         mqttAndroidClient = new MqttAndroidClient(context, server, name, Ack.AUTO_ACK);
@@ -79,6 +80,9 @@ public class MQTTHelper {
             }
         });
 
+    }
+    public void unsubscribeFromTopic(String topic) {
+        mqttAndroidClient.unsubscribe(topic);
     }
 
     public String getName() {

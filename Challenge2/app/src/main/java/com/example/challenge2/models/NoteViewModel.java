@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.challenge2.notesDatabase.Note;
+import com.example.challenge2.notesDatabase.Topic;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -23,7 +24,15 @@ public class NoteViewModel extends AndroidViewModel {
     private final LiveData<List<Note>> allNotes;
 
     private Note noteSelected;
+
+    private final TopicRepository topicRepository;
+    private final MutableLiveData<List<Topic>> topicsByTitle;
+    private final LiveData<List<Topic>> allTopics;
+    private Topic topicSelected;
+
     private String searchText;
+
+    private final MQTTHelper client;
 
     public NoteViewModel(Application application) {
         super(application);
@@ -32,6 +41,50 @@ public class NoteViewModel extends AndroidViewModel {
         notesByTitle=noteRepository.getNotesByTitle();
         noteSelected = null;
         searchText="";
+
+        topicRepository = new TopicRepository(application);
+        allTopics = topicRepository.getAllTopics();
+        topicsByTitle = topicRepository.getTopicsByTitle();
+        topicSelected = null;
+
+        client = new MQTTHelper(application.getApplicationContext(),"client");
+        client.setCallback(new MqttCallbackExtended() {
+            @Override
+            public void connectComplete(boolean reconnect, String serverURI) {
+            }
+
+            @Override
+            public void connectionLost(Throwable cause) {
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                System.out.println("message received");
+
+                JSONObject obj = new JSONObject(message.toString());
+                String title = obj.getJSONObject("message").getString("title");
+                String body = obj.getJSONObject("message").getString("body");
+
+                noteRepository.insert(new Note(title,body));
+                System.out.println("message saved");
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+            }
+        });
+
+        client.connect();
+
+
+
+        //TODO garantir que a base de dados já está carregada (senao isto devolve null às vezes)
+        List<Topic> topicList = getAllTopics().getValue();
+        System.out.println(topicList);
+        if(topicList != null)
+            for (Topic t : topicList)
+                subscribeToTopic(t.getTitle());
+
     }
 
     public LiveData<List<Note>> getAllNotes() {
@@ -76,41 +129,53 @@ public class NoteViewModel extends AndroidViewModel {
         this.searchText=text;
     }
 
+
+
     public void subscribeToTopic(String topic){
-        MQTTHelper messageHelper = new MQTTHelper(getApplication().getApplicationContext(),"cliente",topic);
-
-        messageHelper.setCallback(new MqttCallbackExtended() {
-            @Override
-            public void connectComplete(boolean reconnect, String serverURI) {
-                messageHelper.subscribeToTopic(topic);
-            }
-
-            @Override
-            public void connectionLost(Throwable cause) {
-                messageHelper.stop();
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                System.out.println("message received");
-                JSONObject obj = new JSONObject(message.toString());
-                String title = obj.getJSONObject("message").getString("title");
-                String body = obj.getJSONObject("message").getString("body");
-                System.out.println(title);
-                System.out.println(body);
-                insert(new Note(title,body));
-                System.out.println("message saved");
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
-            }
-        });
-
-        messageHelper.connect();
+        client.subscribeToTopic(topic);
     }
 
+    public void unsubscribeFromTopic(String topic){
+        client.unsubscribeFromTopic(topic);
+    }
+
+
+    public LiveData<List<Topic>> getAllTopics() {
+        return allTopics;
+    }
+
+    public MutableLiveData<List<Topic>> getTopicsByTitle(){
+        return topicsByTitle;
+    }
+
+    public void insertTopic(Topic topic) {
+        topicRepository.insert(topic);
+        this.subscribeToTopic(topic.getTitle());
+    }
+
+    public void deleteTopic(Topic topic) {
+        topicRepository.delete(topic);
+    }
+
+    public Topic getTopicSelected() {
+        return this.topicSelected;
+    }
+
+    public void setTopicSelected(Topic topic) {
+        this.topicSelected = topic;
+    }
+
+    public void updateTopicSelected(String title) {
+        if(title != topicSelected.getTitle()){
+            topicSelected.setTitle(title);
+            topicRepository.insert(topicSelected);
+            this.subscribeToTopic(title);
+        }
+    }
+
+    public void updateTopicsByTitle() {
+        topicRepository.updateTopicsByTitle(this.searchText);
+    }
 
 
 }

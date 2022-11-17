@@ -1,17 +1,8 @@
 package com.example.challenge2;
 
-import android.util.Log;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.util.Log;
 import android.view.ContextThemeWrapper;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,21 +12,27 @@ import android.view.ViewGroup;
 import android.widget.PopupMenu;
 import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.challenge2.models.NoteViewModel;
 import com.example.challenge2.notesDatabase.Note;
 import com.example.challenge2.notesDatabase.Topic;
 
 import java.util.List;
 
-public class ListFragment extends Fragment implements RecyclerViewInterface {
+public class TopicFragment extends Fragment implements TopicRecyclerViewInterface {
     private View rootView;
     private NoteViewModel noteViewModel;
 
-    public ListFragment() {
+    public TopicFragment() {
     }
 
-    public static ListFragment newInstance() {
-        return new ListFragment();
+    public static TopicFragment newInstance() {
+        return new TopicFragment();
     }
 
     @Override
@@ -48,30 +45,29 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_list, container, false);
-        RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
-        NoteListAdapter adapter = new NoteListAdapter(new NoteListAdapter.NoteDiff(), this);
-        recyclerView.setAdapter(adapter);
+        View rootView = inflater.inflate(R.layout.fragment_topic, container, false);
+        RecyclerView topicRecyclerView = rootView.findViewById(R.id.recycler_view);
+        TopicListAdapter adapter = new TopicListAdapter(new TopicListAdapter.TopicDiff(), this);
+        topicRecyclerView.setAdapter(adapter);
         //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        topicRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
         noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
-        noteViewModel.getAllNotes().observe(requireActivity(), notes -> {
-            Log.w("ListFragment","Notes List Changed");
+        noteViewModel.getAllTopics().observe(requireActivity(), topics -> {
+            Log.w("TopicFragment","Topics List Changed");
             if(!noteViewModel.getSearchText().equals("")) {
-                noteViewModel.updateNotesByTitle();
+                noteViewModel.updateTopicsByTitle();
             }
             else{
-                adapter.submitList(notes);
+                adapter.submitList(topics);
             }
         });
-        noteViewModel.getNotesByTitle().observe(requireActivity(), notes -> {
-            adapter.submitList(notes);
+        noteViewModel.getTopicsByTitle().observe(requireActivity(), topics -> {
+            adapter.submitList(topics);
         });
 
-
-        //noteViewModel.subscribeToTopic("cm2022_dyn_dev_123_xpto_456");
+        // noteViewModel.subscribeToTopic("cm2022_dyn_dev_123_xpto_456");
         this.rootView = rootView;
         return rootView;
     }
@@ -96,7 +92,7 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
             @Override
             public boolean onQueryTextChange(String s) {
                 noteViewModel.setSearchText(s);
-                noteViewModel.updateNotesByTitle();
+                noteViewModel.updateTopicsByTitle();
                 return true;
             }
 
@@ -106,14 +102,14 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
             @Override
             public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
                 noteViewModel.setSearchText(searchView.getQuery().toString());
-                noteViewModel.updateNotesByTitle();
+                noteViewModel.updateTopicsByTitle();
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 noteViewModel.setSearchText("");
-                noteViewModel.updateNotesByTitle();
+                noteViewModel.updateTopicsByTitle();
                 return true;
             }
         });
@@ -122,8 +118,8 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.add_note) {
-            noteViewModel.setNoteSelected(null);
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new AddFragment(), null).commit();
+            noteViewModel.setTopicSelected(null);
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new TopicAddFragment(), null).commit();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -131,7 +127,7 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
     }
 
     @Override
-    public void onLongPress(Note note) {
+    public void onLongPress(Topic topic) {
 
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(getContext(), R.style.PopupMenuOverlapAnchor);
         PopupMenu popup = new PopupMenu(contextThemeWrapper, rootView);
@@ -144,14 +140,15 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
             public boolean onMenuItemClick(MenuItem menuItem) {
                 switch (menuItem.getItemId()) {
                     case R.id.delete_option: {
-                        noteViewModel.deleteNote(note);
+                        noteViewModel.deleteTopic(topic);
+                        noteViewModel.unsubscribeFromTopic(topic.getTitle());
                         popup.dismiss();
                         return true;
                     }
                     case R.id.edit_option: {
-                        noteViewModel.setNoteSelected(note);
+                        noteViewModel.setTopicSelected(topic);
                         popup.dismiss();
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new AddFragment(), null).commit();
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new TopicAddFragment(), null).commit();
                         return true;
                     }
                 }

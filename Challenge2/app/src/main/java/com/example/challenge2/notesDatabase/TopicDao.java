@@ -18,8 +18,11 @@ public interface TopicDao {
     @Query("DELETE FROM topic_table")
     void deleteAll();
 
+    @Query("SELECT * FROM topic_table WHERE title LIKE '%'||:title||'%' ")
+    List<Topic> getTopicsByTitle(String title);
+
     @Query("SELECT * FROM topic_table")
-    List<Topic> getAllTopics();
+    LiveData<List<Topic>> getAllTopics();
 
     @Delete
     void delete(Topic topic);

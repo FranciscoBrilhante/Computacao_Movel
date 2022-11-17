@@ -4,4 +4,8 @@
     <string name="save_note">Save Note</string>
     <string name="search_note_title">Search Note</string>
     <string name="search_note">Search for some notes</string>
+    <string name="add_topic">Create Topic</string>
+    <string name="save_topic">Save Topic</string>
+    <string name="search_topic_title">Search Topic</string>
+    <string name="search_topic">Search for some topics</string>
 </resources>
