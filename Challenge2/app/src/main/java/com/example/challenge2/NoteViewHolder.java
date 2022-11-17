@@ -4,7 +4,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.challenge2.notesDatabase.Note;
@@ -30,6 +32,14 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
                         }
                 }
                 return true;
+            }
+        });
+
+        itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                recyclerViewInterface.onClick(note);
+                ((FragmentActivity) v.getContext()).getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new AddFragment(), null).commit();
             }
         });
     }

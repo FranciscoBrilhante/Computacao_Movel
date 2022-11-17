@@ -172,4 +172,10 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
             }
         });
     }
+
+    @Override
+    public void onClick(Note note) {
+        noteViewModel.setNoteSelected(note);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new AddFragment(), null).commit();
+    }
 }
