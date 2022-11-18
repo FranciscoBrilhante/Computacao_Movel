@@ -54,11 +54,8 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
 
         noteViewModel.getAllTopics().observe(requireActivity(), topics -> {
             Log.w("TopicFragment", "Topics list changed");
-            if (!noteViewModel.getSearchTextTopic().equals("")) {
-                noteViewModel.updateTopicsByTitle();
-            } else {
-                adapter.submitList(topics);
-            }
+            adapter.submitList(topics);
+
         });
         noteViewModel.getTopicsByTitle().observe(requireActivity(), topics -> {
             adapter.submitList(topics);
@@ -91,39 +88,10 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu,inflater);
+        menu.clear();
+
         inflater.inflate(R.menu.menu_list_topic, menu);
-        MenuItem item = menu.findItem(R.id.app_bar_search_topic);
-        SearchView searchView = (SearchView) item.getActionView();
-        searchView.setFocusable(View.FOCUSABLE);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                noteViewModel.setSearchTextTopic(s);
-                noteViewModel.updateTopicsByTitle();
-                return true;
-            }
-        });
-        item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
-                searchView.requestFocus();
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
-                searchView.setQuery("", true);
-                noteViewModel.setSearchTextTopic("");
-                noteViewModel.updateTopicsByTitle();
-                return true;
-            }
-        });
     }
 
     @Override
@@ -155,8 +123,6 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
                     case R.id.edit_title: {
                         noteViewModel.setTopicSelected(topic);
                         popup.dismiss();
-                        noteViewModel.setSearchTextTopic("");
-                        noteViewModel.updateTopicsByTitle();
 
                         Context context = getContext();
                         AlertDialog.Builder alert = new AlertDialog.Builder(context);
