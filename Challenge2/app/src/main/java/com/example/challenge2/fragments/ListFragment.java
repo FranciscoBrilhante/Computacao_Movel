@@ -31,7 +31,6 @@ import com.example.challenge2.models.NoteViewModel;
 import com.example.challenge2.notesDatabase.Note;
 
 public class ListFragment extends Fragment implements RecyclerViewInterface {
-    private View rootView;
     private NoteViewModel noteViewModel;
     private NoteListAdapter adapter;
     private FragmentNav fragmentNav;
@@ -47,6 +46,20 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        adapter = new NoteListAdapter(new NoteListAdapter.NoteDiff(), this);
+        noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
+        fragmentNav = (FragmentNav) getContext();
+        noteViewModel.getAllNotes().observe(requireActivity(), notes -> {
+            if (!noteViewModel.getSearchTextNote().equals("")) {
+                noteViewModel.updateNotesByTitle();
+            } else {
+                adapter.submitList(notes);
+            }
+        });
+        noteViewModel.getNotesByTitle().observe(requireActivity(), notes -> {
+            adapter.submitList(notes);
+        });
     }
 
     @Override
@@ -55,28 +68,11 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
 
         View rootView = inflater.inflate(R.layout.fragment_list, container, false);
         RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
-        adapter = new NoteListAdapter(new NoteListAdapter.NoteDiff(), this);
+
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-
-        noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
-        fragmentNav = (FragmentNav) getContext();
-        noteViewModel.getAllNotes().observe(requireActivity(), notes -> {
-            if(!noteViewModel.getSearchTextNote().equals("")) {
-                noteViewModel.updateNotesByTitle();
-            }
-            else{
-                adapter.submitList(notes);
-            }
-        });
-        noteViewModel.getNotesByTitle().observe(requireActivity(), notes -> {
-            adapter.submitList(notes);
-        });
-
-        this.rootView = rootView;
         return rootView;
     }
-
 
     @Override
     public void onResume() {
@@ -87,7 +83,7 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_list, menu);
-        MenuItem item = menu.findItem(R.id.app_bar_search);
+        MenuItem item = menu.findItem(R.id.app_bar_search_note);
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setFocusable(View.FOCUSABLE);
         searchView.setIconified(false);
@@ -115,7 +111,7 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
 
             @Override
             public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
-                searchView.setQuery("",true);
+                searchView.setQuery("", true);
                 noteViewModel.setSearchTextNote("");
                 noteViewModel.updateNotesByTitle();
                 return true;
@@ -135,7 +131,7 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
     }
 
     @Override
-    public void onLongPress(Note note,View view) {
+    public void onLongPress(Note note, View view) {
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(getContext(), R.style.PopupMenuOverlapAnchor);
         PopupMenu popup = new PopupMenu(contextThemeWrapper, view);
         popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
@@ -155,7 +151,7 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
                         popup.dismiss();
                         noteViewModel.updateNotesByTitle();
 
-                        Context context=getContext();
+                        Context context = getContext();
                         AlertDialog.Builder alert = new AlertDialog.Builder(context);
                         alert.setTitle("Edit Note Title");
                         final EditText input = new EditText(context);
@@ -164,11 +160,10 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
                         alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                if (input.getText().toString().isEmpty()){
-                                    Toast toast=Toast.makeText(getContext(),"Title must not be empty", Toast.LENGTH_LONG);
+                                if (input.getText().toString().isEmpty()) {
+                                    Toast toast = Toast.makeText(getContext(), "Title must not be empty", Toast.LENGTH_LONG);
                                     toast.show();
-                                }
-                                else{
+                                } else {
                                     noteViewModel.updateNoteSelected(input.getText().toString(), noteViewModel.getNoteSelected().getBody());
                                 }
                             }
@@ -192,8 +187,8 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 String[] topicList = input.getText().toString().split(",");
-                                for (String topic:topicList)
-                                    noteViewModel.sendToTopic(note,topic);
+                                for (String topic : topicList)
+                                    noteViewModel.sendToTopic(note, topic);
                             }
                         });
                         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

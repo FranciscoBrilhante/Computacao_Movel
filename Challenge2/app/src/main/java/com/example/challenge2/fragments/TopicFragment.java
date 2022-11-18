@@ -31,10 +31,9 @@ import com.example.challenge2.models.NoteViewModel;
 import com.example.challenge2.notesDatabase.Topic;
 
 public class TopicFragment extends Fragment implements TopicRecyclerViewInterface {
-    private View rootView;
     private NoteViewModel noteViewModel;
     private FragmentNav fragmentNav;
-
+    private TopicListAdapter adapter;
 
     public TopicFragment() {
     }
@@ -47,20 +46,11 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_topic, container, false);
-        RecyclerView topicRecyclerView = rootView.findViewById(R.id.recycler_view);
-        TopicListAdapter adapter = new TopicListAdapter(new TopicListAdapter.TopicDiff(), this);
-        topicRecyclerView.setAdapter(adapter);
-        topicRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        adapter = new TopicListAdapter(new TopicListAdapter.TopicDiff(), this);
 
         noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
         fragmentNav = (FragmentNav) getContext();
 
-        adapter.submitList(noteViewModel.getAllTopics().getValue());
         noteViewModel.getAllTopics().observe(requireActivity(), topics -> {
             Log.w("TopicFragment", "Topics list changed");
             if (!noteViewModel.getSearchTextTopic().equals("")) {
@@ -72,9 +62,23 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
         noteViewModel.getTopicsByTitle().observe(requireActivity(), topics -> {
             adapter.submitList(topics);
         });
+    }
 
-        this.rootView = rootView;
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.fragment_topic, container, false);
+        RecyclerView topicRecyclerView = rootView.findViewById(R.id.recycler_view);
+
+        topicRecyclerView.setAdapter(adapter);
+        topicRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adapter.submitList(noteViewModel.getAllTopics().getValue());
     }
 
     @Override
@@ -125,7 +129,7 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
     }
 
     @Override
-    public void onLongPress(Topic topic,View view) {
+    public void onLongPress(Topic topic, View view) {
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(getContext(), R.style.PopupMenuOverlapAnchor);
         PopupMenu popup = new PopupMenu(contextThemeWrapper, view);
         popup.getMenuInflater().inflate(R.menu.menu_popup_topic, popup.getMenu());
