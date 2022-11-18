@@ -4,15 +4,24 @@ package com.example.challenge2.models;
 import android.content.Context;
 import android.util.Log;
 
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.*;
+import com.example.challenge2.notesDatabase.Note;
+
 import info.mqtt.android.service.Ack;
 import info.mqtt.android.service.MqttAndroidClient;
+
 
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import org.eclipse.paho.client.mqttv3.MqttException;
+import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 
 public class MQTTHelper {
@@ -70,12 +79,13 @@ public class MQTTHelper {
         mqttAndroidClient.subscribe(topic, 2, null, new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
-                Log.w(TAG, "Subscribed!");
+                Log.w(TAG, "Subscribed to topic " + topic + "!");
             }
 
             @Override
             public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
                 Log.w(TAG, "Subscribed fail!");
+                Log.w(TAG, exception.toString());
             }
         });
 
@@ -84,7 +94,26 @@ public class MQTTHelper {
         mqttAndroidClient.unsubscribe(topic);
     }
 
+    public void sendToTopic(Note note, String topic) {
+        try {
+            byte[] encodedPayload;
+
+            String msg = "{\"message\":{\"title\":\"" + note.getTitle() + "\",\"body\":\"" + note.getBody() + "\"}}";
+
+            encodedPayload = msg.getBytes("UTF-8");
+
+            MqttMessage message = new MqttMessage(encodedPayload);
+            message.setQos(2);
+
+            mqttAndroidClient.publish(topic, message);
+
+        } catch (UnsupportedEncodingException e) {
+            Log.w(TAG, "Encoding Exception");
+        }
+    }
+
     public String getName() {
         return name;
     }
+
 }

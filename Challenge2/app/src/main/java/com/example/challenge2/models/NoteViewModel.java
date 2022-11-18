@@ -3,6 +3,7 @@ package com.example.challenge2.models;
 import org.json.*;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -51,6 +52,12 @@ public class NoteViewModel extends AndroidViewModel {
         client.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
+                getAllTopics().observeForever(topics -> {
+                    for (Topic t: topics) {
+                        if(t != null)
+                            subscribeToTopic(t.getTitle());
+                    }
+                });
             }
 
             @Override
@@ -76,14 +83,11 @@ public class NoteViewModel extends AndroidViewModel {
 
         client.connect();
 
-
-
         //TODO garantir que a base de dados já está carregada (senao isto devolve null às vezes)
-        List<Topic> topicList = getAllTopics().getValue();
-        System.out.println(topicList);
-        if(topicList != null)
-            for (Topic t : topicList)
-                subscribeToTopic(t.getTitle());
+        //if(allTopics.getValue() != null)
+            //for (Topic t : allTopics.getValue())
+                //subscribeToTopic(t.getTitle());
+
 
     }
 
@@ -139,6 +143,10 @@ public class NoteViewModel extends AndroidViewModel {
         client.unsubscribeFromTopic(topic);
     }
 
+    public void sendToTopic(Note note, String topic){
+        client.sendToTopic(note, topic);
+    }
+
 
     public LiveData<List<Topic>> getAllTopics() {
         return allTopics;
@@ -176,6 +184,5 @@ public class NoteViewModel extends AndroidViewModel {
     public void updateTopicsByTitle() {
         topicRepository.updateTopicsByTitle(this.searchText);
     }
-
 
 }

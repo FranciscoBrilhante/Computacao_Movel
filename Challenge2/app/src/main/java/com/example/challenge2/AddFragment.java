@@ -20,6 +20,7 @@ import com.example.challenge2.notesDatabase.Note;
 
 public class AddFragment extends Fragment {
     private NoteViewModel noteViewModel;
+    private FragmentNav fragmentNav;
 
     private EditText titleView;
     private EditText bodyView;
@@ -43,6 +44,7 @@ public class AddFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_add, container, false);
         noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
+        fragmentNav = (FragmentNav) getContext();
 
         titleView=rootView.findViewById(R.id.addTitleView);
         bodyView= rootView.findViewById(R.id.addBodyView);
@@ -52,6 +54,8 @@ public class AddFragment extends Fragment {
             titleView.setText(noteSelected.getTitle());
             bodyView.setText(noteSelected.getBody());
         }
+
+
         return rootView;
     }
 
@@ -83,10 +87,13 @@ public class AddFragment extends Fragment {
                     else{
                         noteViewModel.updateNoteSelected(titleView.getText().toString(),bodyView.getText().toString());
                     }
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new ListFragment(), null).commit();
-
+                    //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new ListFragment(), null).commit();
+                    fragmentNav.AddNoteToNoteList(this);
                 }
                 return true;
+            }
+            case R.id.discard:{
+                fragmentNav.AddNoteToNoteList(this);
             }
             default:
                 return super.onOptionsItemSelected(item);

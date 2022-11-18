@@ -21,6 +21,7 @@ import com.example.challenge2.notesDatabase.Topic;
 
 public class TopicAddFragment extends Fragment {
     private NoteViewModel noteViewModel;
+    private FragmentNav fragmentNav;
 
     private EditText titleView;
 
@@ -43,6 +44,7 @@ public class TopicAddFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_add_topic, container, false);
         noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
+        fragmentNav = (FragmentNav) getContext();
 
         titleView=rootView.findViewById(R.id.addTitleView);
 
@@ -77,15 +79,17 @@ public class TopicAddFragment extends Fragment {
                     if (noteViewModel.getTopicSelected()==null){
                         noteViewModel.insertTopic(new Topic(titleView.getText().toString()));
                     }
-                    else{
+                    else {
                         noteViewModel.updateTopicSelected(titleView.getText().toString());
                     }
-
-
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new TopicFragment(), null).commit();
-
+                    //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new TopicFragment(), null).commit();
+                    fragmentNav.AddTopicToTopicList(this);
                 }
                 return true;
+            }
+            case R.id.discard:{
+                //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new TopicFragment(), null).commit();
+                fragmentNav.AddTopicToTopicList(this);
             }
             default:
                 return super.onOptionsItemSelected(item);

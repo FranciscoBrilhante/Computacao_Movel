@@ -1,21 +1,27 @@
 package com.example.challenge2;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.challenge2.models.NoteViewModel;
@@ -27,6 +33,8 @@ import java.util.List;
 public class TopicFragment extends Fragment implements TopicRecyclerViewInterface {
     private View rootView;
     private NoteViewModel noteViewModel;
+    private FragmentNav fragmentNav;
+
 
     public TopicFragment() {
     }
@@ -51,9 +59,11 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
         topicRecyclerView.setAdapter(adapter);
         //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        topicRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        topicRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
+        fragmentNav = (FragmentNav) getContext();
+
         noteViewModel.getAllTopics().observe(requireActivity(), topics -> {
             Log.w("TopicFragment","Topics List Changed");
             if(!noteViewModel.getSearchText().equals("")) {
@@ -62,7 +72,10 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
             else{
                 adapter.submitList(topics);
             }
+
+            //noteViewModel.subscribeToTopic(topics.get(topics.size()-1).getTitle());
         });
+
         noteViewModel.getTopicsByTitle().observe(requireActivity(), topics -> {
             adapter.submitList(topics);
         });
@@ -119,7 +132,8 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.add_note) {
             noteViewModel.setTopicSelected(null);
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new TopicAddFragment(), null).commit();
+            //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new TopicAddFragment(), null).commit();
+            fragmentNav.TopicListToAddTopic();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -132,7 +146,7 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(getContext(), R.style.PopupMenuOverlapAnchor);
         PopupMenu popup = new PopupMenu(contextThemeWrapper, rootView);
 
-        popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
+        popup.getMenuInflater().inflate(R.menu.menu_popup_topic, popup.getMenu());
         popup.show();
 
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -145,15 +159,50 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
                         popup.dismiss();
                         return true;
                     }
-                    case R.id.edit_option: {
+                    case R.id.edit_title: {
                         noteViewModel.setTopicSelected(topic);
                         popup.dismiss();
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new TopicAddFragment(), null).commit();
+                        noteViewModel.setSearchText("");
+                        noteViewModel.updateTopicsByTitle();
+
+                        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                        alert.setTitle("Edit Topic");
+                        final EditText input = new EditText(getContext());
+                        input.setText(noteViewModel.getTopicSelected().getTitle());
+                        alert.setView(input);
+                        alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                if (input.getText().toString().isEmpty()){
+                                    Toast toast=Toast.makeText(getContext(),"Title must not be empty", Toast.LENGTH_LONG);
+                                    toast.show();
+                                }
+                                else{
+                                    noteViewModel.updateTopicSelected(input.getText().toString());
+                                }
+
+                            }
+                        });
+
+                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                popup.dismiss();
+                            }
+                        });
+                        alert.show();
                         return true;
                     }
                 }
                 return true;
             }
         });
+    }
+
+
+    @Override
+    public void onClick(Topic topic) {
+        noteViewModel.setTopicSelected(topic);
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new TopicAddFragment(), null).commit();
     }
 }
