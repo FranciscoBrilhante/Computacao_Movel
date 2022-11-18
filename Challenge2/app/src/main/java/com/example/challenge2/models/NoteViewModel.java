@@ -16,7 +16,6 @@ import com.example.challenge2.notesDatabase.Topic;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +33,8 @@ public class NoteViewModel extends AndroidViewModel {
     private final LiveData<List<Topic>> allTopics;
     private Topic topicSelected;
 
-    private String searchText;
+    private String searchTextNote;
+    private String searchTextTopic;
 
     private MQTTHelper client;
 
@@ -46,7 +46,8 @@ public class NoteViewModel extends AndroidViewModel {
         allNotes = noteRepository.getAllNotes();
         notesByTitle = noteRepository.getNotesByTitle();
         noteSelected = null;
-        searchText = "";
+        searchTextNote = "";
+        searchTextTopic = "";
 
         topicRepository = new TopicRepository(application);
         allTopics = topicRepository.getAllTopics();
@@ -125,16 +126,25 @@ public class NoteViewModel extends AndroidViewModel {
     }
 
     public void updateNotesByTitle() {
-        noteRepository.updateNotesByTitle(this.searchText);
+        noteRepository.updateNotesByTitle(this.searchTextNote);
     }
 
-    public String getSearchText() {
-        return this.searchText;
+    public String getSearchTextNote() {
+        return this.searchTextNote;
     }
 
-    public void setSearchText(String text) {
-        this.searchText = text;
+    public void setSearchTextNote(String text) {
+        this.searchTextNote = text;
     }
+
+    public String getSearchTextTopic() {
+        return this.searchTextTopic;
+    }
+
+    public void setSearchTextTopic(String text) {
+        this.searchTextTopic = text;
+    }
+
 
 
     public void subscribeToTopic(String topic) {
@@ -181,7 +191,7 @@ public class NoteViewModel extends AndroidViewModel {
         }
     }
     public void updateTopicsByTitle() {
-        topicRepository.updateTopicsByTitle(this.searchText);
+        topicRepository.updateTopicsByTitle(this.searchTextTopic);
     }
 
 }

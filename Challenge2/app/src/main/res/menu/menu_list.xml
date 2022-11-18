@@ -11,7 +11,7 @@
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom|collapseActionView" />
     <item
-        android:id="@+id/add_note"
+        android:id="@+id/add_note_topic"
         android:icon="@drawable/ic_add"
         android:title="@string/add_note"
         app:showAsAction="ifRoom|withText"/>

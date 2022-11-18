@@ -3,7 +3,6 @@ package com.example.challenge2.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.ContextThemeWrapper;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,9 +23,7 @@ import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.example.challenge2.interfaces.AlertInterface;
 import com.example.challenge2.interfaces.FragmentNav;
-import com.example.challenge2.models.NoteViewModelFactory;
 import com.example.challenge2.ui.NoteListAdapter;
 import com.example.challenge2.R;
 import com.example.challenge2.interfaces.RecyclerViewInterface;
@@ -66,7 +62,7 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
         noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
         fragmentNav = (FragmentNav) getContext();
         noteViewModel.getAllNotes().observe(requireActivity(), notes -> {
-            if(!noteViewModel.getSearchText().equals("")) {
+            if(!noteViewModel.getSearchTextNote().equals("")) {
                 noteViewModel.updateNotesByTitle();
             }
             else{
@@ -103,7 +99,7 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                noteViewModel.setSearchText(s);
+                noteViewModel.setSearchTextNote(s);
                 noteViewModel.updateNotesByTitle();
                 return true;
             }
@@ -120,7 +116,7 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
             @Override
             public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 searchView.setQuery("",true);
-                noteViewModel.setSearchText("");
+                noteViewModel.setSearchTextNote("");
                 noteViewModel.updateNotesByTitle();
                 return true;
             }
@@ -129,9 +125,9 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.add_note) {
+        if (item.getItemId() == R.id.add_note_topic) {
             noteViewModel.setNoteSelected(null);
-            noteViewModel.setSearchText("");
+            noteViewModel.setSearchTextNote("");
             fragmentNav.NoteListToAddNote();
             return true;
         }
@@ -139,9 +135,9 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
     }
 
     @Override
-    public void onLongPress(Note note) {
+    public void onLongPress(Note note,View view) {
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(getContext(), R.style.PopupMenuOverlapAnchor);
-        PopupMenu popup = new PopupMenu(contextThemeWrapper, rootView, Gravity.CENTER);
+        PopupMenu popup = new PopupMenu(contextThemeWrapper, view);
         popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
         popup.show();
 

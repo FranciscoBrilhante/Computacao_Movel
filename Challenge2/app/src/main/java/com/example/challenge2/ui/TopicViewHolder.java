@@ -28,7 +28,7 @@ public class TopicViewHolder extends RecyclerView.ViewHolder {
                     int position=getAdapterPosition();
 
                         if(position!=RecyclerView.NO_POSITION){
-                            topicRecyclerViewInterface.onLongPress(topic);
+                            topicRecyclerViewInterface.onLongPress(topic,view);
                         }
                 }
                 return true;

@@ -23,11 +23,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.challenge2.interfaces.AlertInterface;
 import com.example.challenge2.interfaces.FragmentNav;
 import com.example.challenge2.R;
-import com.example.challenge2.models.NoteViewModelFactory;
-import com.example.challenge2.notesDatabase.Note;
 import com.example.challenge2.ui.TopicListAdapter;
 import com.example.challenge2.interfaces.TopicRecyclerViewInterface;
 import com.example.challenge2.models.NoteViewModel;
@@ -66,7 +63,7 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
         adapter.submitList(noteViewModel.getAllTopics().getValue());
         noteViewModel.getAllTopics().observe(requireActivity(), topics -> {
             Log.w("TopicFragment", "Topics list changed");
-            if (!noteViewModel.getSearchText().equals("")) {
+            if (!noteViewModel.getSearchTextTopic().equals("")) {
                 noteViewModel.updateTopicsByTitle();
             } else {
                 adapter.submitList(topics);
@@ -83,7 +80,7 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_list_topic, menu);
-        MenuItem item = menu.findItem(R.id.app_bar_search);
+        MenuItem item = menu.findItem(R.id.app_bar_search_topic);
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setFocusable(View.FOCUSABLE);
         searchView.setIconified(false);
@@ -95,7 +92,7 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
 
             @Override
             public boolean onQueryTextChange(String s) {
-                noteViewModel.setSearchText(s);
+                noteViewModel.setSearchTextTopic(s);
                 noteViewModel.updateTopicsByTitle();
                 return true;
             }
@@ -110,7 +107,7 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
             @Override
             public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
                 searchView.setQuery("", true);
-                noteViewModel.setSearchText("");
+                noteViewModel.setSearchTextTopic("");
                 noteViewModel.updateTopicsByTitle();
                 return true;
             }
@@ -119,7 +116,7 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.add_note) {
+        if (item.getItemId() == R.id.add_note_topic) {
             noteViewModel.setTopicSelected(null);
             fragmentNav.TopicListToAddTopic();
             return true;
@@ -128,9 +125,9 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
     }
 
     @Override
-    public void onLongPress(Topic topic) {
+    public void onLongPress(Topic topic,View view) {
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(getContext(), R.style.PopupMenuOverlapAnchor);
-        PopupMenu popup = new PopupMenu(contextThemeWrapper, rootView);
+        PopupMenu popup = new PopupMenu(contextThemeWrapper, view);
         popup.getMenuInflater().inflate(R.menu.menu_popup_topic, popup.getMenu());
         popup.show();
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -146,7 +143,7 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
                     case R.id.edit_title: {
                         noteViewModel.setTopicSelected(topic);
                         popup.dismiss();
-                        noteViewModel.setSearchText("");
+                        noteViewModel.setSearchTextTopic("");
                         noteViewModel.updateTopicsByTitle();
 
                         Context context = getContext();

@@ -30,7 +30,7 @@ public class NoteViewHolder extends RecyclerView.ViewHolder {
                     int position=getAdapterPosition();
 
                         if(position!=RecyclerView.NO_POSITION){
-                            recyclerViewInterface.onLongPress(note);
+                            recyclerViewInterface.onLongPress(note,view);
                         }
                 }
                 return true;
