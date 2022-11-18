@@ -53,7 +53,7 @@ public class NoteViewModel extends AndroidViewModel {
         topicSelected = null;
         topicsSubscribedAndSaved=new ArrayList<>();
 
-        client = new MQTTHelper(application.getApplicationContext(), "client");
+        client = new MQTTHelper(application.getApplicationContext(), "dei");
         client.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
@@ -68,6 +68,7 @@ public class NoteViewModel extends AndroidViewModel {
             }
             @Override
             public void connectionLost(Throwable cause) {
+                alertInterface.showToast("Connection with MQTT Broker lost. Restart the app please.");
             }
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
@@ -84,6 +85,7 @@ public class NoteViewModel extends AndroidViewModel {
             }
             @Override
             public void deliveryComplete(IMqttDeliveryToken token) {
+                alertInterface.showToast("Message delivered successfully");
             }
         });
         client.connect();

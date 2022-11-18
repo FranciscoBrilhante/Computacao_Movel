@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.challenge2.R;
 import com.example.challenge2.fragments.AddFragment;
@@ -96,7 +97,14 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         Context context = this;
         AlertDialog.Builder alert = new AlertDialog.Builder(context);
         alert.setTitle("New message arrived.\nDo you wish to save it?");
-        alert.setMessage("Title: "+note.getTitle());
+        String title= note.getTitle();
+        String body= note.getBody();
+        if(body.length()>10){
+            alert.setMessage("Title: "+title+"\nBody: "+body.substring(0,9)+"...");
+        }
+        else{
+            alert.setMessage("Title: "+title+"\nBody: "+body);
+        }
         alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -109,5 +117,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
             }
         });
         alert.show();
+    }
+
+    public void showToast(String message){
+        Toast toast=Toast.makeText(this,message, Toast.LENGTH_LONG);
+        toast.show();
     }
 }
