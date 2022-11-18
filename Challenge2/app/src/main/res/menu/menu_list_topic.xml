@@ -4,6 +4,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/app_bar_search_topic"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search_topic_title"
+        android:tooltipText="@string/search_topic"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView" />
+    <item
         android:id="@+id/add_note_topic"
         android:icon="@drawable/ic_add"
         android:title="@string/add_topic"

@@ -35,7 +35,7 @@ public class NoteViewModel extends AndroidViewModel {
     private Topic topicSelected;
 
     private String searchTextNote;
-
+    private String searchTextTopic;
 
     private MQTTHelper client;
 
@@ -48,7 +48,7 @@ public class NoteViewModel extends AndroidViewModel {
         notesByTitle = noteRepository.getNotesByTitle();
         noteSelected = null;
         searchTextNote = "";
-
+        searchTextTopic = "";
 
         topicRepository = new TopicRepository(application);
         allTopics = topicRepository.getAllTopics();
@@ -139,7 +139,13 @@ public class NoteViewModel extends AndroidViewModel {
         this.searchTextNote = text;
     }
 
+    public String getSearchTextTopic() {
+        return this.searchTextTopic;
+    }
 
+    public void setSearchTextTopic(String text) {
+        this.searchTextTopic = text;
+    }
 
 
 
@@ -185,6 +191,9 @@ public class NoteViewModel extends AndroidViewModel {
             topicSelected.setTitle(title);
             topicRepository.insert(topicSelected);
         }
+    }
+    public void updateTopicsByTitle() {
+        topicRepository.updateTopicsByTitle(this.searchTextTopic);
     }
 
 }
