@@ -29,6 +29,7 @@ import com.example.challenge2.ui.TopicListAdapter;
 import com.example.challenge2.interfaces.TopicRecyclerViewInterface;
 import com.example.challenge2.models.NoteViewModel;
 import com.example.challenge2.notesDatabase.Topic;
+import android.provider.Settings.Secure;
 
 public class TopicFragment extends Fragment implements TopicRecyclerViewInterface {
     private NoteViewModel noteViewModel;
@@ -87,7 +88,7 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
         MenuItem item = menu.findItem(R.id.app_bar_search_topic);
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setFocusable(View.FOCUSABLE);
-        searchView.setIconified(false);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {

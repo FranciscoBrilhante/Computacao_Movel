@@ -3,6 +3,7 @@ package com.example.challenge2.models;
 import org.json.*;
 
 import android.app.Application;
+import android.provider.Settings;
 import android.util.Log;
 
 import androidx.lifecycle.AndroidViewModel;
@@ -55,7 +56,8 @@ public class NoteViewModel extends AndroidViewModel {
         topicSelected = null;
         topicsSubscribedAndSaved=new ArrayList<>();
 
-        client = new MQTTHelper(application.getApplicationContext(), "kasidjf ushadf");
+        String android_id = Settings.Secure.getString(application.getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        client = new MQTTHelper(application.getApplicationContext(), android_id);
         client.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
