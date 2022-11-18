@@ -84,11 +84,14 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu,inflater);
+        menu.clear();
+
         inflater.inflate(R.menu.menu_list_topic, menu);
         MenuItem item = menu.findItem(R.id.app_bar_search_topic);
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setFocusable(View.FOCUSABLE);
-
+        searchView.setIconified(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {

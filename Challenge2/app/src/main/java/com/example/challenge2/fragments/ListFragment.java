@@ -82,6 +82,8 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu,inflater);
+        menu.clear();
         inflater.inflate(R.menu.menu_list, menu);
         MenuItem item = menu.findItem(R.id.app_bar_search_note);
         SearchView searchView = (SearchView) item.getActionView();
