@@ -81,6 +81,13 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
     }
 
     @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu){
+        MenuItem item = menu.findItem(R.id.app_bar_search_note);
+        SearchView searchView = (SearchView) item.getActionView();
+        searchView.setQuery("", true);
+    }
+
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.menu_list, menu);
         MenuItem item = menu.findItem(R.id.app_bar_search_note);
@@ -99,7 +106,6 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
                 noteViewModel.updateNotesByTitle();
                 return true;
             }
-
         });
 
         item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
