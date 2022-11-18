@@ -1,4 +1,4 @@
-package com.example.challenge2;
+package com.example.challenge2.interfaces;
 
 import com.example.challenge2.notesDatabase.Topic;
 

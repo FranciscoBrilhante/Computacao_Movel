@@ -1,11 +1,11 @@
-package com.example.challenge2;
+package com.example.challenge2.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,17 +20,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.challenge2.models.NoteViewModel;
+import com.example.challenge2.interfaces.AlertInterface;
+import com.example.challenge2.interfaces.FragmentNav;
+import com.example.challenge2.R;
+import com.example.challenge2.models.NoteViewModelFactory;
 import com.example.challenge2.notesDatabase.Note;
+import com.example.challenge2.ui.TopicListAdapter;
+import com.example.challenge2.interfaces.TopicRecyclerViewInterface;
+import com.example.challenge2.models.NoteViewModel;
 import com.example.challenge2.notesDatabase.Topic;
 
-import java.util.List;
-
-public class TopicFragment extends Fragment implements TopicRecyclerViewInterface {
+public class TopicFragment extends Fragment implements TopicRecyclerViewInterface, AlertInterface {
     private View rootView;
     private NoteViewModel noteViewModel;
     private FragmentNav fragmentNav;
@@ -50,52 +53,39 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_topic, container, false);
         RecyclerView topicRecyclerView = rootView.findViewById(R.id.recycler_view);
         TopicListAdapter adapter = new TopicListAdapter(new TopicListAdapter.TopicDiff(), this);
         topicRecyclerView.setAdapter(adapter);
-        //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         topicRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
+        noteViewModel = new ViewModelProvider(this, new NoteViewModelFactory(getActivity().getApplication(), this)).get(NoteViewModel.class);
         fragmentNav = (FragmentNav) getContext();
 
         noteViewModel.getAllTopics().observe(requireActivity(), topics -> {
-            Log.w("TopicFragment","Topics List Changed");
-            if(!noteViewModel.getSearchText().equals("")) {
+            Log.w("TopicFragment", "Topics list changed");
+            if (!noteViewModel.getSearchText().equals("")) {
                 noteViewModel.updateTopicsByTitle();
-            }
-            else{
+            } else {
                 adapter.submitList(topics);
             }
-
-            //noteViewModel.subscribeToTopic(topics.get(topics.size()-1).getTitle());
         });
-
         noteViewModel.getTopicsByTitle().observe(requireActivity(), topics -> {
             adapter.submitList(topics);
         });
 
-        // noteViewModel.subscribeToTopic("cm2022_dyn_dev_123_xpto_456");
         this.rootView = rootView;
         return rootView;
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_list, menu);
+        inflater.inflate(R.menu.menu_list_topic, menu);
         MenuItem item = menu.findItem(R.id.app_bar_search);
         SearchView searchView = (SearchView) item.getActionView();
-
+        searchView.setFocusable(View.FOCUSABLE);
+        searchView.setIconified(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -108,19 +98,17 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
                 noteViewModel.updateTopicsByTitle();
                 return true;
             }
-
         });
-
         item.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(@NonNull MenuItem item) {
-                noteViewModel.setSearchText(searchView.getQuery().toString());
-                noteViewModel.updateTopicsByTitle();
+                searchView.requestFocus();
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(@NonNull MenuItem item) {
+                searchView.setQuery("", true);
                 noteViewModel.setSearchText("");
                 noteViewModel.updateTopicsByTitle();
                 return true;
@@ -132,23 +120,18 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.add_note) {
             noteViewModel.setTopicSelected(null);
-            //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new TopicAddFragment(), null).commit();
             fragmentNav.TopicListToAddTopic();
             return true;
         }
         return super.onOptionsItemSelected(item);
-
     }
 
     @Override
     public void onLongPress(Topic topic) {
-
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(getContext(), R.style.PopupMenuOverlapAnchor);
         PopupMenu popup = new PopupMenu(contextThemeWrapper, rootView);
-
         popup.getMenuInflater().inflate(R.menu.menu_popup_topic, popup.getMenu());
         popup.show();
-
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -165,29 +148,27 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
                         noteViewModel.setSearchText("");
                         noteViewModel.updateTopicsByTitle();
 
-                        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                        Context context = getContext();
+                        AlertDialog.Builder alert = new AlertDialog.Builder(context);
                         alert.setTitle("Edit Topic");
-                        final EditText input = new EditText(getContext());
+                        final EditText input = new EditText(context);
                         input.setText(noteViewModel.getTopicSelected().getTitle());
                         alert.setView(input);
                         alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                if (input.getText().toString().isEmpty()){
-                                    Toast toast=Toast.makeText(getContext(),"Title must not be empty", Toast.LENGTH_LONG);
+                                if (input.getText().toString().isEmpty()) {
+                                    Toast toast = Toast.makeText(getContext(), "Title must not be empty", Toast.LENGTH_LONG);
                                     toast.show();
-                                }
-                                else{
+                                } else {
                                     noteViewModel.updateTopicSelected(input.getText().toString());
                                 }
 
                             }
                         });
-
                         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                popup.dismiss();
                             }
                         });
                         alert.show();
@@ -199,10 +180,32 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
         });
     }
 
-
     @Override
     public void onClick(Topic topic) {
         noteViewModel.setTopicSelected(topic);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new TopicAddFragment(), null).commit();
+        fragmentNav.TopicListToAddTopic();
+    }
+
+    @Override
+    public void onMessageReceive(Note note) {
+        Fragment frag=getActivity().getSupportFragmentManager().findFragmentByTag("TopicFragment");
+        if (frag==null || !frag.isVisible()){
+            return;
+        }
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("New message arrived.\nDo you wish to save it?");
+        alert.setMessage("Title: "+note.getTitle());
+        alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                noteViewModel.insert(note);
+            }
+        });
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        alert.show();
     }
 }

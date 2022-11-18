@@ -6,6 +6,7 @@ import android.util.Log;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.*;
+
 import com.example.challenge2.notesDatabase.Note;
 
 import info.mqtt.android.service.Ack;
@@ -25,21 +26,18 @@ import java.util.List;
 
 
 public class MQTTHelper {
-    public MqttAndroidClient mqttAndroidClient;
-
+    public MqttAndroidClient client;
     final String server = "tcp://broker.hivemq.com:1883";
-    final String TAG = "TAG";
-
-    private String name;
-
+    final String TAG = "MQTTHelper";
+    private final String name;
 
     public MQTTHelper(Context context, String name) {
         this.name = name;
-        mqttAndroidClient = new MqttAndroidClient(context, server, name, Ack.AUTO_ACK);
+        client = new MqttAndroidClient(context, server, name, Ack.AUTO_ACK);
     }
 
     public void setCallback(MqttCallbackExtended callback) {
-        mqttAndroidClient.setCallback(callback);
+        client.setCallback(callback);
     }
 
     public void connect() {
@@ -47,19 +45,16 @@ public class MQTTHelper {
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setCleanSession(true);
 
-        mqttAndroidClient.connect(mqttConnectOptions, null, new IMqttActionListener() {
+        client.connect(mqttConnectOptions, null, new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
-
-                //Adjusting the set of options that govern the behaviour of Offline (or Disconnected) buffering of messages
                 DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
                 disconnectedBufferOptions.setBufferEnabled(true);
                 disconnectedBufferOptions.setBufferSize(100);
                 disconnectedBufferOptions.setPersistBuffer(false);
                 disconnectedBufferOptions.setDeleteOldestMessages(false);
-                mqttAndroidClient.setBufferOpts(disconnectedBufferOptions);
-
-                Log.w(TAG,"Connected to b broker");
+                client.setBufferOpts(disconnectedBufferOptions);
+                Log.w(TAG, "Connected to broker");
             }
 
             @Override
@@ -67,16 +62,14 @@ public class MQTTHelper {
                 Log.w(TAG, "Failed to connect to: " + server + exception.toString());
             }
         });
-
-
     }
 
     public void stop() {
-        mqttAndroidClient.disconnect();
+        client.disconnect();
     }
 
     public void subscribeToTopic(String topic) {
-        mqttAndroidClient.subscribe(topic, 2, null, new IMqttActionListener() {
+        client.subscribe(topic, 2, null, new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
                 Log.w(TAG, "Subscribed to topic " + topic + "!");
@@ -88,24 +81,20 @@ public class MQTTHelper {
                 Log.w(TAG, exception.toString());
             }
         });
-
     }
+
     public void unsubscribeFromTopic(String topic) {
-        mqttAndroidClient.unsubscribe(topic);
+        client.unsubscribe(topic);
     }
 
     public void sendToTopic(Note note, String topic) {
         try {
             byte[] encodedPayload;
-
             String msg = "{\"message\":{\"title\":\"" + note.getTitle() + "\",\"body\":\"" + note.getBody() + "\"}}";
-
             encodedPayload = msg.getBytes("UTF-8");
-
             MqttMessage message = new MqttMessage(encodedPayload);
             message.setQos(2);
-
-            mqttAndroidClient.publish(topic, message);
+            client.publish(topic, message);
 
         } catch (UnsupportedEncodingException e) {
             Log.w(TAG, "Encoding Exception");

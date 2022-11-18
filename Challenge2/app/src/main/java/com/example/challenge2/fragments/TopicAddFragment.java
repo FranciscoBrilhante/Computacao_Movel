@@ -1,5 +1,7 @@
-package com.example.challenge2;
+package com.example.challenge2.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,12 +16,16 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.challenge2.interfaces.AlertInterface;
+import com.example.challenge2.interfaces.FragmentNav;
+import com.example.challenge2.R;
 import com.example.challenge2.models.NoteViewModel;
+import com.example.challenge2.models.NoteViewModelFactory;
 import com.example.challenge2.notesDatabase.Note;
 import com.example.challenge2.notesDatabase.Topic;
 
 
-public class TopicAddFragment extends Fragment {
+public class TopicAddFragment extends Fragment implements AlertInterface {
     private NoteViewModel noteViewModel;
     private FragmentNav fragmentNav;
 
@@ -43,9 +49,9 @@ public class TopicAddFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_add_topic, container, false);
-        noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
-        fragmentNav = (FragmentNav) getContext();
 
+        noteViewModel = new ViewModelProvider(this, new NoteViewModelFactory(getActivity().getApplication(), this)).get(NoteViewModel.class);
+        fragmentNav = (FragmentNav) getContext();
         titleView=rootView.findViewById(R.id.addTitleView);
 
         Topic topicSelected=noteViewModel.getTopicSelected();
@@ -82,20 +88,39 @@ public class TopicAddFragment extends Fragment {
                     else {
                         noteViewModel.updateTopicSelected(titleView.getText().toString());
                     }
-                    //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new TopicFragment(), null).commit();
+
                     fragmentNav.AddTopicToTopicList(this);
                 }
                 return true;
             }
             case R.id.discard:{
-                //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new TopicFragment(), null).commit();
                 fragmentNav.AddTopicToTopicList(this);
             }
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
-
+    @Override
+    public void onMessageReceive(Note note) {
+        Fragment frag=getActivity().getSupportFragmentManager().findFragmentByTag("TopicAddFragment");
+        if (frag==null || !frag.isVisible()){
+            return;
+        }
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("New message arrived.\nDo you wish to save it?");
+        alert.setMessage("Title: "+note.getTitle());
+        alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                noteViewModel.insert(note);
+            }
+        });
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        alert.show();
+    }
 }

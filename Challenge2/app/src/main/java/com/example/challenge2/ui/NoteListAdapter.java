@@ -1,4 +1,4 @@
-package com.example.challenge2;
+package com.example.challenge2.ui;
 
 import android.view.ViewGroup;
 
@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
+import com.example.challenge2.interfaces.RecyclerViewInterface;
 import com.example.challenge2.notesDatabase.Note;
 
 public class NoteListAdapter extends ListAdapter<Note,NoteViewHolder> {
@@ -27,7 +28,7 @@ public class NoteListAdapter extends ListAdapter<Note,NoteViewHolder> {
         holder.bind(current);
     }
 
-    static class NoteDiff extends DiffUtil.ItemCallback<Note>{
+    public static class NoteDiff extends DiffUtil.ItemCallback<Note>{
 
         @Override
         public boolean areItemsTheSame(@NonNull Note oldItem,@NonNull Note newItem){

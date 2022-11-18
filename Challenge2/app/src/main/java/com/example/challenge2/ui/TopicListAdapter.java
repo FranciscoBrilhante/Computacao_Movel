@@ -1,4 +1,4 @@
-package com.example.challenge2;
+package com.example.challenge2.ui;
 
 import android.view.ViewGroup;
 
@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
+import com.example.challenge2.interfaces.TopicRecyclerViewInterface;
 import com.example.challenge2.notesDatabase.Topic;
 
 public class TopicListAdapter extends ListAdapter<Topic,TopicViewHolder> {
@@ -27,7 +28,7 @@ public class TopicListAdapter extends ListAdapter<Topic,TopicViewHolder> {
         holder.bind(current);
     }
 
-    static class TopicDiff extends DiffUtil.ItemCallback<Topic>{
+    public static class TopicDiff extends DiffUtil.ItemCallback<Topic>{
 
         @Override
         public boolean areItemsTheSame(@NonNull Topic oldItem,@NonNull Topic newItem){

@@ -1,6 +1,7 @@
-package com.example.challenge2;
+package com.example.challenge2.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
 import android.os.Bundle;
@@ -8,7 +9,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,17 +25,21 @@ import android.widget.PopupMenu;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.example.challenge2.interfaces.AlertInterface;
+import com.example.challenge2.interfaces.FragmentNav;
+import com.example.challenge2.models.NoteViewModelFactory;
+import com.example.challenge2.ui.NoteListAdapter;
+import com.example.challenge2.R;
+import com.example.challenge2.interfaces.RecyclerViewInterface;
 import com.example.challenge2.models.NoteViewModel;
 import com.example.challenge2.notesDatabase.Note;
-import com.example.challenge2.notesDatabase.Topic;
 
-import java.util.List;
-
-public class ListFragment extends Fragment implements RecyclerViewInterface {
+public class ListFragment extends Fragment implements RecyclerViewInterface, AlertInterface {
     private View rootView;
     private NoteViewModel noteViewModel;
     private NoteListAdapter adapter;
     private FragmentNav fragmentNav;
+
     public ListFragment() {
     }
 
@@ -57,15 +61,12 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
         RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
         adapter = new NoteListAdapter(new NoteListAdapter.NoteDiff(), this);
         recyclerView.setAdapter(adapter);
-        //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
-        noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
+        noteViewModel = new ViewModelProvider(this, new NoteViewModelFactory(getActivity().getApplication(), this)).get(NoteViewModel.class);
         fragmentNav = (FragmentNav) getContext();
-        adapter.submitList(noteViewModel.getAllNotes().getValue());
         noteViewModel.getAllNotes().observe(requireActivity(), notes -> {
-            Log.w("ListFragment","Notes List Changed");
+            Log.w("ListFragment","Notes list changed");
             if(!noteViewModel.getSearchText().equals("")) {
                 noteViewModel.updateNotesByTitle();
             }
@@ -77,17 +78,10 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
             adapter.submitList(notes);
         });
 
-
-
-        //noteViewModel.subscribeToTopic("cm2022_dyn_dev_123_xpto_456");
         this.rootView = rootView;
         return rootView;
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
 
     @Override
     public void onResume() {
@@ -102,7 +96,6 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
         SearchView searchView = (SearchView) item.getActionView();
         searchView.setFocusable(View.FOCUSABLE);
         searchView.setIconified(false);
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -140,21 +133,16 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
         if (item.getItemId() == R.id.add_note) {
             noteViewModel.setNoteSelected(null);
             noteViewModel.setSearchText("");
-            noteViewModel.updateNotesByTitle();
-            //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new AddFragment(), null).commit();
             fragmentNav.NoteListToAddNote();
             return true;
         }
         return super.onOptionsItemSelected(item);
-
     }
 
     @Override
     public void onLongPress(Note note) {
-
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(getContext(), R.style.PopupMenuOverlapAnchor);
         PopupMenu popup = new PopupMenu(contextThemeWrapper, rootView, Gravity.CENTER);
-
         popup.getMenuInflater().inflate(R.menu.menu_popup, popup.getMenu());
         popup.show();
 
@@ -170,14 +158,12 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
                     case R.id.edit_title: {
                         noteViewModel.setNoteSelected(note);
                         popup.dismiss();
-                        noteViewModel.setSearchText("");
                         noteViewModel.updateNotesByTitle();
-                        //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new AddFragment(), null).commit();
-                        //fragmentNav.NoteListToAddNote();
 
-                        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+                        Context context=getContext();
+                        AlertDialog.Builder alert = new AlertDialog.Builder(context);
                         alert.setTitle("Edit Note Title");
-                        final EditText input = new EditText(getContext());
+                        final EditText input = new EditText(context);
                         input.setText(noteViewModel.getNoteSelected().getTitle());
                         alert.setView(input);
                         alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
@@ -190,20 +176,17 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
                                 else{
                                     noteViewModel.updateNoteSelected(input.getText().toString(), noteViewModel.getNoteSelected().getBody());
                                 }
-
                             }
                         });
-
                         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                popup.dismiss();
                             }
                         });
                         alert.show();
                         return true;
-
                     }
+
                     case R.id.send_to_topics: {
                         AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
                         alert.setTitle("Insert Topics");
@@ -214,16 +197,13 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 String[] topicList = input.getText().toString().split(",");
-
                                 for (String topic:topicList)
                                     noteViewModel.sendToTopic(note,topic);
                             }
                         });
-
                         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                popup.dismiss();
                             }
                         });
                         alert.show();
@@ -238,7 +218,29 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
     @Override
     public void onClick(Note note) {
         noteViewModel.setNoteSelected(note);
-        //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.main_layout, new AddFragment(), null).commit();
         fragmentNav.NoteListToAddNote();
+    }
+
+    @Override
+    public void onMessageReceive(Note note) {
+        Fragment frag=getActivity().getSupportFragmentManager().findFragmentByTag("ListFragment");
+        if (frag==null || !frag.isVisible()){
+            return;
+        }
+        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
+        alert.setTitle("New message arrived.\nDo you wish to save it?");
+        alert.setMessage("Title: "+note.getTitle());
+        alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                noteViewModel.insert(note);
+            }
+        });
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        alert.show();
     }
 }
