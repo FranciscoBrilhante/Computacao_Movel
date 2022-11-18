@@ -63,6 +63,7 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
         noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
         fragmentNav = (FragmentNav) getContext();
 
+        adapter.submitList(noteViewModel.getAllTopics().getValue());
         noteViewModel.getAllTopics().observe(requireActivity(), topics -> {
             Log.w("TopicFragment", "Topics list changed");
             if (!noteViewModel.getSearchText().equals("")) {

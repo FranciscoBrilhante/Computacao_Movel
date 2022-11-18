@@ -20,6 +20,7 @@ import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class NoteViewModel extends AndroidViewModel {
     private final NoteRepository noteRepository;
@@ -53,10 +54,11 @@ public class NoteViewModel extends AndroidViewModel {
         topicSelected = null;
         topicsSubscribedAndSaved=new ArrayList<>();
 
-        client = new MQTTHelper(application.getApplicationContext(), "dei");
+        client = new MQTTHelper(application.getApplicationContext(), "kasidjf ushadf");
         client.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
+                alertInterface.showToast("Connection with MQTT established.");
                 getAllTopics().observeForever( topics -> {
                     for (Topic topic: topics){
                         if (!topicsSubscribedAndSaved.contains(topic)){
@@ -172,7 +174,8 @@ public class NoteViewModel extends AndroidViewModel {
     }
 
     public void updateTopicSelected(String title) {
-        if (title != topicSelected.getTitle()) {
+        if (!Objects.equals(title, topicSelected.getTitle())) {
+            unsubscribeFromTopic(topicSelected.getTitle());
             topicSelected.setTitle(title);
             topicRepository.insert(topicSelected);
         }

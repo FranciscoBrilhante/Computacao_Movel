@@ -66,7 +66,6 @@ public class ListFragment extends Fragment implements RecyclerViewInterface {
         noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
         fragmentNav = (FragmentNav) getContext();
         noteViewModel.getAllNotes().observe(requireActivity(), notes -> {
-            Log.w("ListFragment","Notes list changed");
             if(!noteViewModel.getSearchText().equals("")) {
                 noteViewModel.updateNotesByTitle();
             }

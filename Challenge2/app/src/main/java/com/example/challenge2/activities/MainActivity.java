@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     }
 
     public void showToast(String message){
-        Toast toast=Toast.makeText(this,message, Toast.LENGTH_LONG);
+        Toast toast=Toast.makeText(this,message, Toast.LENGTH_SHORT);
         toast.show();
     }
 }
