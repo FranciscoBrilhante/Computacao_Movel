@@ -30,10 +30,12 @@ public class MQTTHelper {
     final String server = "tcp://broker.hivemq.com:1883";
     final String TAG = "MQTTHelper";
     private final String name;
+    private Context context;
 
     public MQTTHelper(Context context, String name) {
         this.name = name;
         client = new MqttAndroidClient(context, server, name, Ack.AUTO_ACK);
+        this.context=context;
     }
 
     public void setCallback(MqttCallbackExtended callback) {
@@ -45,7 +47,7 @@ public class MQTTHelper {
         mqttConnectOptions.setAutomaticReconnect(true);
         mqttConnectOptions.setCleanSession(true);
 
-        client.connect(mqttConnectOptions, null, new IMqttActionListener() {
+        client.connect(mqttConnectOptions, context, new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
                 DisconnectedBufferOptions disconnectedBufferOptions = new DisconnectedBufferOptions();
@@ -69,7 +71,7 @@ public class MQTTHelper {
     }
 
     public void subscribeToTopic(String topic) {
-        client.subscribe(topic, 2, null, new IMqttActionListener() {
+        client.subscribe(topic, 2, context, new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
                 Log.w(TAG, "Subscribed to topic " + topic + "!");

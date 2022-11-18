@@ -24,7 +24,7 @@ import com.example.challenge2.models.NoteViewModelFactory;
 import com.example.challenge2.notesDatabase.Note;
 
 
-public class AddFragment extends Fragment implements AlertInterface {
+public class AddFragment extends Fragment {
     private NoteViewModel noteViewModel;
     private FragmentNav fragmentNav;
 
@@ -49,7 +49,7 @@ public class AddFragment extends Fragment implements AlertInterface {
                              Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_add, container, false);
-        noteViewModel = new ViewModelProvider(this, new NoteViewModelFactory(getActivity().getApplication(), this)).get(NoteViewModel.class);
+        noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
 
         fragmentNav = (FragmentNav) getContext();
         titleView=rootView.findViewById(R.id.addTitleView);
@@ -105,26 +105,5 @@ public class AddFragment extends Fragment implements AlertInterface {
 
     }
 
-    @Override
-    public void onMessageReceive(Note note) {
-        Fragment frag=getActivity().getSupportFragmentManager().findFragmentByTag("AddFragment");
-        if (frag==null || !frag.isVisible()){
-            return;
-        }
-        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-        alert.setTitle("New message arrived.\nDo you wish to save it?");
-        alert.setMessage("Title: "+note.getTitle());
-        alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                noteViewModel.insert(note);
-            }
-        });
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        alert.show();
-    }
+
 }

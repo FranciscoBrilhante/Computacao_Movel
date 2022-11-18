@@ -7,6 +7,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -45,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         }
         viewModel = new ViewModelProvider(this, new NoteViewModelFactory(getApplication(), this)).get(NoteViewModel.class);
-
     }
 
     ListFragment listFragment = new ListFragment();
@@ -91,6 +93,21 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
     @Override
     public void onMessageReceive(Note note) {
-
+        Context context = this;
+        AlertDialog.Builder alert = new AlertDialog.Builder(context);
+        alert.setTitle("New message arrived.\nDo you wish to save it?");
+        alert.setMessage("Title: "+note.getTitle());
+        alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                viewModel.insert(note);
+            }
+        });
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        alert.show();
     }
 }

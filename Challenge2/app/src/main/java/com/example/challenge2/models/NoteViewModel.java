@@ -52,20 +52,19 @@ public class NoteViewModel extends AndroidViewModel {
         topicsByTitle = topicRepository.getTopicsByTitle();
         topicSelected = null;
         topicsSubscribedAndSaved=new ArrayList<>();
-        getAllTopics().observeForever( topics -> {
-            for (Topic topic: topics){
-                System.out.println(topic);
-                System.out.println(topicsSubscribedAndSaved);
-                if ( topicsSubscribedAndSaved!=null && !topicsSubscribedAndSaved.contains(topic) ){
-                    subscribeToTopic(topic.getTitle());
-                    topicsSubscribedAndSaved.add(topic);
-                }
-            }
-        });
+
         client = new MQTTHelper(application.getApplicationContext(), "client");
         client.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {
+                getAllTopics().observeForever( topics -> {
+                    for (Topic topic: topics){
+                        if (!topicsSubscribedAndSaved.contains(topic)){
+                            subscribeToTopic(topic.getTitle());
+                            topicsSubscribedAndSaved.add(topic);
+                        }
+                    }
+                });
             }
             @Override
             public void connectionLost(Throwable cause) {
@@ -78,7 +77,8 @@ public class NoteViewModel extends AndroidViewModel {
                     String title = obj.getJSONObject("message").getString("title");
                     String body = obj.getJSONObject("message").getString("body");
                     alertInterface.onMessageReceive(new Note(title, body));
-                } catch (Exception e) {
+                } catch (Exception e){
+                    Log.w("NoteViewModel",e);
                     Log.w("NoteViewModel", "Message content format not valid.");
                 }
             }

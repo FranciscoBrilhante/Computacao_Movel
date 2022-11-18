@@ -33,7 +33,7 @@ import com.example.challenge2.interfaces.TopicRecyclerViewInterface;
 import com.example.challenge2.models.NoteViewModel;
 import com.example.challenge2.notesDatabase.Topic;
 
-public class TopicFragment extends Fragment implements TopicRecyclerViewInterface, AlertInterface {
+public class TopicFragment extends Fragment implements TopicRecyclerViewInterface {
     private View rootView;
     private NoteViewModel noteViewModel;
     private FragmentNav fragmentNav;
@@ -60,7 +60,7 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
         topicRecyclerView.setAdapter(adapter);
         topicRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        noteViewModel = new ViewModelProvider(this, new NoteViewModelFactory(getActivity().getApplication(), this)).get(NoteViewModel.class);
+        noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
         fragmentNav = (FragmentNav) getContext();
 
         noteViewModel.getAllTopics().observe(requireActivity(), topics -> {
@@ -186,26 +186,5 @@ public class TopicFragment extends Fragment implements TopicRecyclerViewInterfac
         fragmentNav.TopicListToAddTopic();
     }
 
-    @Override
-    public void onMessageReceive(Note note) {
-        Fragment frag=getActivity().getSupportFragmentManager().findFragmentByTag("TopicFragment");
-        if (frag==null || !frag.isVisible()){
-            return;
-        }
-        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-        alert.setTitle("New message arrived.\nDo you wish to save it?");
-        alert.setMessage("Title: "+note.getTitle());
-        alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                noteViewModel.insert(note);
-            }
-        });
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        alert.show();
-    }
+
 }

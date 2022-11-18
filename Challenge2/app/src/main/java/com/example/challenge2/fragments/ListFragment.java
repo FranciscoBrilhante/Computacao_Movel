@@ -34,7 +34,7 @@ import com.example.challenge2.interfaces.RecyclerViewInterface;
 import com.example.challenge2.models.NoteViewModel;
 import com.example.challenge2.notesDatabase.Note;
 
-public class ListFragment extends Fragment implements RecyclerViewInterface, AlertInterface {
+public class ListFragment extends Fragment implements RecyclerViewInterface {
     private View rootView;
     private NoteViewModel noteViewModel;
     private NoteListAdapter adapter;
@@ -63,7 +63,7 @@ public class ListFragment extends Fragment implements RecyclerViewInterface, Ale
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
 
-        noteViewModel = new ViewModelProvider(this, new NoteViewModelFactory(getActivity().getApplication(), this)).get(NoteViewModel.class);
+        noteViewModel = new ViewModelProvider(requireActivity()).get(NoteViewModel.class);
         fragmentNav = (FragmentNav) getContext();
         noteViewModel.getAllNotes().observe(requireActivity(), notes -> {
             Log.w("ListFragment","Notes list changed");
@@ -221,26 +221,4 @@ public class ListFragment extends Fragment implements RecyclerViewInterface, Ale
         fragmentNav.NoteListToAddNote();
     }
 
-    @Override
-    public void onMessageReceive(Note note) {
-        Fragment frag=getActivity().getSupportFragmentManager().findFragmentByTag("ListFragment");
-        if (frag==null || !frag.isVisible()){
-            return;
-        }
-        AlertDialog.Builder alert = new AlertDialog.Builder(getContext());
-        alert.setTitle("New message arrived.\nDo you wish to save it?");
-        alert.setMessage("Title: "+note.getTitle());
-        alert.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                noteViewModel.insert(note);
-            }
-        });
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        alert.show();
-    }
 }
