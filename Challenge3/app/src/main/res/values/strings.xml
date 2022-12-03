@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Challenge 3</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_settings">Settings</string>
+</resources>
