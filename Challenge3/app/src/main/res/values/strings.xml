@@ -2,4 +2,6 @@
     <string name="app_name">Challenge 3</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_settings">Settings</string>
+    <string name="humidity_graph_title">Humidity Sensor</string>
+    <string name="temperature_graph_title">Temperature Sensor</string>
 </resources>

@@ -18,12 +18,12 @@ public interface SensorDao {
     void deleteAll();
 
     @Query("SELECT * FROM sensor_table")
-    LiveData<List<Sensor>> getAll();
+    List<Sensor> getAll();
 
     @Delete
     void delete(Sensor sensor);
 
     @Query("SELECT * FROM sensor_table WHERE name= :name")
-    LiveData<List<Sensor>> getByName(String name);
+    List<Sensor> getByName(String name);
 
 }

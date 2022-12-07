@@ -44,6 +44,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
+    //room database-------------------
     def room_version = "2.4.3"
     implementation "androidx.room:room-runtime:$room_version"
     annotationProcessor "androidx.room:room-compiler:$room_version"
@@ -59,7 +60,11 @@ dependencies {
     // optional - Paging 3 Integration
     implementation "androidx.room:room-paging:$room_version"
 
+    //mqtt-------------------
     implementation "org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.2.5"
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.github.hannesa2:paho.mqtt.android:3.5.1'
+
+    //android charts-------------------
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }

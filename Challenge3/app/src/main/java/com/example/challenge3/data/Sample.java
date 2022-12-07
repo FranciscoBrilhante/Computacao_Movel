@@ -18,12 +18,12 @@ public class Sample {
     private Date timestamp;
 
     @ColumnInfo(name = "reading_value")
-    private float readingValue;
+    private double readingValue;
 
     @ColumnInfo(name = "sensor")
     private int sensor;
 
-    public Sample(Date timestamp, float readingValue, int sensor) {
+    public Sample(Date timestamp, double readingValue, int sensor) {
         this.timestamp = timestamp;
         this.readingValue = readingValue;
         this.sensor = sensor;
@@ -37,7 +37,7 @@ public class Sample {
         return timestamp;
     }
 
-    public float getReadingValue() {
+    public double getReadingValue() {
         return readingValue;
     }
 
