@@ -4,4 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.settings.SettingsFragment"/>
+    tools:context=".ui.settings.SettingsFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end"
+        android:orientation="vertical"
+        android:paddingStart="0dp"
+        android:paddingEnd="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/switch_humidity"
+            android:textSize="20sp"
+            app:switchMinWidth="60dp"
+            app:switchPadding="20dp" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_temperature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/switch_temperature"
+            android:textSize="20sp"
+            app:switchMinWidth="60dp"
+            app:switchPadding="20dp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

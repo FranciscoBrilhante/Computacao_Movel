@@ -24,5 +24,7 @@ public interface SampleDao {
     void delete(Sample sample);
 
     @Query("SELECT * FROM sample_table WHERE sensor= :sensorID")
-    LiveData<List<Sample>> getBySensorID(int sensorID);
+    LiveData<List<Sample>> getBySensorID(String sensorID);
+
+
 }

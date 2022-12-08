@@ -21,9 +21,9 @@ public class Sample {
     private double readingValue;
 
     @ColumnInfo(name = "sensor")
-    private int sensor;
+    private String sensor;
 
-    public Sample(Date timestamp, double readingValue, int sensor) {
+    public Sample(Date timestamp, double readingValue, String sensor) {
         this.timestamp = timestamp;
         this.readingValue = readingValue;
         this.sensor = sensor;
@@ -41,7 +41,7 @@ public class Sample {
         return readingValue;
     }
 
-    public int getSensor() {
+    public String getSensor() {
         return sensor;
     }
 
@@ -57,7 +57,7 @@ public class Sample {
         this.readingValue = readingValue;
     }
 
-    public void setSensorName(int sensor) {
+    public void setSensorName(String sensor) {
         this.sensor = sensor;
     }
 }

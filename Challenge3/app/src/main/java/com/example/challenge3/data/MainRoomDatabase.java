@@ -1,15 +1,14 @@
 package com.example.challenge3.data;
+
 import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.concurrent.ExecutorService;
@@ -30,14 +29,15 @@ public abstract class MainRoomDatabase extends RoomDatabase {
         if (INSTANCE == null){
             synchronized (MainRoomDatabase.class){
                 if(INSTANCE==null){
-                    INSTANCE= Room.databaseBuilder(context.getApplicationContext(),MainRoomDatabase.class,"main_database").allowMainThreadQueries().addCallback(sRoomDatabaseCallback).build();
+                    INSTANCE= Room.databaseBuilder(context.getApplicationContext(),MainRoomDatabase.class,"main_database").addCallback(sRoomDatabaseCallback).build();
+                    //INSTANCE= Room.databaseBuilder(context.getApplicationContext(),MainRoomDatabase.class,"main_database").build();
                 }
             }
         }
         return INSTANCE;
     }
 
-    private static MainRoomDatabase.Callback sRoomDatabaseCallback = new MainRoomDatabase.Callback(){
+    private static final MainRoomDatabase.Callback sRoomDatabaseCallback = new MainRoomDatabase.Callback(){
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db){
             super.onCreate(db);
@@ -52,19 +52,6 @@ public abstract class MainRoomDatabase extends RoomDatabase {
                 sensorDao.insert(humiditySensor);
                 sensorDao.insert(temperatureSensor);
 
-                sampleDao.insert(new Sample(new Date(),0.9,sensorDao.getByName("Humidity").get(0).getUid()));
-
-                Calendar c = Calendar.getInstance();
-                c.setTime(new Date());
-                c.add(Calendar.DATE, 1);  // number of days to add
-                sampleDao.insert(new Sample(c.getTime(),1.1,sensorDao.getByName("Humidity").get(0).getUid()));
-
-                c.add(Calendar.DATE,2);
-                sampleDao.insert(new Sample(c.getTime(),0.95,sensorDao.getByName("Humidity").get(0).getUid()));
-
-                c.add(Calendar.DATE,2);
-                sampleDao.insert(new Sample(c.getTime(),2,sensorDao.getByName("Temperature").get(0).getUid()));
-
             });
         }
 
@@ -72,7 +59,7 @@ public abstract class MainRoomDatabase extends RoomDatabase {
         public void onOpen(@NonNull SupportSQLiteDatabase db){
             super.onOpen(db);
             databaseWriteExecutor.execute(()->{
-                SampleDao dao= INSTANCE.sampleDao();
+
             });
         }
     };

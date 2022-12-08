@@ -1,7 +1,18 @@
 <resources>
-    <string name="app_name">Challenge 3</string>
+    <string name="app_name">Smart Sensors</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_settings">Settings</string>
     <string name="humidity_graph_title">Humidity Sensor</string>
     <string name="temperature_graph_title">Temperature Sensor</string>
+    <string name="toggle_led_title">Toggle Arduino LED</string>
+
+    <string name="topic_humidity_sensor">dynamic_humidity_topic</string>
+    <string name="topic_temperature_sensor">dynamic_temperature_topic</string>
+    <string name="topic_led">dynamic_led_topic</string>
+
+
+    <string name="switch_humidity">Receive Humidity Readings</string>
+    <string name="switch_temperature">Receive Temperature Readings</string>
+    <string name="threshold_humidity">Notification Threshold</string>
+    <string name="threshold_temperature">Notification Threshold</string>
 </resources>

@@ -32,6 +32,7 @@ public class MQTT {
         this.context=context;
 
         client = new MqttAndroidClient(context, serverAddress, clientName, Ack.AUTO_ACK);
+        Log.w(LOG_TAG,"Created this time");
     }
 
     public void setCallback(MqttCallbackExtended callback) {
@@ -83,6 +84,7 @@ public class MQTT {
 
     public void unsubscribeFromTopic(String topic) {
         client.unsubscribe(topic);
+        Log.w(LOG_TAG, "Unsubscribed to topic " + topic + "!");
     }
 
     public void sendToTopic(String topic, JSONObject messageContent) {
