@@ -7,4 +7,13 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="title_color">#060D20</color>
+    <color name="text_color">#060D20</color>
+
+    <color name="graph_line">#B3316EC8</color>
+    <color name="graph_point">#B3316EC8</color>
+    <color name="graph_axis">#00FDFDFD</color>
+    <color name="graph_axis_text">#000000</color>
+    <color name="graph_grid">#37000000</color>
 </resources>

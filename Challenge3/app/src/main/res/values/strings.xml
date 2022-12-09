@@ -2,9 +2,10 @@
     <string name="app_name">Smart Sensors</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_settings">Settings</string>
-    <string name="humidity_graph_title">Humidity Sensor</string>
-    <string name="temperature_graph_title">Temperature Sensor</string>
-    <string name="toggle_led_title">Toggle Arduino LED</string>
+
+    <string name="humidity_graph_title">Humidity</string>
+    <string name="temperature_graph_title">Temperature</string>
+    <string name="toggle_led_title">Arduino LED</string>
 
     <string name="topic_humidity_sensor">dynamic_humidity_topic</string>
     <string name="topic_temperature_sensor">dynamic_temperature_topic</string>
@@ -17,7 +18,7 @@
     <string name="threshold_temperature">Notify Temperature Above</string>
 
     <string name="temperature_channel_name">Temperature Sensor Threshold Reached</string>
-    <string name="humidity_channel_name">Humidity ySensor Threshold Reached</string>
+    <string name="humidity_channel_name">Humidity Sensor Threshold Reached</string>
     <string name="temperature_channel_description">Notify when temperature reaches certain threshold</string>
     <string name="humidity_channel_description">Notify when humidity reaches certain threshold</string>
 </resources>
