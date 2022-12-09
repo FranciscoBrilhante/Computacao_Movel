@@ -13,6 +13,11 @@
 
     <string name="switch_humidity">Receive Humidity Readings</string>
     <string name="switch_temperature">Receive Temperature Readings</string>
-    <string name="threshold_humidity">Notification Threshold</string>
-    <string name="threshold_temperature">Notification Threshold</string>
+    <string name="threshold_humidity">Notify Humidity Above</string>
+    <string name="threshold_temperature">Notify Temperature Above</string>
+
+    <string name="temperature_channel_name">Temperature Sensor Threshold Reached</string>
+    <string name="humidity_channel_name">Humidity ySensor Threshold Reached</string>
+    <string name="temperature_channel_description">Notify when temperature reaches certain threshold</string>
+    <string name="humidity_channel_description">Notify when humidity reaches certain threshold</string>
 </resources>

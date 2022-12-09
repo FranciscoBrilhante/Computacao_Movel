@@ -44,8 +44,16 @@ public class MainViewModel extends AndroidViewModel implements MqttCallbackExten
         return sampleDao.getAll();
     }
 
-    public LiveData<List<Sensor>> getAllSensors() {
+    public List<Sensor> getAllSensors() {
         return sensorDao.getAll();
+    }
+
+    public LiveData<List<Sensor>> getAllSensorsLiveData(){
+        return sensorDao.getAllLiveData();
+    }
+
+    public  List<Sensor> getSensorsByName(String name){
+        return sensorDao.getByName(name);
     }
 
     @Override
@@ -69,10 +77,20 @@ public class MainViewModel extends AndroidViewModel implements MqttCallbackExten
         });
     }
 
+    public void updateThreshold(double threshold, String sensorName) {
+        MainRoomDatabase.databaseWriteExecutor.execute(() -> {
+            sensorDao.updateThreshold(threshold, sensorName);
+        });
+    }
+
+    public void sendMessage(String topic, String message){
+        mqttClient.sendToTopic(topic,message);
+    }
+
     @Override
     public void connectComplete(boolean reconnect, String serverURI) {
         Log.w(LOG_TAG, "reconnected to mqtt");
-        sensorDao.getAll().observeForever(sensors -> {
+        getAllSensorsLiveData().observeForever(sensors -> {
             for (Sensor sensor : sensors) {
                 if (sensor.isSaveData()) {
                     mqttClient.subscribeToTopic(sensor.getMqttTopic());
@@ -92,9 +110,13 @@ public class MainViewModel extends AndroidViewModel implements MqttCallbackExten
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         Log.w(LOG_TAG, "message arrived: " + message.toString());
+        Double value=Double.parseDouble(message.toString());
         switch (topic){
             case "dynamic_humidity_topic":
-                insertSample(new Sample(new Date(), Double.parseDouble(message.toString()), "Humidity"));
+                insertSample(new Sample(new Date(),value , "Humidity"));
+                if (value>=getSensorsByName("Humidity").get(0).getThreshold()){
+
+                }
                 break;
             case "dynamic_temperature_topic":
                 insertSample(new Sample(new Date(), Double.parseDouble(message.toString()), "Temperature"));
@@ -104,6 +126,5 @@ public class MainViewModel extends AndroidViewModel implements MqttCallbackExten
 
     @Override
     public void deliveryComplete(IMqttDeliveryToken token) {
-
     }
 }

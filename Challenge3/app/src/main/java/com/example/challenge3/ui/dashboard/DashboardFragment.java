@@ -6,8 +6,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -33,15 +35,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class DashboardFragment extends Fragment {
+public class DashboardFragment extends Fragment implements CompoundButton.OnCheckedChangeListener{
 
     private FragmentDashboardBinding binding;
     private static final String LOG_TAG="DashboardFragment";
     LineChart chartHumidity, chartTemperature;
     private List<Date> sampleDatesHumidity, sampleDatesTemperature;
+    private MainViewModel viewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        MainViewModel dashboardViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
+        viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
 
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -54,26 +57,11 @@ public class DashboardFragment extends Fragment {
         sampleDatesHumidity = new ArrayList<>();
         sampleDatesTemperature = new ArrayList<>();
 
+        updateCharts();
 
-        dashboardViewModel.getAllSamples().observe(requireActivity(), samples -> {
-            for (Sample sample : samples) {
-                switch (sample.getSensor()) {
-                    case "Humidity":
-                        if (!sampleDatesHumidity.contains(sample.getTimestamp())) {
-                            sampleDatesHumidity.add(sample.getTimestamp());
-                            addEntry(chartHumidity, sample);
-                        }
-                        break;
-                    case "Temperature":
-                        if (!sampleDatesTemperature.contains(sample.getTimestamp())) {
-                            sampleDatesTemperature.add(sample.getTimestamp());
-                            addEntry(chartTemperature, sample);
-                        }
-                        break;
-                }
-            }
+        SwitchCompat switchTemp=binding.switchLed;
+        switchTemp.setOnCheckedChangeListener(this);
 
-        });
         return root;
     }
 
@@ -159,5 +147,31 @@ public class DashboardFragment extends Fragment {
         set.setValueTextSize(9f);
         set.setDrawValues(false);
         return set;
+    }
+
+    private void updateCharts(){
+        viewModel.getAllSamples().observe(requireActivity(), samples -> {
+            for (Sample sample : samples) {
+                switch (sample.getSensor()) {
+                    case "Humidity":
+                        if (!sampleDatesHumidity.contains(sample.getTimestamp())) {
+                            sampleDatesHumidity.add(sample.getTimestamp());
+                            addEntry(chartHumidity, sample);
+                        }
+                        break;
+                    case "Temperature":
+                        if (!sampleDatesTemperature.contains(sample.getTimestamp())) {
+                            sampleDatesTemperature.add(sample.getTimestamp());
+                            addEntry(chartTemperature, sample);
+                        }
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        viewModel.sendMessage("dynamic_led_topic", isChecked ? "1" : "0");
     }
 }

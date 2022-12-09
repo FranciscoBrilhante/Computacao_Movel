@@ -87,8 +87,8 @@ public class MQTT {
         Log.w(LOG_TAG, "Unsubscribed to topic " + topic + "!");
     }
 
-    public void sendToTopic(String topic, JSONObject messageContent) {
-        MqttMessage message = new MqttMessage(messageContent.toString().getBytes(StandardCharsets.UTF_8));
+    public void sendToTopic(String topic, String messageContent) {
+        MqttMessage message = new MqttMessage(messageContent.getBytes(StandardCharsets.UTF_8));
         message.setQos(2);
         client.publish(topic, message);
     }

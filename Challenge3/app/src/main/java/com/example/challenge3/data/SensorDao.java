@@ -18,7 +18,10 @@ public interface SensorDao {
     void deleteAll();
 
     @Query("SELECT * FROM sensor_table")
-    LiveData<List<Sensor>> getAll();
+    List<Sensor> getAll();
+
+    @Query("SELECT * FROM sensor_table")
+    LiveData<List<Sensor>> getAllLiveData();
 
     @Delete
     void delete(Sensor sensor);
@@ -28,4 +31,7 @@ public interface SensorDao {
 
     @Query("UPDATE sensor_table SET save_data= :isSaveData WHERE name=:name")
     void updateSaveData(boolean isSaveData,String name);
+
+    @Query("UPDATE sensor_table SET threshold= :threshold WHERE name=:name")
+    void updateThreshold(double threshold ,String name);
 }
