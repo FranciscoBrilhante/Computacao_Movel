@@ -108,7 +108,12 @@ public class SettingsFragment extends Fragment implements SwitchCompat.OnChecked
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            viewModel.updateThreshold(Double.parseDouble(s.toString()),"Humidity");
+            try{
+                Double value=Double.parseDouble(s.toString());
+                viewModel.updateThreshold(value,"Humidity");
+            }
+            catch (NumberFormatException ignored){
+            }
         }
 
         @Override
@@ -123,7 +128,12 @@ public class SettingsFragment extends Fragment implements SwitchCompat.OnChecked
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            viewModel.updateThreshold(Double.parseDouble(s.toString()),"Temperature");
+            try{
+                Double value=Double.parseDouble(s.toString());
+                viewModel.updateThreshold(value,"Temperature");
+            }
+            catch (NumberFormatException ignored){
+            }
         }
 
         @Override

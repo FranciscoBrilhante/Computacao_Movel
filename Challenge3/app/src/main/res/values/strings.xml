@@ -12,10 +12,15 @@
     <string name="topic_led">dynamic_led_topic</string>
 
 
-    <string name="switch_humidity">Receive Humidity Readings</string>
-    <string name="switch_temperature">Receive Temperature Readings</string>
-    <string name="threshold_humidity">Notify Humidity Above</string>
-    <string name="threshold_temperature">Notify Temperature Above</string>
+    <string name="switch_humidity">Receive sensor readings</string>
+    <string name="switch_temperature">Receive sensor readings</string>
+    <string name="threshold_humidity">Notify above</string>
+    <string name="threshold_temperature">Notify above</string>
+
+    <string name="title_humidity">Humidity</string>
+    <string name="title_temperature">Temperature</string>
+    <string name="hint_humidity_threshold">25%</string>
+    <string name="hint_temperature_threshold">10ºC</string>
 
     <string name="temperature_channel_name">Temperature Sensor Threshold Reached</string>
     <string name="humidity_channel_name">Humidity Sensor Threshold Reached</string>
