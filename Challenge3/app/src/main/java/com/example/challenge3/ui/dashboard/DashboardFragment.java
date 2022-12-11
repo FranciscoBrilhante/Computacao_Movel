@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
@@ -68,6 +70,23 @@ public class DashboardFragment extends Fragment implements CompoundButton.OnChec
 
         SwitchCompat switchTemp = binding.switchLed;
         switchTemp.setOnCheckedChangeListener(this);
+
+        ImageButton deleteHumidityButton = binding.deleteHumidityData;
+        deleteHumidityButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chartHumidity.clear();
+            }
+        });
+
+        ImageButton deleteTemperatureData = binding.deleteTemperatureData;
+        deleteTemperatureData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chartTemperature.clear();
+            }
+        });
+
         return root;
     }
 
@@ -156,6 +175,7 @@ public class DashboardFragment extends Fragment implements CompoundButton.OnChec
         // move to the latest entry
         chart.moveViewToX(data.getEntryCount());
     }
+
 
     private LineDataSet createSet() {
         LineDataSet set = new LineDataSet(null, "");

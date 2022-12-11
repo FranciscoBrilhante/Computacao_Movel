@@ -30,6 +30,12 @@
             android:textSize="22sp"
             android:textStyle="bold" />
 
+        <ImageButton
+            android:id="@+id/delete_humidity_data"
+            android:layout_width="46dp"
+            android:layout_height="38dp"
+            android:src="@android:drawable/ic_menu_delete" />
+
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/humidity_chart"
             android:layout_width="345dp"
@@ -47,6 +53,12 @@
             android:textColor="@color/title_color"
             android:textSize="22sp"
             android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/delete_temperature_data"
+            android:layout_width="46dp"
+            android:layout_height="38dp"
+            android:src="@android:drawable/ic_menu_delete" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/temperature_chart"
