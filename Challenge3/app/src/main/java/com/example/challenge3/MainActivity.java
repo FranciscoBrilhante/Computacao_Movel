@@ -26,6 +26,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.challenge3.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void watchForPotentialNewNotifications() {
-        ArrayList<Date> oldSamplesDates = new ArrayList<>();
+        ArrayList<Calendar> oldSamplesDates = new ArrayList<>();
         viewModel.getAllSamples().observe(this, samples -> {
             if(!samples.isEmpty() && oldSamplesDates.isEmpty()){
                 for(Sample sample: samples){

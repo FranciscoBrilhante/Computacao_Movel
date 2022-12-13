@@ -7,6 +7,7 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity(tableName = "sample_table")
@@ -15,7 +16,7 @@ public class Sample {
     private int uid;
 
     @ColumnInfo(name = "timestamp")
-    private Date timestamp;
+    private Calendar timestamp;
 
     @ColumnInfo(name = "reading_value")
     private double readingValue;
@@ -23,7 +24,7 @@ public class Sample {
     @ColumnInfo(name = "sensor")
     private String sensor;
 
-    public Sample(Date timestamp, double readingValue, String sensor) {
+    public Sample(Calendar timestamp, double readingValue, String sensor) {
         this.timestamp = timestamp;
         this.readingValue = readingValue;
         this.sensor = sensor;
@@ -33,7 +34,7 @@ public class Sample {
         return uid;
     }
 
-    public Date getTimestamp() {
+    public Calendar getTimestamp() {
         return timestamp;
     }
 
@@ -49,7 +50,7 @@ public class Sample {
         this.uid = uid;
     }
 
-    public void setTimestamp(Date timestamp) {
+    public void setTimestamp(Calendar timestamp) {
         this.timestamp = timestamp;
     }
 

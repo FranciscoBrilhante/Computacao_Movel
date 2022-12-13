@@ -20,11 +20,17 @@ public interface SampleDao {
     @Query("SELECT * FROM sample_table")
     LiveData<List<Sample>> getAll();
 
+    @Query("SELECT * FROM sample_table")
+    List<Sample> getAllList();
+
     @Delete
     void delete(Sample sample);
 
     @Query("SELECT * FROM sample_table WHERE sensor= :sensorID")
     LiveData<List<Sample>> getBySensorID(String sensorID);
+
+    @Query("DELETE FROM sample_table WHERE sensor= :sensorID")
+    void deleteBySensor(String sensorID);
 
 
 }

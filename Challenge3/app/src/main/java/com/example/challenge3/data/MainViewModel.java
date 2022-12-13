@@ -17,6 +17,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -83,6 +84,12 @@ public class MainViewModel extends AndroidViewModel implements MqttCallbackExten
         });
     }
 
+    public void deleteSamplesBySensor(String sensorName){
+        MainRoomDatabase.databaseWriteExecutor.execute(() -> {
+            sampleDao.deleteBySensor(sensorName);
+        });
+    }
+
     public void sendMessage(String topic, String message){
         mqttClient.sendToTopic(topic,message);
     }
@@ -113,18 +120,19 @@ public class MainViewModel extends AndroidViewModel implements MqttCallbackExten
         Double value=Double.parseDouble(message.toString());
         switch (topic){
             case "dynamic_humidity_topic":
-                insertSample(new Sample(new Date(),value , "Humidity"));
-                if (value>=getSensorsByName("Humidity").get(0).getThreshold()){
-
-                }
+                insertSample(new Sample(Calendar.getInstance(),value , "Humidity"));
                 break;
             case "dynamic_temperature_topic":
-                insertSample(new Sample(new Date(), Double.parseDouble(message.toString()), "Temperature"));
+                insertSample(new Sample(Calendar.getInstance(), Double.parseDouble(message.toString()), "Temperature"));
                 break;
         }
     }
 
     @Override
     public void deliveryComplete(IMqttDeliveryToken token) {
+    }
+
+    public List<Sample> getAllSamplesList(){
+        return sampleDao.getAllList();
     }
 }
