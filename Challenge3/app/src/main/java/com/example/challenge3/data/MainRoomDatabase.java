@@ -46,8 +46,8 @@ public abstract class MainRoomDatabase extends RoomDatabase {
                 SampleDao sampleDao= INSTANCE.sampleDao();
                 SensorDao sensorDao= INSTANCE.sensorDao();
 
-                Sensor humiditySensor=new Sensor("Humidity",true,100,"dynamic_humidity_topic");
-                Sensor temperatureSensor=new Sensor("Temperature",true,100,"dynamic_temperature_topic");
+                Sensor humiditySensor=new Sensor("Humidity",true,50,"dynamic_humidity_topic");
+                Sensor temperatureSensor=new Sensor("Temperature",true,40,"dynamic_temperature_topic");
 
                 sensorDao.insert(humiditySensor);
                 sensorDao.insert(temperatureSensor);
