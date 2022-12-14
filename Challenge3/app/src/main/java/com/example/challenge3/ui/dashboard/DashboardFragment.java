@@ -102,7 +102,6 @@ public class DashboardFragment extends Fragment implements CompoundButton.OnChec
         datePickerHum.setOnDateSetListener(listenerDateHum);
         datePickerTemp.setOnDateSetListener(listenerDateTem);
 
-
         return root;
 
     }

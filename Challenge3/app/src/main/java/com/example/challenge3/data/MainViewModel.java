@@ -97,6 +97,7 @@ public class MainViewModel extends AndroidViewModel implements MqttCallbackExten
     @Override
     public void connectComplete(boolean reconnect, String serverURI) {
         Log.w(LOG_TAG, "reconnected to mqtt");
+        this.sendMessage("dynamic_led_topic", "0");
         getAllSensorsLiveData().observeForever(sensors -> {
             for (Sensor sensor : sensors) {
                 if (sensor.isSaveData()) {
