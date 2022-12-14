@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="ThemeOverlay.MySwitchCompat" parent="">
+        <item name="colorControlActivated">@color/purple_700</item>
+        <item name="colorSwitchThumbNormal">#8FB2E4</item>
+        <item name="android:colorForeground">@color/purple_500</item>
+    </style>
+
+
+</resources>

@@ -1,9 +1,12 @@
 package com.example.challenge3;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,10 +16,14 @@ import com.example.challenge3.data.Sample;
 import com.example.challenge3.data.Sensor;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -63,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(binding.navView, navController);
 
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        enableNotifications();
 
         notificationCount = 1;
         createNotificationChannels();
@@ -143,4 +152,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void enableNotifications(){
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.POST_NOTIFICATIONS)== PackageManager.PERMISSION_DENIED){
+            SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+            boolean allowedBefore=prefs.getBoolean("allowed_notifications",true);
+            if(allowedBefore){
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+    }
+
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+                SharedPreferences.Editor prefsEditor = prefs.edit();
+                prefsEditor.putBoolean("allowed_notifications", isGranted);
+                prefsEditor.apply(); // or commit();
+            });
 }

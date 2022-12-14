@@ -57,6 +57,9 @@
                     android:id="@+id/switch_temperature"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColorHighlight="@color/purple_700"
+                    android:textColorLink="@color/purple_500"
+                    android:theme="@style/ThemeOverlay.MySwitchCompat"
                     app:switchMinWidth="60dp"
                     app:switchPadding="20dp"
                     tools:ignore="DuplicateSpeakableTextCheck,DuplicateSpeakableTextCheck" />
@@ -65,7 +68,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="end"
+                android:layout_gravity="center"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
@@ -80,18 +84,19 @@
                     android:textColor="#000000"
                     android:textSize="17sp" />
 
-                <EditText
-                    android:id="@+id/threshold_temperature"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.4"
-                    android:hint="@string/hint_temperature_threshold"
-                    android:inputType="numberDecimal"
-                    android:minHeight="48dp"
-                    android:textAlignment="textEnd" />
+                <com.shawnlin.numberpicker.NumberPicker
+                    android:id="@+id/number_picker_temp"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
 
+                    app:np_dividerDistance="80dp"
+                    app:np_itemSpacing="25dp"
+                    app:np_max="100"
+                    app:np_min="-100"
+                    app:np_orientation="horizontal"
+                    app:np_value="50"
+                    app:np_width="130dp" />
             </LinearLayout>
-
         </LinearLayout>
 
         <TextView
@@ -133,6 +138,7 @@
                     android:id="@+id/switch_humidity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:theme="@style/ThemeOverlay.MySwitchCompat"
                     app:switchMinWidth="60dp"
                     app:switchPadding="20dp" />
             </LinearLayout>
@@ -140,7 +146,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="end"
+                android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
@@ -155,19 +161,20 @@
                     android:textColor="#000000"
                     android:textSize="17sp" />
 
-                <EditText
-                    android:id="@+id/threshold_humidity"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.4"
-                    android:hint="@string/hint_humidity_threshold"
-                    android:inputType="numberDecimal"
-                    android:minHeight="48dp"
-                    android:textAlignment="textEnd" />
+                <com.shawnlin.numberpicker.NumberPicker
+                    android:id="@+id/number_picker_hum"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+
+                    app:np_dividerDistance="80dp"
+                    app:np_itemSpacing="25dp"
+                    app:np_max="100"
+                    app:np_min="-100"
+                    app:np_orientation="horizontal"
+                    app:np_value="50"
+                    app:np_width="130dp" />
 
             </LinearLayout>
-
         </LinearLayout>
-
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

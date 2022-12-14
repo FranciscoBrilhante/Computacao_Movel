@@ -1,13 +1,16 @@
 package com.example.challenge3.ui.settings;
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.SwitchCompat;
@@ -18,6 +21,7 @@ import com.example.challenge3.R;
 import com.example.challenge3.data.MainViewModel;
 import com.example.challenge3.data.Sensor;
 import com.example.challenge3.databinding.FragmentSettingsBinding;
+import com.shawnlin.numberpicker.NumberPicker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +37,11 @@ public class SettingsFragment extends Fragment implements SwitchCompat.OnChecked
     private static final String LOG_TAG = "SettingsFragment";
     private MainViewModel viewModel;
     SwitchCompat switchHumidity,switchTemperature;
-    EditText thresholdHumidity,thresholdTemperature;
+    NumberPicker thresholdHumidity,thresholdTemperature;
+
+    ArrayList<Double> actualTempValues;
+    ArrayList<Double> actualHumValues;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
@@ -43,20 +51,41 @@ public class SettingsFragment extends Fragment implements SwitchCompat.OnChecked
 
         switchHumidity = binding.switchHumidity;
         switchTemperature = binding.switchTemperature;
-        thresholdHumidity=binding.thresholdHumidity;
-        thresholdTemperature=binding.thresholdTemperature;
+        thresholdHumidity=binding.numberPickerHum;
+        thresholdTemperature=binding.numberPickerTemp;
+
+        switchHumidity.setOnCheckedChangeListener(this);
+        switchTemperature.setOnCheckedChangeListener(this);
+
+        ArrayList<String> tempValues=new ArrayList<String>();
+        actualTempValues=new ArrayList<>();
+        ArrayList<String> humValues=new ArrayList<String>();
+        actualHumValues=new ArrayList<>();
+
+        for(int i=-100;i<100;i++){
+            tempValues.add(String.format(Locale.ENGLISH,"%.0fºC",(float) i));
+            actualTempValues.add((double) i);
+            humValues.add(String.format(Locale.ENGLISH,"%.0f%%",(float) i));
+            actualHumValues.add((double) i);
+        }
+        thresholdHumidity.setMinValue(1);
+        thresholdHumidity.setMaxValue(tempValues.size());
+        thresholdHumidity.setDisplayedValues(humValues.toArray(new String[0]));
+        thresholdHumidity.setValue(180);
+
+        thresholdTemperature.setMinValue(1);
+        thresholdTemperature.setMaxValue(tempValues.size());
+        thresholdTemperature.setDisplayedValues(tempValues.toArray(new String[0]));
+        thresholdTemperature.setValue(150);
+
+        thresholdHumidity.setOnValueChangedListener(humList);
+        thresholdTemperature.setOnValueChangedListener(tempList);
 
         try {
             setInitialSwitchState();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        switchHumidity.setOnCheckedChangeListener(this);
-        switchTemperature.setOnCheckedChangeListener(this);
-
-        thresholdHumidity.addTextChangedListener(humidityTextWatcher);
-        thresholdTemperature.addTextChangedListener(temperatureTextWatcher);
 
         return root;
     }
@@ -88,57 +117,39 @@ public class SettingsFragment extends Fragment implements SwitchCompat.OnChecked
             latch.countDown();
         });
         latch.await();
+        int value=0;
         for(Sensor sensor: allSensors.get()){
             switch (sensor.getName()){
                 case "Humidity":
                     switchHumidity.setChecked(sensor.isSaveData());
-                    thresholdHumidity.setText(String.format(Locale.ENGLISH,"%.1f",sensor.getThreshold()));
+                    value=actualHumValues.indexOf((double)sensor.getThreshold());
+                    thresholdHumidity.setValue(value);
+                    //thresholdHumidity.setText(String.format(Locale.ENGLISH,"%.1f",));
                     break;
                 case "Temperature":
                     switchTemperature.setChecked(sensor.isSaveData());
-                    thresholdTemperature.setText(String.format(Locale.ENGLISH,"%.1f",sensor.getThreshold()));
+                    value=actualTempValues.indexOf((double)sensor.getThreshold());
+                    thresholdTemperature.setValue(value);
             }
         }
     }
 
-    private final TextWatcher humidityTextWatcher=new TextWatcher() {
+    private NumberPicker.OnValueChangeListener humList = new NumberPicker.OnValueChangeListener() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            try{
-                Double value=Double.parseDouble(s.toString());
-                viewModel.updateThreshold(value,"Humidity");
-            }
-            catch (NumberFormatException ignored){
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
+        public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+            Double value=actualHumValues.get(newVal);
+            viewModel.updateThreshold(value,"Humidity");
         }
     };
 
-    private final TextWatcher temperatureTextWatcher=new TextWatcher() {
+    private NumberPicker.OnValueChangeListener tempList = new NumberPicker.OnValueChangeListener() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            try{
-                Double value=Double.parseDouble(s.toString());
-                viewModel.updateThreshold(value,"Temperature");
-            }
-            catch (NumberFormatException ignored){
-            }
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
+        public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+            Double value=actualTempValues.get(newVal);
+            viewModel.updateThreshold(value,"Temperature");
         }
     };
+
+
+
 }
