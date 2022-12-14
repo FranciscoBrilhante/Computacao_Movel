@@ -1,122 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ui.dashboard.DashboardFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.dashboard.DashboardFragment">
+    >
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
-        android:paddingTop="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:text="@string/humidity_graph_title"
-            android:textColor="@color/title_color"
-            android:textSize="22sp"
-            android:textStyle="bold" />
+        android:fillViewport="true">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
+            android:gravity="center_horizontal"
+            android:layout_marginTop="15dp"
+            android:orientation="vertical">
 
-            <ImageButton
-                android:id="@+id/date_picker_button_hum"
-                android:layout_width="46dp"
-                android:layout_height="38dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/layout_button"
-                android:src="@drawable/calendar_icon"
-                tools:ignore="SpeakableTextPresentCheck" />
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_led"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/toggle_led_title"
+                android:textColor="@color/title_color"
+                android:textSize="20sp"
+                app:switchMinWidth="60dp" />
 
-            <ImageButton
-                android:id="@+id/delete_humidity_data"
-                android:layout_width="46dp"
-                android:layout_height="38dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/layout_button"
-                android:src="@drawable/delete_icon"
-                tools:ignore="SpeakableTextPresentCheck" />
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/humidity_graph_title"
+                android:textColor="@color/title_color"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/date_picker_button_hum"
+                    android:layout_width="46dp"
+                    android:layout_height="38dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/layout_button"
+                    android:src="@drawable/calendar_icon"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <ImageButton
+                    android:id="@+id/delete_humidity_data"
+                    android:layout_width="46dp"
+                    android:layout_height="38dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/layout_button"
+                    android:src="@drawable/delete_icon"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+            </LinearLayout>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/humidity_chart"
+                android:layout_width="345dp"
+                android:layout_height="169dp"
+                android:layout_marginBottom="50dp">
+
+            </com.github.mikephil.charting.charts.LineChart>
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="@string/temperature_graph_title"
+                android:textColor="@color/title_color"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/date_picker_button_temp"
+                    android:layout_width="46dp"
+                    android:layout_height="38dp"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/layout_button"
+                    android:src="@drawable/calendar_icon"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+                <ImageButton
+                    android:id="@+id/delete_temperature_data"
+                    android:layout_width="46dp"
+                    android:layout_height="38dp"
+                    android:background="@drawable/layout_button"
+                    android:src="@drawable/delete_icon" />
+            </LinearLayout>
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/temperature_chart"
+                android:layout_width="345dp"
+                android:layout_height="169dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="30dp">
+
+            </com.github.mikephil.charting.charts.LineChart>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="100dp" />
 
         </LinearLayout>
+    </ScrollView>
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/humidity_chart"
-            android:layout_width="345dp"
-            android:layout_height="169dp"
-            android:layout_marginBottom="50dp">
-
-        </com.github.mikephil.charting.charts.LineChart>
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/temperature_graph_title"
-            android:textColor="@color/title_color"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:orientation="horizontal">
-
-            <ImageButton
-                android:id="@+id/date_picker_button_temp"
-                android:layout_width="46dp"
-                android:layout_height="38dp"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/layout_button"
-                android:src="@drawable/calendar_icon"
-                tools:ignore="SpeakableTextPresentCheck" />
-
-            <ImageButton
-                android:id="@+id/delete_temperature_data"
-                android:layout_width="46dp"
-                android:layout_height="38dp"
-                android:background="@drawable/layout_button"
-                android:src="@drawable/delete_icon" />
-        </LinearLayout>
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/temperature_chart"
-            android:layout_width="345dp"
-            android:layout_height="169dp"
-            android:layout_marginTop="0dp"
-            android:layout_marginBottom="30dp">
-
-        </com.github.mikephil.charting.charts.LineChart>
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switch_led"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/toggle_led_title"
-            android:textColor="@color/title_color"
-            android:textSize="20sp"
-            app:switchMinWidth="60dp" />
-
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>
