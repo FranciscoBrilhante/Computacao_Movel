@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,7 +70,7 @@ public class SettingsFragment extends Fragment implements SwitchCompat.OnChecked
             actualHumValues.add((double) i);
         }
         thresholdHumidity.setMinValue(1);
-        thresholdHumidity.setMaxValue(tempValues.size());
+        thresholdHumidity.setMaxValue(tempValues.size()-1);
         thresholdHumidity.setDisplayedValues(humValues.toArray(new String[0]));
         thresholdHumidity.setValue(180);
 
@@ -137,7 +138,14 @@ public class SettingsFragment extends Fragment implements SwitchCompat.OnChecked
     private NumberPicker.OnValueChangeListener humList = new NumberPicker.OnValueChangeListener() {
         @Override
         public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-            Double value=actualHumValues.get(newVal);
+            Double value= Double.valueOf(0);
+            try {
+                value = actualHumValues.get(newVal-1);
+            }catch (IndexOutOfBoundsException e){
+                value=actualHumValues.get(oldVal-1);
+                Log.w(LOG_TAG,"Out of index");
+            }
+            Log.w(LOG_TAG,String.valueOf(value));
             viewModel.updateThreshold(value,"Humidity");
         }
     };
@@ -145,7 +153,14 @@ public class SettingsFragment extends Fragment implements SwitchCompat.OnChecked
     private NumberPicker.OnValueChangeListener tempList = new NumberPicker.OnValueChangeListener() {
         @Override
         public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-            Double value=actualTempValues.get(newVal);
+            Double value= Double.valueOf(0);
+            try {
+                 value = actualTempValues.get(newVal-1);
+            }catch (IndexOutOfBoundsException e){
+                value=actualTempValues.get(oldVal-1);
+                Log.w(LOG_TAG,"Out of index");
+            }
+            Log.w(LOG_TAG,String.valueOf(value));
             viewModel.updateThreshold(value,"Temperature");
         }
     };
