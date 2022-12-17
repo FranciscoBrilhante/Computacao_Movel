@@ -119,3 +119,9 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+
+__pycache__
+market_api/market/db.sqlite3
+market_api/market/product_pics
+market_api/market/profile_pics

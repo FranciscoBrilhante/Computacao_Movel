@@ -1,7 +1,12 @@
 conda activate cm
+
 python manage.py makemigrations 
+python manage.py migrate --run-syncdb 
 python manage.py migrate
 python manage.py createsuperuser
 python manage.py runserver
+python manage-py loaddata
+
 pip freeze > requirements.txt
 pip install -r requirements.txt
+

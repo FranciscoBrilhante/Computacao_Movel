@@ -29,6 +29,8 @@ class Product(models.Model):
     userSelling=models.ForeignKey(Profile,on_delete=models.CASCADE)
     price=models.FloatField()
     category=models.ForeignKey(Category,on_delete=models.CASCADE)
+    dateCreated=models.DateTimeField()
+
 
 class ProductImage(models.Model):
     product=models.ForeignKey(Product,on_delete=models.CASCADE)

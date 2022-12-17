@@ -1,11 +1,14 @@
-from django.shortcuts import render
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, logout
 from django.contrib.auth import login as login_user
 from ..models import Profile
-from django.http import JsonResponse,HttpResponse
+from django.http import JsonResponse
 from ..forms.profile_forms import Register, Login, Location, Photo
 from PIL import Image
+from django.core.files import File
+import os
+from django.conf import settings
+from ..utils import *
 
 def register(request):
     if request.method == 'POST':
@@ -38,7 +41,6 @@ def login(request):
                 return JsonResponse({'status': 200})
             else:
                 return JsonResponse({'status': 404})
-        print(form.errors.as_data())
     return JsonResponse({'status': 400})
 
 
@@ -51,9 +53,10 @@ def setLocation(request):
         if form.is_valid():
             data = form.cleaned_data
             user = request.user
-            user.cityX = data['cityX']
-            user.cityY = data['cityY']
-            user.save()
+            profile=Profile.objects.get(user=user.pk)
+            profile.cityX = data['cityX']
+            profile.cityY = data['cityY']
+            profile.save()
             return JsonResponse({'status': 200})
 
     return JsonResponse({'status': 400})
@@ -68,10 +71,22 @@ def setPhoto(request):
         if form.is_valid():
             user=request.user
             profile=Profile.objects.get(user=user.pk)
-            profile.photo=request.FILES['profile_photo']
-            profile.save()
+            photo=form.cleaned_data['profile_photo']
+            
+            try:
+                try_delete_file(profile.photo.path)
+            except:
+                pass
+            img=Image.open(photo)
+            img = img.convert('RGB')
+            img.thumbnail((500, 500))
+            path=os.path.join(settings.MEDIA_ROOT,"profile_pics",str(profile.pk)+'.jpg')
+            img.save(path)
+            with open(path,mode='rb') as f:
+                profile.photo = File(f, name=str(profile.pk)+'.jpg')
+                profile.save()
+            try_delete_file(path)
             return JsonResponse({'status': 200})
-        
 
     return JsonResponse({'status': 400})
 
@@ -86,27 +101,17 @@ def personalInfo(request):
     email=user.email
     cityX=profile.cityX
     cityY=profile.cityY
-    return JsonResponse({'status': 200, 'username':username, email:email, cityX:cityX, cityY:cityY})
-
-def profilePhoto(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({'status': 401})
-
-    user=request.user
-    profile=Profile.objects.get(user=user.pk)
-    photo=profile.photo
-    image=Image.open(photo.path)
     
-    with open(photo.path, "rb") as f:
-        return HttpResponse(f.read(), content_type="image/jpeg")
-#_________________ Helpers ___________________#
-
+    photo=profile.photo
+    if photo and hasattr(photo, 'url'):
+        url=photo.url
+    else:
+        url=None
+    return JsonResponse({'status': 200, 'username':username,'id': profile.id, 'email':email, 'cityX':cityX, 'cityY':cityY,'photo':url})
 
 def delete(request):
     if not request.user.is_authenticated:
         return JsonResponse({'status': 401})
-
-    
 
     user=request.user
     profile=Profile.objects.get(user=user.pk)
@@ -116,19 +121,3 @@ def delete(request):
     profile.delete()
 
     return JsonResponse({'status': 200})
-
-
-
-def contains_error(errors, code):
-    for key, values in errors.items():
-        for value in values:
-            if(value.code == code):
-                return True
-    return False
-
-
-def get_first_error_code(errors):
-    for key, values in errors.items():
-        for value in values:
-            return value.code
-    return None
