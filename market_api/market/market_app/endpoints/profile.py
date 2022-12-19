@@ -81,7 +81,7 @@ def setPhoto(request):
             img = img.convert('RGB')
             img.thumbnail((500, 500))
             path=os.path.join(settings.MEDIA_ROOT,"profile_pics",str(profile.pk)+'.jpg')
-            print(os.listdir(os.path.join(settings.MEDIA_ROOT,"profile_pics")))
+            os.makedirs(os.path.join(settings.MEDIA_ROOT,"profile_pics"), exist_ok=True)
             img.save(path)
             with open(path,mode='rb') as f:
                 profile.photo = File(f, name=str(profile.pk)+'.jpg')

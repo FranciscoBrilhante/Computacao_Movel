@@ -129,4 +129,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 PROFILE_PHOTO_FOLDER='profile_pics'
 
 MEDIA_URL='media/'
-MEDIA_ROOT=BASE_DIR / 'market_app'
+MEDIA_ROOT=BASE_DIR
