@@ -22,7 +22,7 @@ def register(request):
 
             user.save()
             profile.save()
-
+        
             return JsonResponse({'status': 200})
         elif contains_error(form.errors.as_data(), 'conflict'):
             return JsonResponse({'status': 409})

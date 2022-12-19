@@ -1,5 +1,5 @@
 from django.urls import path
-from .endpoints import profile,message,database,product,product_category
+from .endpoints import profile,message,database,product,product_category,review
 
 urlpatterns = [
     path('profile/register', profile.register),
@@ -14,7 +14,7 @@ urlpatterns = [
     path('message/withuser', message.getByProfile),
     path('message/users', message.getProfilesWithMessages),
 
-    path('product/create',product.add),
+    path('product/add',product.add),
     path('product/addphoto',product.addPhoto),
     path('product/delete',product.delete),
     path('product/details',product.details),
@@ -24,6 +24,10 @@ urlpatterns = [
     path('category/add',product_category.add),
     path('category/delete',product_category.delete),
     path('category/all',product_category.getAll),
+
+    path('review/add',review.add),
+    path('review/score',review.score),
+    path('review/privatescore',review.privateScore),
 
     path('database/clear', database.clear),
     path('database/loginuser', database.login),
