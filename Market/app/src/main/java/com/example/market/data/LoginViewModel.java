@@ -44,7 +44,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     public void sendPOSTRequest(String endpointURL,Map<String,Object> payload, boolean saveCookies, boolean sendCookies, HTTTPCallback callback){
         executor.execute(()->{
-            JSONObject jObject = new JSONObject();
+            JSONObject jObject;
             try {
                 StringBuilder postData = new StringBuilder();
                 for (Map.Entry<String,Object> param : payload.entrySet()) {
@@ -73,8 +73,9 @@ public class LoginViewModel extends AndroidViewModel {
                     sb.append((char)c);
                 in.close();
                 String response = sb.toString();
+                System.out.println(response);
                 jObject = new JSONObject(response);
-
+                jObject.put("endpoint",endpointURL);
                 if(saveCookies){
                     Map<String, List<String>> headerFields = con.getHeaderFields();
                     List<String> cookiesHeader = headerFields.get("Set-Cookie");
@@ -86,18 +87,9 @@ public class LoginViewModel extends AndroidViewModel {
                 }
                 con.disconnect();
             } catch (IOException | JSONException e) {
-                try {
-                    jObject= new JSONObject("{\"status\":400}");
-                } catch (JSONException ex) {
-                    ex.printStackTrace();
-                }
+                jObject= new JSONObject();
             }
             JSONObject finalJObject = jObject;
-            try {
-                jObject.put("endpoint",endpointURL);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
             handler.post(()->{
                callback.onComplete(finalJObject);
             });

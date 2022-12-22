@@ -10,4 +10,11 @@
     <string name="email_label">Email</string>
     <string name="confirm_password_label">Confirm Password</string>
     <string name="register_button">Register</string>
+    <string name="login_success_message">Successfully logged in</string>
+    <string name="register_success_message">Registered successfully</string>
+    <string name="already_registered_label">Already have an account.</string>
+    <string name="login_prompt"><u>Login now</u></string>
+    <string name="login_fail_message">The username or password does not match any user</string>
+    <string name="register_fail_message">Registration failed</string>
+    <string name="password_missmatch_message">Passwords do not match</string>
 </resources>

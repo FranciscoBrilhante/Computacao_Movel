@@ -11,4 +11,11 @@
     <string name="email_label">Email</string>
     <string name="confirm_password_label">Confirme a Palavra-passe</string>
     <string name="register_button">Registar</string>
+    <string name="login_success_message">Login com sucesso</string>
+    <string name="register_success_message">Registado com sucesso</string>
+    <string name="already_registered_label">Já tenho uma conta.</string>
+    <string name="login_prompt"><u>Entrar agora</u></string>
+    <string name="login_fail_message">Credenciais inválidas</string>
+    <string name="register_fail_message">O registo falhou</string>
+    <string name="password_missmatch_message">As passwords não coincidem</string>
 </resources>

@@ -81,9 +81,11 @@
         android:layout_marginEnd="30dp"
         android:background="@drawable/default_border"
 
-        android:drawableStart="@drawable/arrow_right"
+        android:drawableEnd="@drawable/arrow_right"
+        android:drawablePadding="5dp"
         android:padding="10dp"
         android:text="@string/login_button"
+        android:textAllCaps="false"
         android:textColor="@color/title_color"
         android:textSize="24sp" />
 
@@ -93,10 +95,10 @@
         android:layout_weight="1"
         android:gravity="bottom|center_horizontal"
         android:orientation="horizontal"
-        android:paddingBottom="20dp">
+        android:paddingBottom="10dp">
 
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/register_prompt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
@@ -104,7 +106,7 @@
             android:text="@string/no_account_question" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/register_link"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"

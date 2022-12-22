@@ -7,6 +7,11 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.NavGraph;
+import androidx.navigation.NavInflater;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,7 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.prefs.Preferences;
 
-public class LoginFragment extends Fragment implements View.OnClickListener, HTTTPCallback {
+public class LoginFragment extends Fragment implements HTTTPCallback {
 
     private FragmentLoginBinding binding;
     private LoginViewModel viewModel;
@@ -43,8 +48,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener, HTT
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 
         Button loginButton = binding.loginButton;
-        loginButton.setOnClickListener(this);
+        loginButton.setOnClickListener(this.loginListener);
 
+        TextView registerLink=binding.registerLink;
+        registerLink.setOnClickListener(this.registerLinkListener);
         return binding.getRoot();
     }
 
@@ -52,18 +59,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener, HTT
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
-    }
-
-    @Override
-    public void onClick(View view) {
-        TextView usernameInput=binding.usernameInput;
-        TextView passwordInput=binding.passwordInput;
-
-        Map<String,Object> params = new LinkedHashMap<>();
-        params.put("username", usernameInput.getText().toString());
-        params.put("password", passwordInput.getText().toString());
-
-        viewModel.sendPOSTRequest("/profile/login",params,true,true, this);
     }
 
     @Override
@@ -75,7 +70,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener, HTT
             e.printStackTrace();
         }
         if(code==200){
-            Toast.makeText(getActivity().getApplicationContext(), "Login com sucesso",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(), R.string.login_success_message,Toast.LENGTH_SHORT).show();
             SharedPreferences sharedPref = getActivity().getPreferences(getActivity().getApplicationContext().MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString("username", binding.usernameInput.getText().toString());
@@ -84,11 +79,35 @@ public class LoginFragment extends Fragment implements View.OnClickListener, HTT
 
             Intent myIntent = new Intent(getActivity(), MainActivity.class);
             startActivity(myIntent);
-
         }
         else{
-            Toast.makeText(getActivity().getApplicationContext(),"Credenciais Inválidas",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity().getApplicationContext(),R.string.login_fail_message,Toast.LENGTH_SHORT).show();
         }
 
     }
+
+    private View.OnClickListener loginListener =new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            TextView usernameInput=binding.usernameInput;
+            TextView passwordInput=binding.passwordInput;
+
+            Map<String,Object> params = new LinkedHashMap<>();
+            params.put("username", usernameInput.getText().toString());
+            params.put("password", passwordInput.getText().toString());
+
+            viewModel.sendPOSTRequest("/profile/login",params,true,false, LoginFragment.this);
+        }
+    };
+
+    private View.OnClickListener registerLinkListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            NavHostFragment navHostFragment =
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_login);
+            NavController navController = navHostFragment.getNavController();
+            NavDirections action = LoginFragmentDirections.actionNavigationLoginToNavigationRegister();
+            navController.navigate(action);
+        }
+    };
 }

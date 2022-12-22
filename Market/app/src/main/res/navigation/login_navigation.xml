@@ -12,7 +12,9 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_navigation_login_to_navigation_register"
-            app:destination="@id/navigation_register" />
+            app:destination="@id/navigation_register"
+            app:enterAnim="@anim/register_enter"
+            app:exitAnim="@anim/login_exit" />
     </fragment>
 
     <fragment
@@ -20,5 +22,11 @@
         android:name="com.example.market.ui.fragments.RegisterFragment"
         android:label="RegisterFragment"
         tools:layout="@layout/fragment_register"
-        />
+        >
+        <action
+            android:id="@+id/action_navigation_register_to_navigation_login"
+            app:destination="@id/navigation_login"
+            app:enterAnim="@anim/login_enter"
+            app:exitAnim="@anim/register_exit" />
+    </fragment>
 </navigation>
