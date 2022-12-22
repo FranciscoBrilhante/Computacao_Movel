@@ -8,9 +8,8 @@
     <fragment
         android:id="@+id/navigation_login"
         android:name="com.example.market.ui.fragments.LoginFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_login"
-        >
+        android:label="LoginFragment"
+        tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_navigation_login_to_navigation_register"
             app:destination="@id/navigation_register" />

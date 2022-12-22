@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Mercado</string>
+    <string name="login_title">Entrar</string>
+    <string name="no_account_question">Não tem conta?</string>
+    <string name="register_now_prompt"><u>Registe-se agora</u></string>
+    <string name="username_label">Nome de Utilizador</string>
+    <string name="password_label">Palavra-passe</string>
+    <string name="login_button">Entrar</string>
+    <string name="register_title">Registar</string>
+    <string name="email_label">Email</string>
+    <string name="confirm_password_label">Confirme a Palavra-passe</string>
+    <string name="register_button">Registar</string>
+</resources>

@@ -39,7 +39,6 @@ public class LoginActivity extends AppCompatActivity {
         //NavDirections action = LoginFragmentDirections.actionNavigationLoginToNavigationRegister();
         //navController.navigate(action);
 
-
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
