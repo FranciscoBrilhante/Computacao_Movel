@@ -1,4 +1,4 @@
-package com.example.market;
+package com.example.market.data;
 
 import androidx.lifecycle.AndroidViewModel;
 
