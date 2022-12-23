@@ -39,7 +39,6 @@ public class LoginViewModel extends AndroidViewModel {
 
     public LoginViewModel(Application application) {
         super(application);
-
     }
 
     public void sendPOSTRequest(String endpointURL,Map<String,Object> payload, boolean saveCookies, boolean sendCookies, HTTTPCallback callback){

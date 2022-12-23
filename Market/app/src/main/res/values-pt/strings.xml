@@ -18,4 +18,7 @@
     <string name="login_fail_message">Credenciais inválidas</string>
     <string name="register_fail_message">O registo falhou</string>
     <string name="password_missmatch_message">As passwords não coincidem</string>
+    <string name="home_tab_title">Início</string>
+    <string name="items_tab_title">Produtos</string>
+    <string name="profile_tab_title">Perfil</string>
 </resources>

@@ -17,4 +17,7 @@
     <string name="login_fail_message">The username or password does not match any user</string>
     <string name="register_fail_message">Registration failed</string>
     <string name="password_missmatch_message">Passwords do not match</string>
+    <string name="home_tab_title">Home</string>
+    <string name="items_tab_title">Products</string>
+    <string name="profile_tab_title">Profile</string>
 </resources>

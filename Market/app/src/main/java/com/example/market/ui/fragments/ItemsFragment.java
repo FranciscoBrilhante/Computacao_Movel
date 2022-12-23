@@ -10,11 +10,11 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.market.data.MarketViewModel;
-import com.example.market.databinding.FragmentDashboardBinding;
+import com.example.market.databinding.FragmentItemsBinding;
 
-public class DashboardFragment extends Fragment {
+public class ItemsFragment extends Fragment {
 
-    private FragmentDashboardBinding binding;
+    private FragmentItemsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

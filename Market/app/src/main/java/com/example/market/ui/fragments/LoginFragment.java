@@ -21,11 +21,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.market.BuildConfig;
 import com.example.market.R;
 import com.example.market.data.LoginViewModel;
-import com.example.market.data.MarketViewModel;
-import com.example.market.databinding.FragmentDashboardBinding;
 import com.example.market.databinding.FragmentLoginBinding;
 import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.ui.activities.MainActivity;
