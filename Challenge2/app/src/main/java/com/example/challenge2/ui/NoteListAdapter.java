@@ -1,5 +1,6 @@
 package com.example.challenge2.ui;
 
+import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ public class NoteListAdapter extends ListAdapter<Note,NoteViewHolder> {
 
     @Override
     public NoteViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
+
         return NoteViewHolder.create(parent,recyclerViewInterface);
     }
 

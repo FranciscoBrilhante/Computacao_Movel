@@ -1,5 +1,7 @@
 package com.example.market.ui.fragments;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -79,7 +81,7 @@ public class RegisterFragment extends Fragment implements HTTTPCallback{
                     code = (Integer) data.get("status");
                     if (code == 200) {
                         Toast.makeText(getActivity().getApplicationContext(), R.string.register_success_message, Toast.LENGTH_SHORT).show();
-                        SharedPreferences sharedPref = getActivity().getPreferences(getActivity().getApplicationContext().MODE_PRIVATE);
+                        SharedPreferences sharedPref = getActivity().getSharedPreferences("credentials",MODE_PRIVATE);
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString("username", binding.usernameInput.getText().toString());
                         editor.putString("password", binding.passwordInput.getText().toString());
