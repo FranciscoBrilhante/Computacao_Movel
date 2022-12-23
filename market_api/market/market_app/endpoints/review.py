@@ -42,8 +42,12 @@ def score(request):
             userWithScore=Profile.objects.get(pk=data['profile_id'])
 
             reviews=Review.objects.filter(userReviewed=userWithScore)
+            
             scores=[review.stars for review in reviews]
-            score=sum(scores)/len(scores)
+            if len(scores)==0:
+                score=0
+            else:
+                score=sum(scores)/len(scores)
 
             return JsonResponse({'status': 200, 'score':score})
 

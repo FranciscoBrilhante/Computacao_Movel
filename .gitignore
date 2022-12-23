@@ -122,6 +122,4 @@ google-services.json
 
 
 __pycache__
-market_api/market/product_pics
-market_api/market/profile_pics
 market_api/market/db.sqlite3

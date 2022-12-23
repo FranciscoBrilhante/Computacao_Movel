@@ -101,7 +101,9 @@ def details(request):
             'price':product.price,
             'profile':product.userSelling.pk,
             'date':product.dateCreated,
-            'images':imgs_urls
+            'images':imgs_urls,
+            'category_name':product.category.name,
+            'profile_name':product.userSelling.user.username,
             })
             
         elif contains_error(form.errors.as_data(), 'resource not found'):
@@ -129,6 +131,8 @@ def recommended(request):
         'price':product.price,
         'profile':product.userSelling.pk,
         'date':product.dateCreated,
+        'category_name':product.category.name,
+        'profile_name':product.userSelling.user.username,
         'images':[productImage.image.url for productImage in ProductImage.objects.filter(product=product.pk)]
     } for product in page1]
 
