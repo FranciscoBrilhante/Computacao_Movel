@@ -21,6 +21,9 @@ public class Converters {
 
     @TypeConverter
     public static ArrayList<String> fromString(String value) {
+        if(value.equals("")){
+            return  new ArrayList<>();
+        }
         String[] arrOfStr = value.trim().split("\\s+");
         return new ArrayList<String>(Arrays.asList(arrOfStr));
     }
@@ -32,7 +35,9 @@ public class Converters {
             result.append(" ");
             result.append(str);
         }
-
+        if(list.isEmpty()){
+            result.append("");
+        }
         return result.toString();
     }
 

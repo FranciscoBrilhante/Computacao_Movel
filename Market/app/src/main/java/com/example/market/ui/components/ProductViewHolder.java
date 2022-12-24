@@ -48,7 +48,6 @@ public class ProductViewHolder extends RecyclerView.ViewHolder {
         ArrayList<SlideModel> imageList =new ArrayList<SlideModel>();
         for(String imgURL: product.getImages()){
             String fullURL="https://"+BuildConfig.API_ADDRESS+imgURL;
-            System.out.println("Printed here:"+fullURL);
             imageList.add(new SlideModel(fullURL, ScaleTypes.CENTER_CROP));
         }
         imageSlider.setImageList(imageList);

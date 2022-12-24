@@ -46,7 +46,8 @@ public abstract class MainRoomDatabase extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db){
             databaseWriteExecutor.execute(()->{
                 super.onCreate(db);
-                ArrayList<String> imagesURLS=new ArrayList<>();
+
+                /*ArrayList<String> imagesURLS=new ArrayList<>();
                 imagesURLS.add("/media/product_pics/1_zjNaCq8.jpg");
                 Product prod1=new Product(1,"Title1","Description1",1, 60.0,1, Calendar.getInstance(),imagesURLS);
                 Product prod2=new Product(2,"Title2","Description2",16, 61.0,1, Calendar.getInstance(),imagesURLS);
@@ -55,10 +56,9 @@ public abstract class MainRoomDatabase extends RoomDatabase {
                 productDao.insert(prod1);
                 productDao.insert(prod2);
 
-
                 String loremIpsium="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.";
                 Product prod3=new Product(3,"Title3",loremIpsium,3, 62.0,1, Calendar.getInstance(),imagesURLS);
-                productDao.insert(prod3);
+                productDao.insert(prod3);*/
             });
         }
 

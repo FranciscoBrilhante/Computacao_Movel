@@ -68,3 +68,13 @@ def privateScore(request):
         return JsonResponse({'status': 200, 'reviews':json_data})
 
     return JsonResponse({'status': 400})
+
+def computeRating(profile):
+    reviews=Review.objects.filter(userReviewed=profile)  
+    scores=[review.stars for review in reviews]
+    if len(scores)==0:
+        score=0
+    else:
+        score=sum(scores)/len(scores)
+
+    return score

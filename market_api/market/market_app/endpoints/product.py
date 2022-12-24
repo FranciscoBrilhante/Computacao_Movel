@@ -104,6 +104,7 @@ def details(request):
             'images':imgs_urls,
             'category_name':product.category.name,
             'profile_name':product.userSelling.user.username,
+            'rating': computeRating(product.userSelling),
             })
             
         elif contains_error(form.errors.as_data(), 'resource not found'):
@@ -133,8 +134,18 @@ def recommended(request):
         'date':product.dateCreated,
         'category_name':product.category.name,
         'profile_name':product.userSelling.user.username,
-        'images':[productImage.image.url for productImage in ProductImage.objects.filter(product=product.pk)]
+        'images':[productImage.image.url for productImage in ProductImage.objects.filter(product=product.pk)],
+        'rating': computeRating(product.userSelling),
     } for product in page1]
 
     return JsonResponse({'status': 200, 'products':json_data})
 
+def computeRating(profile):
+    reviews=Review.objects.filter(userReviewed=profile)  
+    scores=[review.stars for review in reviews]
+    if len(scores)==0:
+        score=0
+    else:
+        score=sum(scores)/len(scores)
+
+    return score
