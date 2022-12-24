@@ -81,7 +81,7 @@ public class MarketViewModel extends AndroidViewModel {
                 for(String path:paths){
                     builder.appendPath(path);
                 }
-                if(method.equals("GET")){
+                if(method.equals("GET") && params!=null){
                     for (Map.Entry<String, Object> param : params.entrySet()) {
                         builder.appendQueryParameter(param.getKey(),(String) param.getValue());
                     }
@@ -102,7 +102,7 @@ public class MarketViewModel extends AndroidViewModel {
                     con.setRequestProperty("Cookie", TextUtils.join(";", msCookieManager.getCookieStore().getCookies()));
                 }
 
-                if (sendPayload) {
+                if (sendPayload && payload!=null) {
                     StringBuilder postData = new StringBuilder();
                     for (Map.Entry<String, Object> param : payload.entrySet()) {
                         if (postData.length() != 0) postData.append('&');
@@ -170,6 +170,10 @@ public class MarketViewModel extends AndroidViewModel {
     public String getSessionID() {
         String sessionID = msCookieManager.getCookieStore().getCookies().get(0).getValue();
         return sessionID;
+    }
+
+    public void clearCookies(){
+        msCookieManager.getCookieStore().removeAll();
     }
 
 }

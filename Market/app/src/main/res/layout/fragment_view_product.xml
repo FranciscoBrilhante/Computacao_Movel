@@ -28,7 +28,8 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                app:strokeWidth="2dp" />
+                app:strokeColor="@color/black"
+                app:strokeWidth="0.5dp" />
 
             <TextView
                 android:id="@+id/name_label"

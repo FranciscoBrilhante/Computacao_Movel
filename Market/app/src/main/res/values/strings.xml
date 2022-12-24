@@ -28,5 +28,14 @@
     <string name="prod_category_title">Category</string>
     <string name="upload_image_title">Upload photo</string>
     <string name="publish_button">Publish</string>
+    <string name="profile_option">Profile</string>
+    <string name="messages_option">Messages</string>
+    <string name="logout_option">Logout</string>
+    <string name="delete_account_option">Delete Account</string>
+    <string name="confirm_deletion_message">This action cannot be undone.</string>
+    <string name="confirm_deletion_title">Delete Profile?</string>
+    <string name="delete_button">Delete</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="successfull_deletion_message">Acount deleted successfuly</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
