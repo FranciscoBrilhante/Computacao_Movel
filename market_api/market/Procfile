@@ -1,1 +1,1 @@
-web: python manage.py makemigrations && python manage.py makemigrations market_app && python manage.py migrate --run-syncdb && python manage.py loaddata .data.json && gunicorn market.wsgi
+web: python manage.py makemigrations && python manage.py makemigrations market_app && python manage.py migrate --run-syncdb && python manage.py loaddata ./data.json && gunicorn market.wsgi
