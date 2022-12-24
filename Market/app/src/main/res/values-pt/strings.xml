@@ -21,4 +21,12 @@
     <string name="home_tab_title">Início</string>
     <string name="items_tab_title">Produtos</string>
     <string name="profile_tab_title">Perfil</string>
+    <string name="send_message_button">Enviar mensagem</string>
+    <string name="prod_title_title">Título</string>
+    <string name="prod_price_title">Preço</string>
+    <string name="prod_description_title">Descrição</string>
+    <string name="description_prompt">Descreve aqui o produto que pretendes vender...</string>
+    <string name="prod_category_title">Categoria</string>
+    <string name="upload_image_title">Carregar foto</string>
+    <string name="publish_button">Publicar</string>
 </resources>

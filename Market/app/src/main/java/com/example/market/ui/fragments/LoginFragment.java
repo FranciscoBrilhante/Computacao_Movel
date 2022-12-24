@@ -11,11 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
-import androidx.navigation.NavGraph;
-import androidx.navigation.NavInflater;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +31,6 @@ import org.json.JSONObject;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.prefs.Preferences;
 
 public class LoginFragment extends Fragment implements HTTTPCallback {
 
@@ -103,7 +99,7 @@ public class LoginFragment extends Fragment implements HTTTPCallback {
         @Override
         public void onClick(View view) {
             NavHostFragment navHostFragment =
-                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_login);
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
             NavController navController = navHostFragment.getNavController();
             NavDirections action = LoginFragmentDirections.actionNavigationLoginToNavigationRegister();
             navController.navigate(action);

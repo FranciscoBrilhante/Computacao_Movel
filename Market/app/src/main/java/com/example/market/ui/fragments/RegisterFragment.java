@@ -125,7 +125,7 @@ public class RegisterFragment extends Fragment implements HTTTPCallback{
         @Override
         public void onClick(View view) {
             NavHostFragment navHostFragment =
-                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_login);
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
             NavController navController = navHostFragment.getNavController();
             NavDirections action = RegisterFragmentDirections.actionNavigationRegisterToNavigationLogin();
             navController.navigate(action);

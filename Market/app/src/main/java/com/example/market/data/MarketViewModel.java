@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -26,8 +27,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -48,9 +52,9 @@ public class MarketViewModel extends AndroidViewModel {
 
     public MarketViewModel(Application application) {
         super(application);
-        this.application=application;
-        MainRoomDatabase db= MainRoomDatabase.getDatabase(application);
-        productDao=db.productDao();
+        this.application = application;
+        MainRoomDatabase db = MainRoomDatabase.getDatabase(application);
+        productDao = db.productDao();
 
     }
 
@@ -58,50 +62,70 @@ public class MarketViewModel extends AndroidViewModel {
         return productDao.getAll();
     }
 
-    public boolean areCredentialsStored(){
-        SharedPreferences sharedPref = application.getSharedPreferences("credentials",MODE_PRIVATE);
-        String username=sharedPref.getString("username",null);
-        String password=sharedPref.getString("password",null);
+    public boolean areCredentialsStored() {
+        SharedPreferences sharedPref = application.getSharedPreferences("credentials", MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        String password = sharedPref.getString("password", null);
 
-        return username!=null && password!=null;
+        return username != null && password != null;
     }
 
-
-    public void sendPOSTRequest(String endpointURL, Map<String,Object> payload, boolean saveCookies, boolean sendCookies, HTTTPCallback callback){
-        executor.execute(()->{
+    //general purpose api request method
+    public void sendRequest(String endpointURL, String method,Map<String, Object> params, Map<String, Object> payload, boolean sendPayload, boolean saveCookies, boolean sendCookies, HTTTPCallback callback) {
+        executor.execute(() -> {
             JSONObject jObject;
             try {
-                StringBuilder postData = new StringBuilder();
-                for (Map.Entry<String,Object> param : payload.entrySet()) {
-                    if (postData.length() != 0) postData.append('&');
-                    postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
-                    postData.append('=');
-                    postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+                String paths[]=endpointURL.split("/",0);
+                Uri.Builder builder = new Uri.Builder();
+                builder.scheme("https").authority(BuildConfig.API_ADDRESS);
+                for(String path:paths){
+                    builder.appendPath(path);
                 }
-                byte[] postDataBytes = postData.toString().getBytes(StandardCharsets.UTF_8);
-
-                URL url=new URL("https://"+ BuildConfig.API_ADDRESS+endpointURL);
+                if(method.equals("GET")){
+                    for (Map.Entry<String, Object> param : params.entrySet()) {
+                        builder.appendQueryParameter(param.getKey(),(String) param.getValue());
+                    }
+                }
+                String fullUrl = builder.build().toString();
+                URL url = new URL(fullUrl);
                 HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                con.setRequestMethod("POST");
-                con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                con.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
-                con.setDoOutput(true);
-                if (sendCookies && msCookieManager.getCookieStore().getCookies().size() > 0) {
-                    con.setRequestProperty("Cookie", TextUtils.join(";",  msCookieManager.getCookieStore().getCookies()));
-                }
-                con.getOutputStream().write(postDataBytes);
+                con.setRequestMethod(method);
 
+                if (method.equals("POST")) {
+                    con.setDoOutput(true);
+                } else if (method.equals("GET")) {
+                    con.setDoOutput(false);
+                    con.setDoInput(true);
+                }
+
+                if (sendCookies && msCookieManager.getCookieStore().getCookies().size() > 0) {
+                    con.setRequestProperty("Cookie", TextUtils.join(";", msCookieManager.getCookieStore().getCookies()));
+                }
+
+                if (sendPayload) {
+                    StringBuilder postData = new StringBuilder();
+                    for (Map.Entry<String, Object> param : payload.entrySet()) {
+                        if (postData.length() != 0) postData.append('&');
+                        postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+                        postData.append('=');
+                        postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+                    }
+                    byte[] postDataBytes = postData.toString().getBytes(StandardCharsets.UTF_8);
+                    con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                    con.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+                    con.getOutputStream().write(postDataBytes);
+                }
 
                 Reader in = new BufferedReader(new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8));
                 StringBuilder sb = new StringBuilder();
-                for (int c; (c = in.read()) >= 0;)
-                    sb.append((char)c);
+                for (int c; (c = in.read()) >= 0; )
+                    sb.append((char) c);
                 in.close();
                 String response = sb.toString();
-                System.out.println(response);
                 jObject = new JSONObject(response);
-                jObject.put("endpoint",endpointURL);
-                if(saveCookies){
+                jObject.put("endpoint", endpointURL);
+                System.out.println(response);
+                if (saveCookies) {
                     Map<String, List<String>> headerFields = con.getHeaderFields();
                     List<String> cookiesHeader = headerFields.get("Set-Cookie");
                     if (cookiesHeader != null) {
@@ -112,29 +136,31 @@ public class MarketViewModel extends AndroidViewModel {
                 }
                 con.disconnect();
             } catch (IOException | JSONException e) {
-                jObject= new JSONObject();
+                e.printStackTrace();
+                jObject = new JSONObject();
+
             }
             JSONObject finalJObject = jObject;
-            handler.post(()->{
+            handler.post(() -> {
                 callback.onComplete(finalJObject);
             });
         });
     }
 
 
-    public Map<String,Object> getStoredCredentials(){
-        Map<String,Object> map=new LinkedHashMap<>();
-        SharedPreferences sharedPref = application.getSharedPreferences("credentials",MODE_PRIVATE);
-        String username=sharedPref.getString("username",null);
-        String password=sharedPref.getString("password",null);
+    public Map<String, Object> getStoredCredentials() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        SharedPreferences sharedPref = application.getSharedPreferences("credentials", MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        String password = sharedPref.getString("password", null);
 
-        map.put("username",username);
-        map.put("password",password);
+        map.put("username", username);
+        map.put("password", password);
         return map;
     }
 
-    public void removeStoredCredentials(){
-        SharedPreferences sharedPref = getApplication().getSharedPreferences("credentials",MODE_PRIVATE);
+    public void removeStoredCredentials() {
+        SharedPreferences sharedPref = getApplication().getSharedPreferences("credentials", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.remove("username");
         editor.remove("password");
@@ -142,7 +168,8 @@ public class MarketViewModel extends AndroidViewModel {
     }
 
     public String getSessionID() {
-        String sessionID=msCookieManager.getCookieStore().getCookies().get(0).getValue();
-        return  sessionID;
+        String sessionID = msCookieManager.getCookieStore().getCookies().get(0).getValue();
+        return sessionID;
     }
+
 }

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.interfaces.ItemClickListener;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.market.BuildConfig;
 import com.example.market.R;
@@ -22,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 
-public class ProductViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener {
+public class ProductViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener, ItemClickListener {
     private final TextView titleView;
     private final TextView descriptionView;
     private final TextView ratingTextView;
@@ -60,7 +61,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements  View.
         ratingTextView.setText(String.format(Locale.ENGLISH,"%.1f", product.getProfileRating() ));
         categoryTextView.setText(product.getCategoryName());
         locationTextView.setText("Coimbra");
-        priceTextView.setText(String.format(Locale.ENGLISH,"%.1f", product.getPrice()));
+        priceTextView.setText(String.format(Locale.ENGLISH,"%.0f€", product.getPrice()));
         nameTextView.setText(product.getProfileName());
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy",Locale.ENGLISH);
@@ -73,7 +74,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements  View.
             imageList.add(new SlideModel(fullURL, ScaleTypes.CENTER_CROP));
         }
         imageSlider.setImageList(imageList);
-
+        imageSlider.setItemClickListener(this);
     }
 
     static ProductViewHolder create(ViewGroup parent, RecyclerViewInterface recyclerViewInterface) {
@@ -83,6 +84,11 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements  View.
 
     @Override
     public void onClick(View view) {
+        recyclerViewInterface.onClick(product);
+    }
+
+    @Override
+    public void onItemSelected(int i) {
         recyclerViewInterface.onClick(product);
     }
 }
