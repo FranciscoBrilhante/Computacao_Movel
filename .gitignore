@@ -123,3 +123,4 @@ google-services.json
 
 __pycache__
 market_api/market/db.sqlite3
+market_api/market/market_app/__pycache__/urls.cpython-39.pyc

@@ -140,6 +140,35 @@ def recommended(request):
 
     return JsonResponse({'status': 200, 'products':json_data})
 
+
+def myProducts(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'status': 401}) 
+    
+    profile=Profile.objects.get(user=request.user.pk)
+    ownProducts=Product.objects.filter(userSelling=profile.pk)
+    json_data=[{
+        'id':product.pk, 
+        'title':product.name, 
+        'description':product.description,
+        'category':product.category.pk,
+        'price':product.price,
+        'profile':product.userSelling.pk,
+        'date':product.dateCreated,
+        'category_name':product.category.name,
+        'profile_name':product.userSelling.user.username,
+        'images':[productImage.image.url for productImage in ProductImage.objects.filter(product=product.pk)],
+        'rating': computeRating(product.userSelling),
+    } for product in ownProducts]
+
+    return JsonResponse({'status': 200, 'products':json_data})
+
+
+
+
+
+
+
 def computeRating(profile):
     reviews=Review.objects.filter(userReviewed=profile)  
     scores=[review.stars for review in reviews]
@@ -149,3 +178,4 @@ def computeRating(profile):
         score=sum(scores)/len(scores)
 
     return score
+
