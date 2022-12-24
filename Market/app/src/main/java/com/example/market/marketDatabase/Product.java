@@ -40,7 +40,10 @@ public class Product {
     @ColumnInfo(name = "profileName")
     private String profileName;
 
-    public Product(int id, String title, String description, int category, Double price, int profile, Calendar date, ArrayList<String> images, String categoryName, String profileName) {
+    @ColumnInfo(name = "profileRating")
+    private Double profileRating;
+
+    public Product(int id, String title, String description, int category, Double price, int profile, Calendar date, ArrayList<String> images, String categoryName, String profileName, Double profileRating) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -51,6 +54,7 @@ public class Product {
         this.images = images;
         this.categoryName=categoryName;
         this.profileName=profileName;
+        this.profileRating=profileRating;
     }
 
     public int getId() {
@@ -131,5 +135,13 @@ public class Product {
 
     public void setProfileName(String profileName) {
         this.profileName = profileName;
+    }
+
+    public Double getProfileRating() {
+        return profileRating;
+    }
+
+    public void setProfileRating(Double profileRating) {
+        this.profileRating = profileRating;
     }
 }

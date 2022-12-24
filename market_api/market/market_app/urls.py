@@ -8,6 +8,7 @@ urlpatterns = [
     path('profile/setphoto', profile.setPhoto),
     path('profile/personalinfo', profile.personalInfo),
     path('profile/delete', profile.delete),
+    path('profile/info', profile.info),
 
     path('message/send', message.send),
     path('message/all', message.getAll),

@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, logout
 from django.contrib.auth import login as login_user
 from ..models import Profile
 from django.http import JsonResponse
-from ..forms.profile_forms import Register, Login, Location, Photo
+from ..forms.profile_forms import Register, Login, Location, Photo, ProfileId
 from PIL import Image
 from django.core.files import File
 import os
@@ -122,3 +122,32 @@ def delete(request):
     profile.delete()
 
     return JsonResponse({'status': 200})
+
+def info(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'status': 401}) 
+    
+    if request.method == 'GET':
+        form = ProfileId(request.GET)
+        if form.is_valid():
+            data = form.cleaned_data
+            profile_id=data['profile_id']
+            profile = Profile.objects.get(pk=profile_id)
+
+            try:
+                photo_url=profile.photo.url
+            except:
+                photo_url=None
+
+            return JsonResponse({'status': 200,
+            'id':profile.pk, 
+            'username':profile.user.username, 
+            'cityX':profile.cityX,
+            'cityY':profile.cityY,
+            'image':photo_url,
+            })
+            
+        elif contains_error(form.errors.as_data(), 'resource not found'):
+                return JsonResponse({'status': 404})
+
+    return JsonResponse({'status': 400})

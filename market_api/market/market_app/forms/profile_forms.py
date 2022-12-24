@@ -32,3 +32,11 @@ class Location(forms.Form):
 class Photo(forms.Form):
     profile_photo=forms.ImageField()
     
+class ProfileId(forms.Form):
+    profile_id=forms.IntegerField()
+
+    def clean_profile_id(self):
+        data = self.cleaned_data['profile_id']
+        if not Profile.objects.filter(pk=data).exists():
+            raise ValidationError(_('Profile with that ID does not exist'),code='resource does not exist')
+        return data

@@ -141,11 +141,12 @@ public class ProductsService extends Service {
                         "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
                 format.setTimeZone(TimeZone.getTimeZone("UTC"));
 
+                Double rating=elem.getDouble("rating");
                 try {
                     Date d = format.parse(date);
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(d);
-                    Product product=new Product(id,title,description,category,price,profile,calendar,imagesURL,categoryName,profileName);
+                    Product product=new Product(id,title,description,category,price,profile,calendar,imagesURL,categoryName,profileName,rating);
                     productDao.insert(product);
                 } catch (ParseException e) {
                     e.printStackTrace();
