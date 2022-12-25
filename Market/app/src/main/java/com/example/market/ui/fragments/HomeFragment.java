@@ -29,9 +29,14 @@ import com.example.market.R;
 import com.example.market.data.MarketViewModel;
 import com.example.market.databinding.FragmentHomeBinding;
 import com.example.market.interfaces.RecyclerViewInterface;
+import com.example.market.marketDatabase.Category;
+import com.example.market.marketDatabase.PriceRange;
 import com.example.market.marketDatabase.Product;
 import com.example.market.ui.components.CategorySpinnerAdapter;
+import com.example.market.ui.components.PriceRangeSpinnerAdapter;
 import com.example.market.ui.components.ProductListAdapter;
+
+import java.util.ArrayList;
 
 public class HomeFragment extends Fragment implements RecyclerViewInterface, View.OnClickListener {
 
@@ -55,16 +60,20 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        CategorySpinnerAdapter categorySpinnerAdapter= new CategorySpinnerAdapter(getContext(),new ArrayList<>());
+        binding.categorySpinner.setAdapter(categorySpinnerAdapter);
+
+        PriceRangeSpinnerAdapter priceRangeSpinnerAdapter= new PriceRangeSpinnerAdapter(getContext(),initPriceRange());
+        binding.priceRangeSpinner.setAdapter(priceRangeSpinnerAdapter);
+
         viewModel.getAllProducts().observe(requireActivity(), products -> {
             adapter.submitList(products);
         });
 
-        // CategorySpinnerAdapter spinnerAdapter= new CategorySpinnerAdapter(getContext());
-        //binding.categorySpinner.setAdapter(spinnerAdapter);
-
         viewModel.getAllCategories().observe(requireActivity(),categories -> {
-            //spinnerAdapter.clear();
-            //spinnerAdapter.addAll(categories);
+            categorySpinnerAdapter.clear();
+            categorySpinnerAdapter.addAll(categories);
+            categorySpinnerAdapter.notifyDataSetChanged();
         });
 
         binding.moreButton.setOnClickListener(this);
@@ -96,5 +105,15 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
             }
 
         }
+    }
+
+    private ArrayList<PriceRange> initPriceRange(){
+        ArrayList<PriceRange> array=new ArrayList<>();
+        array.add(new PriceRange(null,10.0,getContext()));
+        array.add(new PriceRange(10.0,50.0,getContext()));
+        array.add(new PriceRange(50.0,100.0,getContext()));
+        array.add(new PriceRange(100.0,500.0,getContext()));
+        array.add(new PriceRange(500.0,null,getContext()));
+        return array;
     }
 }

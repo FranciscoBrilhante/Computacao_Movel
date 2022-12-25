@@ -5,26 +5,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.market.R;
-import com.example.market.interfaces.RecyclerViewInterface;
 import com.example.market.marketDatabase.Category;
-import com.example.market.marketDatabase.Product;
+import com.example.market.marketDatabase.PriceRange;
 
 import java.util.ArrayList;
 
 
-public class CategorySpinnerAdapter extends ArrayAdapter<Category> {
+public class PriceRangeSpinnerAdapter extends ArrayAdapter<PriceRange> {
 
-    public CategorySpinnerAdapter(Context context, ArrayList<Category> categories) {
+    public PriceRangeSpinnerAdapter(Context context, ArrayList<PriceRange> categories) {
         super(context, 0, categories);
     }
 
@@ -46,9 +41,9 @@ public class CategorySpinnerAdapter extends ArrayAdapter<Category> {
             );
         }
         TextView nameView = convertView.findViewById(R.id.category_name);
-        Category currentItem = getItem(position);
+        PriceRange currentItem = getItem(position);
         if (currentItem != null) {
-            nameView.setText(currentItem.getName());
+            nameView.setText(currentItem.toString());
         }
         return convertView;
     }

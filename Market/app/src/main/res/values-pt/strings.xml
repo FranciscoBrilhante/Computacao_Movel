@@ -44,4 +44,10 @@
     <string name="more_options_messages">Ver mensagens</string>
     <string name="more_button_label">mais</string>
     <string name="less_button_label">menos</string>
+    <string name="or_more">ou mais</string>
+    <string name="or_less">ou menos</string>
+    <string name="toolbar_home_title">Procurar Produtos</string>
+    <string name="toolbar_items_title">Os Meus Anúncios</string>
+    <string name="toolbar_create_title">Publicar Anúncio</string>
+    <string name="toolbar_profile_title">Conta Pessoal</string>
 </resources>

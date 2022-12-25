@@ -43,5 +43,11 @@
     <string name="more_options_report">Report product</string>
     <string name="more_button_label">more</string>
     <string name="less_button_label">less</string>
+    <string name="or_more">or more</string>
+    <string name="or_less">or less</string>
+    <string name="toolbar_home_title">Search Products</string>
+    <string name="toolbar_items_title">My listings</string>
+    <string name="toolbar_create_title">Publish Product Listing</string>
+    <string name="toolbar_profile_title">Personal Account</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>
