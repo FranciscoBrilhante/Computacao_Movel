@@ -97,9 +97,11 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="50dp"
         android:elevation="10dp"
         android:orientation="vertical">
 
@@ -107,10 +109,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/products_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="50dp" />
-    </LinearLayout>
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>
 

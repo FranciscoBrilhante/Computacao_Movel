@@ -50,7 +50,8 @@
                 android:inputType="textAutoComplete"
                 android:minWidth="250dp"
                 app:iconifiedByDefault="false"
-                app:searchIcon="@drawable/search">
+                app:searchIcon="@drawable/search"
+                tools:ignore="TouchTargetSizeCheck">
 
             </androidx.appcompat.widget.SearchView>
 
@@ -65,19 +66,21 @@
                 android:src="@drawable/plus"
                 android:textAlignment="center"
                 android:textColor="@color/title_color"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="50dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/products_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="100dp"
             android:layout_marginBottom="50dp" />
-    </LinearLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>
