@@ -9,11 +9,14 @@ import android.os.Bundle;
 import com.example.market.R;
 import com.example.market.data.MarketViewModel;
 import com.example.market.interfaces.HTTTPCallback;
+import com.example.market.marketDatabase.Category;
+import com.example.market.marketDatabase.Product;
 import com.example.market.services.ProductsService;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -22,10 +25,19 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.market.databinding.ActivityMainBinding;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class MainActivity extends AppCompatActivity implements HTTTPCallback {
 
@@ -42,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
+
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
         if (!viewModel.areCredentialsStored()) {
             Intent myIntent = new Intent(this, LoginActivity.class);
@@ -50,43 +63,50 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         }
 
         Map<String, Object> params = viewModel.getStoredCredentials();
-        viewModel.sendRequest("/profile/login","POST",null, params,true, true, false, this);
-
+        viewModel.sendRequest("/profile/login", "POST", null, params, true, true, false, this);
     }
 
     @Override
     public void onComplete(JSONObject data) {
         Integer code;
+        String url1 = "/profile/login";
+        String url2 = "/category/all";
         try {
             String endpoint = (String) data.get("endpoint");
-            switch (endpoint) {
-                case "/profile/login":
-                    code = (Integer) data.get("status");
-                    if (code == 200) {
-                        String sessionID = viewModel.getSessionID();
-                        Intent intent = new Intent(this, ProductsService.class);
-                        intent.putExtra("sessionID",sessionID);
-                        startService(intent);
+            if (endpoint.equals(url1)) {
+                code = (Integer) data.get("status");
+                if (code == 200) {
+                    String sessionID = viewModel.getSessionID();
+                    Intent intent = new Intent(this, ProductsService.class);
+                    intent.putExtra("sessionID", sessionID);
+                    startService(intent);
 
-                        requestLocation();
-                    }
-                    else{
-                        viewModel.removeStoredCredentials();
-                        Intent myIntent = new Intent(this, LoginActivity.class);
-                        startActivity(myIntent);
-                    }
-                    break;
+                    requestLocation();
+
+                    viewModel.sendRequest("/category/all", "GET", null, null, false, false, true, this);
+
+                } else {
+                    viewModel.removeStoredCredentials();
+                    Intent myIntent = new Intent(this, LoginActivity.class);
+                    startActivity(myIntent);
+                }
+            } else if (endpoint.equals(url2)) {
+                code = (Integer) data.get("status");
+                if (code == 200) {
+                    populateCategories(data);
+                }
             }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    private void requestLocation(){
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION)== PackageManager.PERMISSION_DENIED){
+    private void requestLocation() {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED) {
             SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-            boolean allowedBefore=prefs.getBoolean("allowed_location",true);
-            if(allowedBefore){
+            boolean allowedBefore = prefs.getBoolean("allowed_location", true);
+            if (allowedBefore) {
                 requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
             }
         }
@@ -99,4 +119,19 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
                 prefsEditor.putBoolean("allowed_location", isGranted);
                 prefsEditor.apply(); // or commit();
             });
+
+    private void populateCategories(JSONObject data) throws JSONException{
+        JSONArray array = data.getJSONArray("categories");
+        ArrayList<Category> categories = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject elem = array.getJSONObject(i);
+            int id = elem.getInt("id");
+            String name = elem.getString("name");
+
+            Category category=new Category(id,name);
+            categories.add(category);
+        }
+
+        viewModel.addCategories(categories);
+    }
 }

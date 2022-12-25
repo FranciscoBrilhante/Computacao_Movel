@@ -47,15 +47,15 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        viewModel =new ViewModelProvider(this).get(MarketViewModel.class);
-        binding= FragmentItemsBinding.inflate(inflater,container,false);
+        viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
+        binding = FragmentItemsBinding.inflate(inflater, container, false);
 
         adapter = new OwnProductListAdapter(new OwnProductListAdapter.ProductDiff(), this);
-        RecyclerView recyclerView=binding.productsList;
+        RecyclerView recyclerView = binding.productsList;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        viewModel.sendRequest("/product/myproducts","GET",null, null,false,false,true,this);
+        viewModel.sendRequest("/product/myproducts", "GET", null, null, false, false, true, this);
         return binding.getRoot();
     }
 
@@ -72,11 +72,11 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
     @Override
     public void onComplete(JSONObject data) {
         try {
-            String url1="/product/myproducts";
+            String url1 = "/product/myproducts";
             int code = data.getInt("status");
-            String endpoint=data.getString("endpoint");
-            if(endpoint.equals(url1)){
-                if(code==200){
+            String endpoint = data.getString("endpoint");
+            if (endpoint.equals(url1)) {
+                if (code == 200) {
                     ArrayList<Product> products = processData(data);
                     adapter.submitList(products);
                 }
@@ -87,25 +87,25 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
         }
     }
 
-    private ArrayList<Product> processData(JSONObject data) throws JSONException{
-        JSONArray array=data.getJSONArray("products");
-        ArrayList<Product> products=new ArrayList<>();
-        for (int i = 0 ; i < array.length(); i++) {
-            JSONObject elem=array.getJSONObject(i);
-            int id=elem.getInt("id");
-            String title=elem.getString("title");
-            String description=elem.getString("description");
-            int category=elem.getInt("category");
-            Double price=elem.getDouble("price");
-            int profile=elem.getInt("profile");
-            String date=elem.getString("date");
+    private ArrayList<Product> processData(JSONObject data) throws JSONException {
+        JSONArray array = data.getJSONArray("products");
+        ArrayList<Product> products = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject elem = array.getJSONObject(i);
+            int id = elem.getInt("id");
+            String title = elem.getString("title");
+            String description = elem.getString("description");
+            int category = elem.getInt("category");
+            Double price = elem.getDouble("price");
+            int profile = elem.getInt("profile");
+            String date = elem.getString("date");
 
-            String categoryName=elem.getString("category_name");
-            String profileName=elem.getString("profile_name");
+            String categoryName = elem.getString("category_name");
+            String profileName = elem.getString("profile_name");
 
-            JSONArray images=elem.getJSONArray("images");
-            ArrayList<String> imagesURL=new ArrayList<>();
-            for (int j = 0 ; j < images.length(); j++) {
+            JSONArray images = elem.getJSONArray("images");
+            ArrayList<String> imagesURL = new ArrayList<>();
+            for (int j = 0; j < images.length(); j++) {
                 imagesURL.add((String) images.get(j));
             }
 
@@ -113,12 +113,12 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
                     "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
             format.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-            Double rating=elem.getDouble("rating");
+            Double rating = elem.getDouble("rating");
             try {
                 Date d = format.parse(date);
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(d);
-                Product product=new Product(id,title,description,category,price,profile,calendar,imagesURL,categoryName,profileName,rating);
+                Product product = new Product(id, title, description, category, price, profile, calendar, imagesURL, categoryName, profileName, rating);
                 products.add(product);
             } catch (ParseException e) {
                 e.printStackTrace();

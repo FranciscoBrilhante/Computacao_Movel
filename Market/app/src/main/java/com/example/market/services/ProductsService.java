@@ -58,8 +58,10 @@ public class ProductsService extends Service {
     public int onStartCommand(Intent intent,int flags, int startId){
         Bundle bundle = intent.getExtras();
         sessionID = bundle.getString("sessionID");
-        thread=new Thread(routine);
-        thread.start();
+        if(thread==null){
+            thread=new Thread(routine);
+            thread.start();
+        }
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -73,6 +75,7 @@ public class ProductsService extends Service {
     private Runnable routine =new Runnable() {
         @Override
         public void run() {
+            System.out.println("started running");
             MainRoomDatabase db= MainRoomDatabase.getDatabase(getApplication());
             ProductDao productDao=db.productDao();
             try {
@@ -82,10 +85,10 @@ public class ProductsService extends Service {
                     Thread.sleep(60_000);
                 }
 
-            } catch (InterruptedException e) {
+            } catch (InterruptedException | JSONException e) {
                 System.out.println("--------------------Products Thread has been interrupted-----------------");
-            } catch (JSONException e) {
-                e.printStackTrace();
+                Thread.currentThread().interrupt();
+
             }
         }
     };

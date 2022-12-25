@@ -41,5 +41,7 @@
     <string name="more_options_details">Details</string>
     <string name="more_options_messages">See messages</string>
     <string name="more_options_report">Report product</string>
+    <string name="more_button_label">more</string>
+    <string name="less_button_label">less</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.example.market.BuildConfig;
 import com.example.market.interfaces.HTTTPCallback;
+import com.example.market.marketDatabase.Category;
+import com.example.market.marketDatabase.CategoryDao;
 import com.example.market.marketDatabase.MainRoomDatabase;
 import com.example.market.marketDatabase.Product;
 import com.example.market.marketDatabase.ProductDao;
@@ -35,6 +37,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,8 +46,10 @@ import java.util.concurrent.Executors;
 
 
 public class MarketViewModel extends AndroidViewModel {
-    private final ProductDao productDao;
     private Application application;
+    private final MainRoomDatabase db;
+    private final ProductDao productDao;
+    private final CategoryDao categoryDao;
 
     private final Executor executor = Executors.newCachedThreadPool();
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -53,13 +58,25 @@ public class MarketViewModel extends AndroidViewModel {
     public MarketViewModel(Application application) {
         super(application);
         this.application = application;
-        MainRoomDatabase db = MainRoomDatabase.getDatabase(application);
+        db = MainRoomDatabase.getDatabase(application);
         productDao = db.productDao();
-
+        categoryDao = db.categoryDao();
     }
 
     public LiveData<List<Product>> getAllProducts() {
         return productDao.getAll();
+    }
+
+    public LiveData<List<Category>> getAllCategories() {
+        return categoryDao.getAll();
+    }
+
+    public void addCategories(ArrayList<Category> categories) {
+        MainRoomDatabase.databaseWriteExecutor.execute(()->{
+            for(Category category:categories){
+                categoryDao.insert(category);
+            }
+        });
     }
 
     public boolean areCredentialsStored() {
@@ -70,20 +87,48 @@ public class MarketViewModel extends AndroidViewModel {
         return username != null && password != null;
     }
 
+    public Map<String, Object> getStoredCredentials() {
+        Map<String, Object> map = new LinkedHashMap<>();
+        SharedPreferences sharedPref = application.getSharedPreferences("credentials", MODE_PRIVATE);
+        String username = sharedPref.getString("username", null);
+        String password = sharedPref.getString("password", null);
+
+        map.put("username", username);
+        map.put("password", password);
+        return map;
+    }
+
+    public void removeStoredCredentials() {
+        SharedPreferences sharedPref = getApplication().getSharedPreferences("credentials", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.remove("username");
+        editor.remove("password");
+        editor.commit();
+    }
+
+    public String getSessionID() {
+        String sessionID = msCookieManager.getCookieStore().getCookies().get(0).getValue();
+        return sessionID;
+    }
+
+    public void clearCookies() {
+        msCookieManager.getCookieStore().removeAll();
+    }
+
     //general purpose api request method
-    public void sendRequest(String endpointURL, String method,Map<String, Object> params, Map<String, Object> payload, boolean sendPayload, boolean saveCookies, boolean sendCookies, HTTTPCallback callback) {
+    public void sendRequest(String endpointURL, String method, Map<String, Object> params, Map<String, Object> payload, boolean sendPayload, boolean saveCookies, boolean sendCookies, HTTTPCallback callback) {
         executor.execute(() -> {
             JSONObject jObject;
             try {
-                String paths[]=endpointURL.split("/",0);
+                String paths[] = endpointURL.split("/", 0);
                 Uri.Builder builder = new Uri.Builder();
                 builder.scheme("https").authority(BuildConfig.API_ADDRESS);
-                for(String path:paths){
+                for (String path : paths) {
                     builder.appendPath(path);
                 }
-                if(method.equals("GET") && params!=null){
+                if (method.equals("GET") && params != null) {
                     for (Map.Entry<String, Object> param : params.entrySet()) {
-                        builder.appendQueryParameter(param.getKey(),(String) param.getValue());
+                        builder.appendQueryParameter(param.getKey(), (String) param.getValue());
                     }
                 }
                 String fullUrl = builder.build().toString();
@@ -102,7 +147,7 @@ public class MarketViewModel extends AndroidViewModel {
                     con.setRequestProperty("Cookie", TextUtils.join(";", msCookieManager.getCookieStore().getCookies()));
                 }
 
-                if (sendPayload && payload!=null) {
+                if (sendPayload && payload != null) {
                     StringBuilder postData = new StringBuilder();
                     for (Map.Entry<String, Object> param : payload.entrySet()) {
                         if (postData.length() != 0) postData.append('&');
@@ -145,35 +190,6 @@ public class MarketViewModel extends AndroidViewModel {
                 callback.onComplete(finalJObject);
             });
         });
-    }
-
-
-    public Map<String, Object> getStoredCredentials() {
-        Map<String, Object> map = new LinkedHashMap<>();
-        SharedPreferences sharedPref = application.getSharedPreferences("credentials", MODE_PRIVATE);
-        String username = sharedPref.getString("username", null);
-        String password = sharedPref.getString("password", null);
-
-        map.put("username", username);
-        map.put("password", password);
-        return map;
-    }
-
-    public void removeStoredCredentials() {
-        SharedPreferences sharedPref = getApplication().getSharedPreferences("credentials", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.remove("username");
-        editor.remove("password");
-        editor.commit();
-    }
-
-    public String getSessionID() {
-        String sessionID = msCookieManager.getCookieStore().getCookies().get(0).getValue();
-        return sessionID;
-    }
-
-    public void clearCookies(){
-        msCookieManager.getCookieStore().removeAll();
     }
 
 }

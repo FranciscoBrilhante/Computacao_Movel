@@ -70,6 +70,9 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback {
         params.put("product_id", Integer.toString(id));
         viewModel.sendRequest("/product/details", "GET", params, null, false, false, true, this);
 
+        if(owner){
+            binding.sendMessageButton.setVisibility(View.GONE);
+        }
         return binding.getRoot();
     }
 
@@ -84,6 +87,7 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback {
                 code = (Integer) data.get("status");
                 if (code == 200) {
                     initializeValues(data);
+
                     int profile_id = data.getInt("profile");
                     Map<String, Object> params = new LinkedHashMap<>();
                     params.put("profile_id", Integer.toString(profile_id));
