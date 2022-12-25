@@ -24,7 +24,7 @@
         android:id="@+id/navigation_items"
         android:name="com.example.market.ui.fragments.ItemsFragment"
         android:label="ItemsFragment"
-        tools:layout="@layout/fragment_profile" >
+        tools:layout="@layout/fragment_items" >
         <action
             android:id="@+id/action_navigation_items_to_navigation_view_product"
             app:destination="@id/navigation_view_product" >
@@ -33,7 +33,7 @@
                 android:defaultValue="true" />
         </action>
         <action
-            android:id="@+id/action_navigation_items_to_navigation_view_product2"
+            android:id="@+id/action_navigation_items_to_navigation_create_product"
             app:destination="@id/navigation_create_product" />
     </fragment>
 
@@ -41,7 +41,7 @@
         android:id="@+id/navigation_profile"
         android:name="com.example.market.ui.fragments.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_items" />
+        tools:layout="@layout/fragment_profile" />
 
     <fragment
         android:id="@+id/navigation_view_product"

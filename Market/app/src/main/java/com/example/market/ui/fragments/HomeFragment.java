@@ -45,12 +45,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    @Override
     public void onClick(Product product) {
         NavHostFragment navHostFragment =
                 (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);

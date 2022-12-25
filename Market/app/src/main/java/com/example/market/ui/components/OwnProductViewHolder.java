@@ -9,7 +9,6 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.denzcoskun.imageslider.ImageSlider;
@@ -27,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 
-public class ProductViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener, ItemClickListener {
+public class OwnProductViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener, ItemClickListener {
     private final TextView titleView;
     private final TextView descriptionView;
     private final TextView ratingTextView;
@@ -38,16 +37,13 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements  View.
     private final ImageSlider imageSlider;
     private final TextView nameTextView;
     private  final ImageButton moreOptionsButton;
-
     private final RecyclerViewInterface recyclerViewInterface;
     private Product product;
+    private final View rootView;
 
-    private  final View rootView;
-
-    private ProductViewHolder(View itemView, RecyclerViewInterface recyclerViewInterface) {
+    private OwnProductViewHolder(View itemView, RecyclerViewInterface recyclerViewInterface) {
         super(itemView);
         rootView=itemView;
-
         this.recyclerViewInterface=recyclerViewInterface;
 
         titleView = itemView.findViewById(R.id.title_label);
@@ -87,11 +83,13 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements  View.
         }
         imageSlider.setImageList(imageList);
         imageSlider.setItemClickListener(this);
+
+
     }
 
-    static ProductViewHolder create(ViewGroup parent, RecyclerViewInterface recyclerViewInterface) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_product, parent, false);
-        return new ProductViewHolder(view, recyclerViewInterface);
+    static OwnProductViewHolder create(ViewGroup parent, RecyclerViewInterface recyclerViewInterface) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_own_product, parent, false);
+        return new OwnProductViewHolder(view, recyclerViewInterface);
     }
 
     @Override
@@ -102,7 +100,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements  View.
         else if(view.getId()==R.id.more_options){
             PopupMenu popupMenu=new PopupMenu(rootView.getContext(),view);
             MenuInflater inflater=popupMenu.getMenuInflater();
-            inflater.inflate(R.menu.more_options_menu, popupMenu.getMenu());
+            inflater.inflate(R.menu.own_more_options_menu, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {

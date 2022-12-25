@@ -38,4 +38,8 @@
     <string name="delete_button">Apagar</string>
     <string name="cancel_button">Cancelar</string>
     <string name="successfull_deletion_message">Conta apagada com sucesso</string>
+    <string name="more_options_details">Detalhes</string>
+    <string name="more_options_delete">Eliminar</string>
+    <string name="more_options_report">Reportar produto</string>
+    <string name="more_options_messages">Ver mensagens</string>
 </resources>
