@@ -41,7 +41,17 @@
         android:id="@+id/navigation_profile"
         android:name="com.example.market.ui.fragments.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_navigation_profile_to_navigation_profile_details"
+            app:destination="@id/navigation_profile_details" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_profile_details"
+        android:name="com.example.market.ui.fragments.ProfileDetailsFragment"
+        android:label="ProfileDetailsFragment"
+        tools:layout="@layout/fragment_profile_details" />
 
     <fragment
         android:id="@+id/navigation_view_product"

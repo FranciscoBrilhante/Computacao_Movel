@@ -52,5 +52,7 @@
     <string name="confirm_deletion_product_title">Delete Product Listing</string>
     <string name="confirm_deletion_product_message">This action cannot be undone.</string>
     <string name="successfull_deletion_product_message">Product deleted successfully</string>
+    <string name="profile_details_title">Profile</string>
+    <string name="location_label">City Location</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

@@ -72,7 +72,7 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
         params.put("product_id", Integer.toString(id));
         viewModel.sendRequest("/product/details", "GET", params, null, false, false, true, this);
 
-        if(owner){
+        if (owner) {
             //if its owner cant send own message and replace button image with eliminate image
             binding.messageButton.setImageResource(R.drawable.trash_2);
             binding.sendMessageButton.setVisibility(View.GONE);
@@ -111,7 +111,7 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
                 initializeProfilePhoto(data);
             } else if (endpoint.equals(url3)) {
                 viewModel.deleteProductByID(id);
-                Toast.makeText(getActivity().getApplicationContext(),R.string.successfull_deletion_product_message,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity().getApplicationContext(), R.string.successfull_deletion_product_message, Toast.LENGTH_SHORT).show();
                 NavHostFragment navHostFragment =
                         (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
                 NavController navController = navHostFragment.getNavController();
@@ -156,6 +156,9 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
             imageList.add(new SlideModel(fullURL, ScaleTypes.CENTER_CROP));
         }
         imageSlider.setImageList(imageList);
+        if(imageList.size()<=0){
+            imageSlider.setVisibility(View.GONE);
+        }
 
         descriptionView.setText(data.getString("description"));
     }
@@ -165,42 +168,41 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
         int code = (Integer) data.get("status");
         if (code == 200) {
             String photoURL = data.getString("image");
-
             if (photoURL.equals("null")) {
-                photoView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.user));
-                return;
+                photoView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.placeholder_avatar));
+            } else {
+                String fullURL = "https://" + BuildConfig.API_ADDRESS + photoURL;
+                Glide.with(getContext())
+                        .load(fullURL)
+                        .override(500, 500) //give resize dimension, you could calculate those
+                        .centerCrop() // scale to fill the ImageView
+                        .into(photoView);
+                //Picasso.get().load(fullURL).into(photoView);
             }
-            String fullURL = "https://" + BuildConfig.API_ADDRESS + photoURL;
-            Glide.with(getContext())
-                    .load(fullURL)
-                    .override(500, 500) //give resize dimension, you could calculate those
-                    .centerCrop() // scale to fill the ImageView
-                    .into(photoView);
-            //Picasso.get().load(fullURL).into(photoView);
         } else {
-            photoView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.user));
+            photoView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.placeholder_avatar));
         }
     }
 
     @Override
     public void onClick(View view) {
-        if(view==binding.backButton){
+        if (view == binding.backButton) {
             NavHostFragment navHostFragment =
                     (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
             NavController navController = navHostFragment.getNavController();
             navController.navigateUp();
         }
-        if(view==binding.messageButton){
-            if(owner){
-                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(),0);
+        if (view == binding.messageButton) {
+            if (owner) {
+                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(), 0);
                 alert.setTitle(R.string.confirm_deletion_product_title);
                 alert.setMessage(R.string.confirm_deletion_product_message);
                 alert.setPositiveButton(R.string.delete_button, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Map<String,Object> params=new LinkedHashMap<>();
-                        params.put("product_id",Integer.toString(id));
-                        viewModel.sendRequest("/product/delete","GET",params,null,false, false,true,ViewProductFragment.this::onComplete);
+                        Map<String, Object> params = new LinkedHashMap<>();
+                        params.put("product_id", Integer.toString(id));
+                        viewModel.sendRequest("/product/delete", "GET", params, null, false, false, true, ViewProductFragment.this::onComplete);
                     }
                 });
                 alert.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {

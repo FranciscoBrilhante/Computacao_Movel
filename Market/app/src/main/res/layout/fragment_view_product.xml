@@ -189,7 +189,8 @@
                 app:iss_corner_radius="10"
                 app:iss_delay="0"
                 app:iss_period="1000"
-                app:iss_placeholder="@drawable/loader" />
+                app:iss_placeholder="@drawable/loading_circle"
+                app:iss_error_image="@drawable/network_error"/>
 
             <TextView
                 android:id="@+id/description_label_view_item"

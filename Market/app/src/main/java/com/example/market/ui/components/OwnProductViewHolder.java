@@ -1,5 +1,6 @@
 package com.example.market.ui.components;
 
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -77,9 +78,25 @@ public class OwnProductViewHolder extends RecyclerView.ViewHolder implements  Vi
         dateTextView.setText(strDate);
 
         ArrayList<SlideModel> imageList =new ArrayList<SlideModel>();
-        for(String imgURL: product.getImages()){
-            String fullURL="https://"+BuildConfig.API_ADDRESS+imgURL;
-            imageList.add(new SlideModel(fullURL, ScaleTypes.CENTER_CROP));
+        if(product.getImages().size()>0){
+            for(String imgURL: product.getImages()){
+                String fullURL="https://"+BuildConfig.API_ADDRESS+imgURL;
+                imageList.add(new SlideModel(fullURL, ScaleTypes.CENTER_CROP));
+            }
+
+        }
+        else {
+            try{
+                String lang= Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
+                if(lang.equals("pt")){
+                    imageList.add(new SlideModel(R.drawable.placeholder_no_image_pt, ScaleTypes.CENTER_CROP));
+                }
+                else{
+                    imageList.add(new SlideModel(R.drawable.placeholder_no_image_en, ScaleTypes.CENTER_CROP));
+                }
+            }
+            catch (Exception ignored){
+            }
         }
         imageSlider.setImageList(imageList);
         imageSlider.setItemClickListener(this);

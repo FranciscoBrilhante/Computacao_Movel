@@ -67,7 +67,9 @@
         app:iss_auto_cycle="false"
         app:iss_delay="0"
         app:iss_period="1000"
-        app:iss_placeholder="@drawable/loader" />
+        app:iss_placeholder="@drawable/loading_circle"
+        app:iss_error_image="@drawable/network_error"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"

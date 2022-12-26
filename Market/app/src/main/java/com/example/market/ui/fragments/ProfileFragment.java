@@ -14,6 +14,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.market.R;
 import com.example.market.data.MarketViewModel;
@@ -52,35 +55,39 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, H
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.profile:
-                break;
-            case R.id.messages:
-                break;
-            case R.id.logout:
-                viewModel.clearCookies();
-                viewModel.removeStoredCredentials();
-                Intent myIntent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(myIntent);
-                break;
-            case R.id.delete:
-                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(),0);
-                alert.setTitle(R.string.confirm_deletion_title);
-                alert.setMessage(R.string.confirm_deletion_message);
-                alert.setPositiveButton(R.string.delete_button, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        viewModel.sendRequest("/profile/delete","GET",null,null,false, false,true,ProfileFragment.this::onComplete);
-                    }
-                });
+        if(view==binding.profile){
+            NavHostFragment navHostFragment =
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+            NavController navController = navHostFragment.getNavController();
+            NavDirections action = ProfileFragmentDirections.actionNavigationProfileToNavigationProfileDetails();
+            navController.navigate(action);
+        }
+        else if(view==binding.messages){
 
-                alert.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                });
-                alert.show();
-                break;
+        }
+        else if(view==binding.logout){
+            viewModel.clearCookies();
+            viewModel.removeStoredCredentials();
+            Intent myIntent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(myIntent);
+        }
+        else if(view==binding.delete){
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(),0);
+            alert.setTitle(R.string.confirm_deletion_title);
+            alert.setMessage(R.string.confirm_deletion_message);
+            alert.setPositiveButton(R.string.delete_button, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    viewModel.sendRequest("/profile/delete","GET",null,null,false, false,true,ProfileFragment.this::onComplete);
+                }
+            });
+
+            alert.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            });
+            alert.show();
         }
     }
 

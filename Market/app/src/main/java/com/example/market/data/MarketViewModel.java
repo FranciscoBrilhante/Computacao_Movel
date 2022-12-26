@@ -78,6 +78,14 @@ public class MarketViewModel extends AndroidViewModel {
         return categoryDao.getAll();
     }
 
+    public void addProducts(ArrayList<Product> products) {
+        MainRoomDatabase.databaseWriteExecutor.execute(() -> {
+            for (Product product : products) {
+                productDao.insert(product);
+            }
+        });
+    }
+
     public void addCategories(ArrayList<Category> categories) {
         MainRoomDatabase.databaseWriteExecutor.execute(() -> {
             for (Category category : categories) {

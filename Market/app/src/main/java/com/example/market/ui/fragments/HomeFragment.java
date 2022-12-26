@@ -142,7 +142,8 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
             if (endpoint.equals(url1)) {
                 if (code == 200) {
                     ArrayList<Product> products = viewModel.productsFromJSONObject(data);
-                    adapter.submitList(products);
+                    viewModel.addProducts(products);
+                    //adapter.submitList(products);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
             }
