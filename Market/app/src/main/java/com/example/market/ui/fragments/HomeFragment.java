@@ -24,10 +24,12 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.market.R;
 import com.example.market.data.MarketViewModel;
 import com.example.market.databinding.FragmentHomeBinding;
+import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.interfaces.RecyclerViewInterface;
 import com.example.market.marketDatabase.Category;
 import com.example.market.marketDatabase.PriceRange;
@@ -36,9 +38,13 @@ import com.example.market.ui.components.CategorySpinnerAdapter;
 import com.example.market.ui.components.PriceRangeSpinnerAdapter;
 import com.example.market.ui.components.ProductListAdapter;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.ParseException;
 import java.util.ArrayList;
 
-public class HomeFragment extends Fragment implements RecyclerViewInterface, View.OnClickListener {
+public class HomeFragment extends Fragment implements RecyclerViewInterface, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, HTTTPCallback {
 
     private FragmentHomeBinding binding;
     private MarketViewModel viewModel;
@@ -66,6 +72,8 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         PriceRangeSpinnerAdapter priceRangeSpinnerAdapter= new PriceRangeSpinnerAdapter(getContext(),initPriceRange());
         binding.priceRangeSpinner.setAdapter(priceRangeSpinnerAdapter);
 
+        viewModel.sendRequest("/product/recommended", "GET", null, null, false, false, true, this);
+
         viewModel.getAllProducts().observe(requireActivity(), products -> {
             adapter.submitList(products);
         });
@@ -77,15 +85,13 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         });
 
         binding.moreButton.setOnClickListener(this);
+        binding.swipeRefreshLayout.setOnRefreshListener(this);
         return binding.getRoot();
     }
 
     @Override
     public void onClick(Product product) {
-        boolean isOwner=false;
-        if(product.getProfileName().equals(viewModel.getStoredCredentials().get("username"))){
-            isOwner=true;
-        }
+        boolean isOwner= product.getProfileName().equals(viewModel.getStoredCredentials().get("username"));
         NavHostFragment navHostFragment =
                 (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
         NavController navController = navHostFragment.getNavController();
@@ -119,5 +125,29 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         array.add(new PriceRange(100.0,500.0,getContext()));
         array.add(new PriceRange(500.0,null,getContext()));
         return array;
+    }
+
+    @Override
+    public void onRefresh() {
+        binding.swipeRefreshLayout.setRefreshing(true);
+        viewModel.sendRequest("/product/recommended", "GET", null, null, false, false, true, this);
+    }
+
+    @Override
+    public void onComplete(JSONObject data) {
+        try {
+            String url1 = "/product/recommended";
+            int code = data.getInt("status");
+            String endpoint = data.getString("endpoint");
+            if (endpoint.equals(url1)) {
+                if (code == 200) {
+                    ArrayList<Product> products = viewModel.productsFromJSONObject(data);
+                    adapter.submitList(products);
+                }
+                binding.swipeRefreshLayout.setRefreshing(false);
+            }
+        } catch (JSONException | ParseException e) {
+            e.printStackTrace();
+        }
     }
 }

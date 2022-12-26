@@ -22,6 +22,7 @@ import com.example.market.marketDatabase.Product;
 import com.example.market.marketDatabase.ProductDao;
 import com.example.market.ui.fragments.LoginFragment;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,10 +38,16 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -72,15 +79,15 @@ public class MarketViewModel extends AndroidViewModel {
     }
 
     public void addCategories(ArrayList<Category> categories) {
-        MainRoomDatabase.databaseWriteExecutor.execute(()->{
-            for(Category category:categories){
+        MainRoomDatabase.databaseWriteExecutor.execute(() -> {
+            for (Category category : categories) {
                 categoryDao.insert(category);
             }
         });
     }
 
-    public void deleteProductByID(int id){
-        MainRoomDatabase.databaseWriteExecutor.execute(()->{
+    public void deleteProductByID(int id) {
+        MainRoomDatabase.databaseWriteExecutor.execute(() -> {
             productDao.deleteByID(id);
         });
     }
@@ -198,4 +205,54 @@ public class MarketViewModel extends AndroidViewModel {
         });
     }
 
+    public ArrayList<Product> productsFromJSONObject(JSONObject data) throws JSONException, ParseException {
+        JSONArray array = data.getJSONArray("products");
+        ArrayList<Product> products = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject elem = array.getJSONObject(i);
+            int id = elem.getInt("id");
+            String title = elem.getString("title");
+            String description = elem.getString("description");
+            int category = elem.getInt("category");
+            Double price = elem.getDouble("price");
+            int profile = elem.getInt("profile");
+            String date = elem.getString("date");
+
+            String categoryName = elem.getString("category_name");
+            String profileName = elem.getString("profile_name");
+
+            JSONArray images = elem.getJSONArray("images");
+            ArrayList<String> imagesURL = new ArrayList<>();
+            for (int j = 0; j < images.length(); j++) {
+                imagesURL.add((String) images.get(j));
+            }
+
+            SimpleDateFormat format = new SimpleDateFormat(
+                    "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            Double rating = elem.getDouble("rating");
+            Date d = format.parse(date);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(d);
+            Product product = new Product(id, title, description, category, price, profile, calendar, imagesURL, categoryName, profileName, rating);
+            products.add(product);
+
+        }
+        return products;
+    }
+
+    public ArrayList<Category>  categoriesFromJSONObject(JSONObject data) throws JSONException {
+        JSONArray array = data.getJSONArray("categories");
+        ArrayList<Category> categories = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject elem = array.getJSONObject(i);
+            int id = elem.getInt("id");
+            String name = elem.getString("name");
+
+            Category category=new Category(id,name);
+            categories.add(category);
+        }
+        return categories;
+    }
 }

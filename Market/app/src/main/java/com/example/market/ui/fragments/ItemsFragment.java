@@ -15,6 +15,7 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.market.R;
 import com.example.market.data.MarketViewModel;
@@ -39,7 +40,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class ItemsFragment extends Fragment implements RecyclerViewInterface, HTTTPCallback, View.OnClickListener {
+public class ItemsFragment extends Fragment implements RecyclerViewInterface, HTTTPCallback, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
 
     private FragmentItemsBinding binding;
     private MarketViewModel viewModel;
@@ -57,7 +58,7 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         binding.createButton.setOnClickListener(this);
-
+        binding.swipeRefreshLayout.setOnRefreshListener(this);
         //request own user products to populate screen
         viewModel.sendRequest("/product/myproducts", "GET", null, null, false, false, true, this);
         return binding.getRoot();
@@ -82,56 +83,14 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
             String endpoint = data.getString("endpoint");
             if (endpoint.equals(url1)) {
                 if (code == 200) {
-                    ArrayList<Product> products = processData(data);
+                    ArrayList<Product> products = viewModel.productsFromJSONObject(data);
                     adapter.submitList(products);
                 }
+                binding.swipeRefreshLayout.setRefreshing(false);
             }
-
-        } catch (JSONException e) {
+        } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
-    }
-
-    //unpack response json data to populate screen with products
-    private ArrayList<Product> processData(JSONObject data) throws JSONException {
-        JSONArray array = data.getJSONArray("products");
-        ArrayList<Product> products = new ArrayList<>();
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject elem = array.getJSONObject(i);
-            int id = elem.getInt("id");
-            String title = elem.getString("title");
-            String description = elem.getString("description");
-            int category = elem.getInt("category");
-            Double price = elem.getDouble("price");
-            int profile = elem.getInt("profile");
-            String date = elem.getString("date");
-
-            String categoryName = elem.getString("category_name");
-            String profileName = elem.getString("profile_name");
-
-            JSONArray images = elem.getJSONArray("images");
-            ArrayList<String> imagesURL = new ArrayList<>();
-            for (int j = 0; j < images.length(); j++) {
-                imagesURL.add((String) images.get(j));
-            }
-
-            SimpleDateFormat format = new SimpleDateFormat(
-                    "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-            format.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-            Double rating = elem.getDouble("rating");
-            try {
-                Date d = format.parse(date);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(d);
-                Product product = new Product(id, title, description, category, price, profile, calendar, imagesURL, categoryName, profileName, rating);
-                products.add(product);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return products;
     }
 
     //user wants to create new product
@@ -143,5 +102,11 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
         NavDirections action = ItemsFragmentDirections.actionNavigationItemsToNavigationCreateProduct();
 
         navController.navigate(action);
+    }
+
+    @Override
+    public void onRefresh() {
+        binding.swipeRefreshLayout.setRefreshing(true);
+        viewModel.sendRequest("/product/myproducts", "GET", null, null, false, false, true, this);
     }
 }

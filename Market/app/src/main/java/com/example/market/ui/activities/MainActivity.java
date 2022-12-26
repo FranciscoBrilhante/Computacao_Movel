@@ -80,13 +80,7 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
             if (endpoint.equals(url1)) {
                 code = (Integer) data.get("status");
                 if (code == 200) {
-                    String sessionID = viewModel.getSessionID();
-                    Intent intent = new Intent(this, ProductsService.class);
-                    intent.putExtra("sessionID", sessionID);
-                    startService(intent);
-
                     requestLocation();
-
                     viewModel.sendRequest("/category/all", "GET", null, null, false, false, true, this);
 
                 } else {
@@ -97,7 +91,8 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
             } else if (endpoint.equals(url2)) {
                 code = (Integer) data.get("status");
                 if (code == 200) {
-                    populateCategories(data);
+                    ArrayList<Category> categories = viewModel.categoriesFromJSONObject(data);
+                    viewModel.addCategories(categories);
                 }
             }
 
@@ -125,18 +120,4 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
                 prefsEditor.apply();
             });
 
-    private void populateCategories(JSONObject data) throws JSONException{
-        JSONArray array = data.getJSONArray("categories");
-        ArrayList<Category> categories = new ArrayList<>();
-        for (int i = 0; i < array.length(); i++) {
-            JSONObject elem = array.getJSONObject(i);
-            int id = elem.getInt("id");
-            String name = elem.getString("name");
-
-            Category category=new Category(id,name);
-            categories.add(category);
-        }
-
-        viewModel.addCategories(categories);
-    }
 }
