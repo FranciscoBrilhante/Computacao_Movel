@@ -22,8 +22,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:drawablePadding="5dp"
+            android:ellipsize="end"
             android:gravity="center"
-            android:text="eletronics"
+            android:maxWidth="200dp"
+            android:maxLines="1"
+            android:text="asdasdasdasdeletronics"
             android:textColor="@color/subtext_color"
             android:textSize="12sp"
             app:drawableStartCompat="@drawable/hash" />
@@ -79,6 +82,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
+            android:ellipsize="end"
+            android:maxWidth="100dp"
+            android:maxLines="1"
             android:text="João Mário"
             android:textColor="@color/title_color"
             android:textSize="16sp" />
@@ -125,6 +131,9 @@
                 android:id="@+id/title_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxWidth="270dp"
+                android:maxLines="1"
                 android:text="Blackview BL8800 Pro"
                 android:textColor="@color/title_color"
                 android:textSize="20sp" />
@@ -150,6 +159,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:ellipsize="end"
             android:maxHeight="150dp"
             android:text="Telemovel novo na caixa com factura e garantia custou mais de 400 euros e esta completamente funcional..É a prova de agua choque e temperaturas extremasBlackview BL6000 Pro – 5G, chega ao mercado como o primeiro equipamento 5G robusto da marca Blackview, para que a comunicação e a navegação sejam mais fluidas.Com uma capacidade de 8GB de RAM e 256GB de ROM, com o processador MediaTek MT6873 de última geração, que lhe permitirá lidar com múltiplas tarefas ao mesmo tempo e alternar facilmente entre aplicativos.É também um aparelho que possui uma câmera tripla de 48 megapixels e assistida por mais duas de 0.3MP e 13MP"
             android:textSize="14sp" />

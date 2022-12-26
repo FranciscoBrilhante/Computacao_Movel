@@ -21,6 +21,9 @@ public interface ProductDao {
     List<Product> getAllList();
 
     @Query("DELETE FROM product_table")
-    void delete();
+    void deleteAll();
+
+    @Query("DELETE FROM product_table WHERE id=:id")
+    void deleteByID(int id);
 
 }

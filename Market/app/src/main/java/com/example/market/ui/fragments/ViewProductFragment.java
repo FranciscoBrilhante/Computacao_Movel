@@ -2,6 +2,8 @@ package com.example.market.ui.fragments;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -12,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
@@ -49,13 +52,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
-public class ViewProductFragment extends Fragment implements HTTTPCallback {
-    private boolean owner;
-    private int id;
+public class ViewProductFragment extends Fragment implements HTTTPCallback, View.OnClickListener {
+    private boolean owner; //is the user the owner of the product?
+    private int id; //product id being viewed
 
     private FragmentViewProductBinding binding;
     private MarketViewModel viewModel;
-    private ProductListAdapter adapter;
 
 
     @Override
@@ -71,8 +73,13 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback {
         viewModel.sendRequest("/product/details", "GET", params, null, false, false, true, this);
 
         if(owner){
+            //if its owner cant send own message and replace button image with eliminate image
+            binding.messageButton.setImageResource(R.drawable.trash_2);
             binding.sendMessageButton.setVisibility(View.GONE);
         }
+
+        binding.backButton.setOnClickListener(this);
+        binding.messageButton.setOnClickListener(this);
         return binding.getRoot();
     }
 
@@ -81,6 +88,7 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback {
         Integer code;
         String url1 = "/product/details";
         String url2 = "/profile/info";
+        String url3 = "/product/delete";
         try {
             String endpoint = (String) data.get("endpoint");
             if (endpoint.equals(url1)) {
@@ -101,6 +109,13 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback {
                 }
             } else if (endpoint.equals(url2)) {
                 initializeProfilePhoto(data);
+            } else if (endpoint.equals(url3)) {
+                viewModel.deleteProductByID(id);
+                Toast.makeText(getActivity().getApplicationContext(),R.string.successfull_deletion_product_message,Toast.LENGTH_SHORT).show();
+                NavHostFragment navHostFragment =
+                        (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                NavController navController = navHostFragment.getNavController();
+                navController.navigateUp();
             }
         } catch (JSONException | ParseException e) {
             e.printStackTrace();
@@ -164,6 +179,37 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback {
             //Picasso.get().load(fullURL).into(photoView);
         } else {
             photoView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.user));
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view==binding.backButton){
+            NavHostFragment navHostFragment =
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+            NavController navController = navHostFragment.getNavController();
+            navController.navigateUp();
+        }
+        if(view==binding.messageButton){
+            if(owner){
+                AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(),0);
+                alert.setTitle(R.string.confirm_deletion_product_title);
+                alert.setMessage(R.string.confirm_deletion_product_message);
+                alert.setPositiveButton(R.string.delete_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Map<String,Object> params=new LinkedHashMap<>();
+                        params.put("product_id",Integer.toString(id));
+                        viewModel.sendRequest("/product/delete","GET",params,null,false, false,true,ViewProductFragment.this::onComplete);
+                    }
+                });
+                alert.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                alert.show();
+            }
         }
     }
 }

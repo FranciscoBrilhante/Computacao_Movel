@@ -33,7 +33,7 @@
     <string name="messages_option">Mensagens</string>
     <string name="logout_option">Terminar Sessão</string>
     <string name="delete_account_option">Apagar Conta</string>
-    <string name="confirm_deletion_message">Esta ação não é reversível.</string>
+    <string name="confirm_deletion_message">Esta ação é irreversível.</string>
     <string name="confirm_deletion_title">Apagar Conta?</string>
     <string name="delete_button">Apagar</string>
     <string name="cancel_button">Cancelar</string>
@@ -50,4 +50,7 @@
     <string name="toolbar_items_title">Os Meus Anúncios</string>
     <string name="toolbar_create_title">Publicar Anúncio</string>
     <string name="toolbar_profile_title">Conta Pessoal</string>
+    <string name="confirm_deletion_product_title">Remover Anúncio</string>
+    <string name="confirm_deletion_product_message">Esta ação é irreversível.</string>
+    <string name="successfull_deletion_product_message">Anúncio retirado com sucesso</string>
 </resources>

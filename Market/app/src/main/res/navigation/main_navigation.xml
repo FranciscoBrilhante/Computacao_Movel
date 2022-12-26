@@ -16,7 +16,7 @@
             app:destination="@id/navigation_view_product" >
             <argument
                 android:name="owner"
-                android:defaultValue="false" />
+                app:argType="boolean"/>
         </action>
     </fragment>
 
@@ -56,8 +56,7 @@
             app:destination="@id/navigation_home" />
         <argument
             android:name="owner"
-            app:argType="boolean"
-            android:defaultValue="false" />
+            app:argType="boolean" />
         <argument
             android:name="id"
             app:argType="integer" />

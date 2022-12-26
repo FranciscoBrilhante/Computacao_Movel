@@ -79,6 +79,12 @@ public class MarketViewModel extends AndroidViewModel {
         });
     }
 
+    public void deleteProductByID(int id){
+        MainRoomDatabase.databaseWriteExecutor.execute(()->{
+            productDao.deleteByID(id);
+        });
+    }
+
     public boolean areCredentialsStored() {
         SharedPreferences sharedPref = application.getSharedPreferences("credentials", MODE_PRIVATE);
         String username = sharedPref.getString("username", null);

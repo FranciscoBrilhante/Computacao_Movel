@@ -82,10 +82,14 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
 
     @Override
     public void onClick(Product product) {
+        boolean isOwner=false;
+        if(product.getProfileName().equals(viewModel.getStoredCredentials().get("username"))){
+            isOwner=true;
+        }
         NavHostFragment navHostFragment =
                 (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
         NavController navController = navHostFragment.getNavController();
-        NavDirections action = HomeFragmentDirections.actionNavigationHomeToNavigationViewProduct(product.getId());
+        NavDirections action = HomeFragmentDirections.actionNavigationHomeToNavigationViewProduct(isOwner,product.getId());
 
         navController.navigate(action);
     }

@@ -39,7 +39,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class ItemsFragment extends Fragment implements RecyclerViewInterface, HTTTPCallback {
+public class ItemsFragment extends Fragment implements RecyclerViewInterface, HTTTPCallback, View.OnClickListener {
 
     private FragmentItemsBinding binding;
     private MarketViewModel viewModel;
@@ -50,15 +50,20 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
         binding = FragmentItemsBinding.inflate(inflater, container, false);
 
+        //configure costume recyclerview for products
         adapter = new OwnProductListAdapter(new OwnProductListAdapter.ProductDiff(), this);
         RecyclerView recyclerView = binding.productsList;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        binding.createButton.setOnClickListener(this);
+
+        //request own user products to populate screen
         viewModel.sendRequest("/product/myproducts", "GET", null, null, false, false, true, this);
         return binding.getRoot();
     }
 
+    //user clicked on a product, redirect to view product screen
     @Override
     public void onClick(Product product) {
         NavHostFragment navHostFragment =
@@ -87,6 +92,7 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
         }
     }
 
+    //unpack response json data to populate screen with products
     private ArrayList<Product> processData(JSONObject data) throws JSONException {
         JSONArray array = data.getJSONArray("products");
         ArrayList<Product> products = new ArrayList<>();
@@ -126,5 +132,16 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
         }
 
         return products;
+    }
+
+    //user wants to create new product
+    @Override
+    public void onClick(View view) {
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+        NavController navController = navHostFragment.getNavController();
+        NavDirections action = ItemsFragmentDirections.actionNavigationItemsToNavigationCreateProduct();
+
+        navController.navigate(action);
     }
 }

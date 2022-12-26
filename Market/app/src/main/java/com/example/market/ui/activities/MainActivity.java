@@ -16,6 +16,7 @@ import com.example.market.services.ProductsService;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
@@ -48,13 +49,16 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Disable auto dark mode
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-
+        //if no credentials found redirect to login screen
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
         if (!viewModel.areCredentialsStored()) {
             Intent myIntent = new Intent(this, LoginActivity.class);
@@ -62,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
             return;
         }
 
+        //send login request
         Map<String, Object> params = viewModel.getStoredCredentials();
         viewModel.sendRequest("/profile/login", "POST", null, params, true, true, false, this);
     }
@@ -106,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED) {
             SharedPreferences prefs = getPreferences(MODE_PRIVATE);
             boolean allowedBefore = prefs.getBoolean("allowed_location", true);
+            //if user already gave permission or never was requested permission then app can request it
             if (allowedBefore) {
                 requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
             }
@@ -117,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
                 SharedPreferences prefs = getPreferences(MODE_PRIVATE);
                 SharedPreferences.Editor prefsEditor = prefs.edit();
                 prefsEditor.putBoolean("allowed_location", isGranted);
-                prefsEditor.apply(); // or commit();
+                prefsEditor.apply();
             });
 
     private void populateCategories(JSONObject data) throws JSONException{

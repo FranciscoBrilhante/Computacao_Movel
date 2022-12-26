@@ -1,6 +1,7 @@
 package com.example.market.ui.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
 import androidx.navigation.NavInflater;
@@ -17,6 +18,8 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Disable auto dark mode
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -28,11 +31,7 @@ public class LoginActivity extends AppCompatActivity {
         NavGraph graph=inflater.inflate(R.navigation.login_navigation);
         navController.setGraph(graph);
 
-
-        //para ir para o fragmento de registo
-        //NavDirections action = LoginFragmentDirections.actionNavigationLoginToNavigationRegister();
-        //navController.navigate(action);
-
+        //hide default toolbar
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }

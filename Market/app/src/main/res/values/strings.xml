@@ -49,5 +49,8 @@
     <string name="toolbar_items_title">My listings</string>
     <string name="toolbar_create_title">Publish Product Listing</string>
     <string name="toolbar_profile_title">Personal Account</string>
+    <string name="confirm_deletion_product_title">Delete Product Listing</string>
+    <string name="confirm_deletion_product_message">This action cannot be undone.</string>
+    <string name="successfull_deletion_product_message">Product deleted successfully</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

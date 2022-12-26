@@ -119,6 +119,7 @@ public class ProductsService extends Service {
 
     public void processProductsResponse(JSONObject data, ProductDao productDao) throws JSONException {
         if(data!=null && (Integer) data.get("status")==200){
+            productDao.deleteAll();
             JSONArray array=data.getJSONArray("products");
             for (int i = 0 ; i < array.length(); i++) {
                 JSONObject elem=array.getJSONObject(i);
