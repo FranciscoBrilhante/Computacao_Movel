@@ -46,7 +46,6 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
         return binding.getRoot();
     }
 
-
     @Override
     public void onClick(View view) {
         if(view==binding.backButton){

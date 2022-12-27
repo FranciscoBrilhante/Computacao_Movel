@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.market.ui.components.SquareLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_centerInParent="true">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            app:shapeAppearanceOverlay="@style/borderForShapeableImage"
+            app:srcCompat="@drawable/placeholder_no_image_en"
+            app:strokeColor="@null"/>
+
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/remove_photo"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:background="@drawable/default_border"
+            android:scaleType="fitCenter"
+            android:src="@drawable/x" />
+    </FrameLayout>
+
+</com.example.market.ui.components.SquareLinearLayout>

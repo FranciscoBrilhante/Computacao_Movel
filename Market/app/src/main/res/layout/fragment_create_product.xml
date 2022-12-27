@@ -191,7 +191,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="30dp"
-                android:gravity="center_horizontal|center_vertical"
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingVertical="5dp">
 
@@ -208,12 +208,44 @@
                     android:textStyle="bold" />
 
                 <Spinner
-                    android:id="@+id/category_input"
-                    android:layout_width="170dp"
+                    android:id="@+id/category_spinner"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0"
-                    tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/default_border" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:paddingVertical="5dp">
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/upload_photo_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/default_border"
+                    android:drawableStart="@drawable/image"
+                    android:drawablePadding="10dp"
+                    android:paddingHorizontal="10dp"
+                    android:text="@string/upload_image_title"
+                    android:textAllCaps="false"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/image_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="30dp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/publish_button"
@@ -221,7 +253,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginHorizontal="5dp"
-                android:layout_marginTop="30dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/default_border"
                 android:drawableStart="@drawable/upload_cloud"

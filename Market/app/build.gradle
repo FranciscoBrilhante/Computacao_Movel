@@ -70,4 +70,7 @@ dependencies {
     //refresh data on scroll to top
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
 
+    //send photos w/ other parameters
+    implementation"com.squareup.okhttp3:okhttp:4.10.0"
+
 }
