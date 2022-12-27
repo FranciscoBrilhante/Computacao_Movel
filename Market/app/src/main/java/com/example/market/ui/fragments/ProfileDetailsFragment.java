@@ -112,7 +112,11 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
         String username = data.getString("username");
         String email = data.getString("email");
         String photoURL = data.getString("photo");
-        String city = Double.toString(data.getDouble("cityX"));
+        String city = data.getString("location");
+
+        if(city.equals("null")){
+            city=getString(R.string.location_undefined);
+        }
 
         binding.usernameInput.setText(username);
         binding.emailInput.setText(email);

@@ -134,6 +134,7 @@ public class ProductsService extends Service {
 
                 String categoryName=elem.getString("category_name");
                 String profileName=elem.getString("profile_name");
+                String profileLocation=elem.getString("profile_location");
 
                 JSONArray images=elem.getJSONArray("images");
                 ArrayList<String> imagesURL=new ArrayList<>();
@@ -150,7 +151,7 @@ public class ProductsService extends Service {
                     Date d = format.parse(date);
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(d);
-                    Product product=new Product(id,title,description,category,price,profile,calendar,imagesURL,categoryName,profileName,rating);
+                    Product product=new Product(id,title,description,category,price,profile,calendar,imagesURL,categoryName,profileName,rating,profileLocation);
                     productDao.insert(product);
                 } catch (ParseException e) {
                     e.printStackTrace();

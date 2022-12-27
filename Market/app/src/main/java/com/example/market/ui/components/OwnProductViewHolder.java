@@ -64,12 +64,18 @@ public class OwnProductViewHolder extends RecyclerView.ViewHolder implements  Vi
     }
 
     public void bind(Product product) {
+        String lang= Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
         this.product = product;
         titleView.setText(product.getTitle());
         descriptionView.setText(product.getDescription());
         ratingTextView.setText(String.format(Locale.ENGLISH,"%.1f", product.getProfileRating() ));
         categoryTextView.setText(product.getCategoryName());
-        locationTextView.setText("Coimbra");
+
+        String city=product.getProfileLocation();
+        if(city.equals("null")){
+            locationTextView.setVisibility(View.INVISIBLE);
+        }
+        locationTextView.setText(city);
         priceTextView.setText(String.format(Locale.ENGLISH,"%.0f€", product.getPrice()));
         nameTextView.setText(product.getProfileName());
 
@@ -87,7 +93,6 @@ public class OwnProductViewHolder extends RecyclerView.ViewHolder implements  Vi
         }
         else {
             try{
-                String lang= Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
                 if(lang.equals("pt")){
                     imageList.add(new SlideModel(R.drawable.placeholder_no_image_pt, ScaleTypes.CENTER_CROP));
                 }

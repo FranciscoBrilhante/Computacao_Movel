@@ -239,6 +239,7 @@ public class MarketViewModel extends AndroidViewModel {
 
             String categoryName = elem.getString("category_name");
             String profileName = elem.getString("profile_name");
+            String profileLocation=elem.getString("profile_location");
 
             JSONArray images = elem.getJSONArray("images");
             ArrayList<String> imagesURL = new ArrayList<>();
@@ -254,7 +255,7 @@ public class MarketViewModel extends AndroidViewModel {
             Date d = format.parse(date);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(d);
-            Product product = new Product(id, title, description, category, price, profile, calendar, imagesURL, categoryName, profileName, rating);
+            Product product = new Product(id, title, description, category, price, profile, calendar, imagesURL, categoryName, profileName, rating,profileLocation);
             products.add(product);
 
         }

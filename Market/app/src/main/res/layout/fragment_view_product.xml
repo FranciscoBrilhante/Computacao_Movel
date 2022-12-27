@@ -171,8 +171,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawablePadding="5dp"
+                    android:ellipsize="end"
                     android:gravity="center_vertical"
-                    android:text="Coimbra"
+                    android:maxWidth="250dp"
+                    android:maxLines="1"
+                    android:text="Coimbraasdasdasdasdasd"
                     android:textColor="@color/title_color"
                     android:textSize="24sp"
                     app:drawableEndCompat="@drawable/map_pin" />

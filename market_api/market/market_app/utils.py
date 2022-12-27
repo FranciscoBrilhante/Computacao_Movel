@@ -1,6 +1,7 @@
 import os
 from geopy.geocoders import Nominatim
 from .models import *
+import pickle
 
 #_________________ Helpers ___________________#
 def contains_error(errors, code):
@@ -26,25 +27,39 @@ def try_delete_file(path):
 
 def translateLocation(cityX,cityY):
     if(cityX==0 and cityY==0):
-        return "null"
+        return None
 
-    geolocator = Nominatim(user_agent="market_api_CM")
-    location = geolocator.reverse(f"{cityY}, {cityX}")
+    table={}
+    try:
+        with open('coordinates_table.pkl', 'rb') as f:
+            table = pickle.load(f)
+    except:
+        pass
 
-    address=location.raw.get('address',None)
-    if(address!=None):
-        municipality=address.get('municipality',None)
-        county=address.get('county',None)
+    entry=table.get(f"{cityY}, {cityX}",None)
+    if entry==None:
+        geolocator = Nominatim(user_agent="market_api_CM")
+        location = geolocator.reverse(f"{cityY}, {cityX}")
+        if location!=None:
+            entry=location.raw.get('address',None)
+            if len(table.keys())<100000:
+                table[f"{cityY}, {cityX}"]=entry
+                with open('coordinates_table.pkl', 'wb') as f:
+                    pickle.dump(table, f)
+        
+    if(entry!=None):
+        municipality=entry.get('municipality',None)
+        county=entry.get('county',None)
         if(municipality!=None and county!=None):
             return f"{municipality}, {county}"
         elif(county!=None):
             return f"{county}"
         else:
-            return "null"
-    return "null"
+            return None
+    return None
 
 
-def computeRating(profile):
+def computeRating(profile): 
     reviews=Review.objects.filter(userReviewed=profile)  
     scores=[review.stars for review in reviews]
     if len(scores)==0:

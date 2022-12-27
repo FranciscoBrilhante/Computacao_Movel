@@ -147,7 +147,11 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
         String price = String.format(Locale.ENGLISH, "%.0f€", data.getDouble("price"));
         priceView.setText(price);
 
-        cityView.setText("Coimbra");
+        String city=data.getString("profile_location");
+        if(city.equals("null")){
+            cityView.setVisibility(View.INVISIBLE);
+        }
+        cityView.setText(city);
 
         ArrayList<SlideModel> imageList = new ArrayList<SlideModel>();
         JSONArray images = data.getJSONArray("images");

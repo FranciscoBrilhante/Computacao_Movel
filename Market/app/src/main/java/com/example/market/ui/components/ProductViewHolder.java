@@ -73,9 +73,14 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         descriptionView.setText(product.getDescription());
         ratingTextView.setText(String.format(Locale.ENGLISH, "%.1f", product.getProfileRating()));
         categoryTextView.setText(product.getCategoryName());
-        locationTextView.setText("Coimbra");
         priceTextView.setText(String.format(Locale.ENGLISH, "%.0f€", product.getPrice()));
         nameTextView.setText(product.getProfileName());
+
+        String city=product.getProfileLocation();
+        if(city.equals("null")){
+            locationTextView.setVisibility(View.INVISIBLE);
+        }
+        locationTextView.setText(city);
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
         String strDate = dateFormat.format(product.getDate().getTime());
