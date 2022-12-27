@@ -103,6 +103,7 @@ def details(request):
             'date':product.dateCreated,
             'images':imgs_urls,
             'category_name':product.category.name,
+            'profile_location':translateLocation(product.userSelling.cityX,product.userSelling.cityY),
             'profile_name':product.userSelling.user.username,
             'rating': computeRating(product.userSelling),
             })
@@ -133,6 +134,7 @@ def recommended(request):
         'profile':product.userSelling.pk,
         'date':product.dateCreated,
         'category_name':product.category.name,
+        'profile_location':translateLocation(product.userSelling.cityX,product.userSelling.cityY),
         'profile_name':product.userSelling.user.username,
         'images':[productImage.image.url for productImage in ProductImage.objects.filter(product=product.pk)],
         'rating': computeRating(product.userSelling),
@@ -156,6 +158,7 @@ def myProducts(request):
         'profile':product.userSelling.pk,
         'date':product.dateCreated,
         'category_name':product.category.name,
+        'profile_location':translateLocation(profile.cityX,profile.cityY),
         'profile_name':product.userSelling.user.username,
         'images':[productImage.image.url for productImage in ProductImage.objects.filter(product=product.pk)],
         'rating': computeRating(product.userSelling),
@@ -169,13 +172,4 @@ def myProducts(request):
 
 
 
-def computeRating(profile):
-    reviews=Review.objects.filter(userReviewed=profile)  
-    scores=[review.stars for review in reviews]
-    if len(scores)==0:
-        score=0
-    else:
-        score=sum(scores)/len(scores)
-
-    return score
 

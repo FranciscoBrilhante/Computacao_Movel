@@ -9,6 +9,7 @@ from django.core.files import File
 import os
 from django.conf import settings
 from ..utils import *
+from geopy.geocoders import Nominatim
 
 def register(request):
     if request.method == 'POST':
@@ -100,15 +101,14 @@ def personalInfo(request):
     profile=Profile.objects.get(user=user.pk)
     username=user.username
     email=user.email
-    cityX=profile.cityX
-    cityY=profile.cityY
-    
+    location=translateLocation(profile.cityX,profile.cityY)
+
     photo=profile.photo
     if photo and hasattr(photo, 'url'):
         url=photo.url
     else:
         url=None
-    return JsonResponse({'status': 200, 'username':username,'id': profile.id, 'email':email, 'cityX':cityX, 'cityY':cityY,'photo':url})
+    return JsonResponse({'status': 200, 'username':username,'id': profile.id, 'email':email, 'location':location ,'photo':url})
 
 def delete(request):
     if not request.user.is_authenticated:
@@ -133,7 +133,6 @@ def info(request):
             data = form.cleaned_data
             profile_id=data['profile_id']
             profile = Profile.objects.get(pk=profile_id)
-
             try:
                 photo_url=profile.photo.url
             except:
@@ -142,8 +141,7 @@ def info(request):
             return JsonResponse({'status': 200,
             'id':profile.pk, 
             'username':profile.user.username, 
-            'cityX':profile.cityX,
-            'cityY':profile.cityY,
+            'location':translateLocation(profile.cityX,profile.cityY),
             'image':photo_url,
             })
             

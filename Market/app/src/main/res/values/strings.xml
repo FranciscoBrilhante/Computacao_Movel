@@ -56,5 +56,6 @@
     <string name="location_label">City Location</string>
     <string name="empty_product_info_warning">The title, description and price of the product must be filled out</string>
     <string name="price_invalid_warning">The price is invalid</string>
+    <string name="update_location_button">update</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

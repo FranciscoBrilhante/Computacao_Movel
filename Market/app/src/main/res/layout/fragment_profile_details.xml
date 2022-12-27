@@ -167,19 +167,37 @@
                     android:text="@string/location_label"
                     android:textColor="@color/title_color" />
 
-                <EditText
-                    android:id="@+id/location_input"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:drawableStart="@drawable/map_pin"
-                    android:drawablePadding="10dp"
-                    android:editable="false"
-                    android:ems="10"
-                    android:enabled="false"
-                    android:textColor="@color/title_color"
-                    android:textIsSelectable="true"
-                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingVertical="5dp">
+
+                    <EditText
+                        android:id="@+id/location_input"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_weight="1"
+                        android:drawableStart="@drawable/map_pin"
+                        android:drawablePadding="10dp"
+                        android:ems="10"
+                        android:enabled="false"
+                        android:textColor="@color/title_color"
+                        android:textIsSelectable="true"
+                        tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/update_location_button"
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/default_border"
+                        android:text="@string/update_location_button"
+                        android:textAllCaps="false"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
             </LinearLayout>
 
         </LinearLayout>

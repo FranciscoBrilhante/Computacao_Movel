@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
             if (endpoint.equals(url1)) {
                 code = (Integer) data.get("status");
                 if (code == 200) {
-                    requestLocation();
                     viewModel.sendRequest("/category/all", "GET", null, null, false, false, true, this);
                     viewModel.sendRequest("/product/recommended", "GET", null, null, false, false, true, this);
                 } else {
@@ -106,25 +105,5 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
             e.printStackTrace();
         }
     }
-
-    private void requestLocation() {
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-            boolean allowedBefore = prefs.getBoolean("allowed_location", true);
-            //if user already gave permission or never was requested permission then app can request it
-            if (allowedBefore) {
-                requestPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION);
-            }
-        }
-    }
-
-    private ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                SharedPreferences prefs = getPreferences(MODE_PRIVATE);
-                SharedPreferences.Editor prefsEditor = prefs.edit();
-                prefsEditor.putBoolean("allowed_location", isGranted);
-                prefsEditor.apply();
-            });
-
 
 }
