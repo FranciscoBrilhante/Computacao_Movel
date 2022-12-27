@@ -54,5 +54,7 @@
     <string name="successfull_deletion_product_message">Product deleted successfully</string>
     <string name="profile_details_title">Profile</string>
     <string name="location_label">City Location</string>
+    <string name="empty_product_info_warning">The title, description and price of the product must be filled out</string>
+    <string name="price_invalid_warning">The price is invalid</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

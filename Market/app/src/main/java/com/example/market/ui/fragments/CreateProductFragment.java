@@ -6,6 +6,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -15,12 +16,14 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -72,15 +75,15 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
     private ImageListAdapter imageListAdapter;
     private RecyclerView imageRecyclerView;
     private ArrayList<Image> productImages;
-    CategorySpinnerAdapter categorySpinnerAdapter;
-
+    private CategorySpinnerAdapter categorySpinnerAdapter;
+    private int numberOfUploadedPhotos = 0;
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-    ActivityResultLauncher<String> mGetContent;
     private static final int PICK_IMAGE_REQUEST = 345345;
+    ActivityResultLauncher<String> requestPermissionLauncher;
 
 
     @Override
@@ -111,6 +114,16 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
         binding.backButton.setOnClickListener(this);
         binding.publishButton.setOnClickListener(this);
         binding.uploadButton.setOnClickListener(this);
+
+        requestPermissionLauncher =
+                registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                    if(isGranted){
+                        Intent intent = new Intent(Intent.ACTION_PICK);
+                        intent.setType("image/*");
+                        startActivityForResult(Intent.createChooser(intent, "Open Gallery"), PICK_IMAGE_REQUEST);
+                    }
+                });
+
         return binding.getRoot();
     }
 
@@ -124,15 +137,27 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
         }
         if (view == binding.uploadPhotoButton) {
             verifyStoragePermissions(getActivity());
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            startActivityForResult(Intent.createChooser(intent, "Open Gallery"), PICK_IMAGE_REQUEST);
         }
         if (view == binding.uploadButton || view == binding.publishButton) {
+            String title = binding.titleInput.getText().toString();
+            String description = binding.descriptionInput.getText().toString();
+            String price = binding.priceInput.getText().toString();
+
+            if (title.length() <= 0 || description.length() <= 0 || price.length() <= 0) {
+                Toast.makeText(getActivity().getApplicationContext(), R.string.empty_product_info_warning, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Double priceDouble = 0.0;
+            try {
+                priceDouble = Double.parseDouble(price);
+            } catch (NumberFormatException e) {
+                Toast.makeText(getActivity().getApplicationContext(), R.string.price_invalid_warning, Toast.LENGTH_SHORT).show();
+                return;
+            }
             Map<String, Object> params = new LinkedHashMap<>();
-            params.put("title", binding.titleInput.getText().toString());
-            params.put("description", binding.descriptionInput.getText().toString());
-            params.put("price", Double.parseDouble(binding.priceInput.getText().toString()));
+            params.put("title", title);
+            params.put("description", description);
+            params.put("price", priceDouble);
             Category cat = (Category) binding.categorySpinner.getSelectedItem();
             params.put("category", cat.getId());
 
@@ -147,10 +172,11 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
             int code = data.getInt("status");
             String endpoint = data.getString("endpoint");
             if (endpoint.equals(url1)) {
+
                 if (code == 200) {
                     if (productImages.size() > 0) {
                         int productID = data.getInt("id");
-                        viewModel.sendProductPhotos(productID,productImages);
+                        viewModel.sendProductPhotos(productID, productImages);
                     }
                     NavHostFragment navHostFragment =
                             (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
@@ -170,16 +196,14 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
         imageListAdapter.notifyItemRemoved(index);
     }
 
-    private static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_EXTERNAL_STORAGE);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    activity,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
+    private void verifyStoragePermissions(Activity activity) {
+        if (ContextCompat.checkSelfPermission(activity.getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+            requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+        }
+        else{
+            Intent intent = new Intent(Intent.ACTION_PICK);
+            intent.setType("image/*");
+            startActivityForResult(Intent.createChooser(intent, "Open Gallery"), PICK_IMAGE_REQUEST);
         }
     }
 
@@ -207,4 +231,5 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
             }
         }
     }
+
 }

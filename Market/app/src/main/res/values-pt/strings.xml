@@ -55,4 +55,6 @@
     <string name="successfull_deletion_product_message">Anúncio retirado com sucesso</string>
     <string name="profile_details_title">Perfil</string>
     <string name="location_label">Cidade</string>
+    <string name="empty_product_info_warning">O título, descrição e preço do produto devem ser preenchidos</string>
+    <string name="price_invalid_warning">O preço é inválido</string>
 </resources>

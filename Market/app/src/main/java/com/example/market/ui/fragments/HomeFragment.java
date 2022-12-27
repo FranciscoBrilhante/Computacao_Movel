@@ -72,7 +72,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         PriceRangeSpinnerAdapter priceRangeSpinnerAdapter= new PriceRangeSpinnerAdapter(getContext(),initPriceRange());
         binding.priceRangeSpinner.setAdapter(priceRangeSpinnerAdapter);
 
-        viewModel.sendRequest("/product/recommended", "GET", null, null, false, false, true, this);
 
         viewModel.getAllProducts().observe(requireActivity(), products -> {
             adapter.submitList(products);

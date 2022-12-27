@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         Integer code;
         String url1 = "/profile/login";
         String url2 = "/category/all";
+        String url3 = "/product/recommended";
         try {
             String endpoint = (String) data.get("endpoint");
             if (endpoint.equals(url1)) {
@@ -82,7 +83,7 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
                 if (code == 200) {
                     requestLocation();
                     viewModel.sendRequest("/category/all", "GET", null, null, false, false, true, this);
-
+                    viewModel.sendRequest("/product/recommended", "GET", null, null, false, false, true, this);
                 } else {
                     viewModel.removeStoredCredentials();
                     Intent myIntent = new Intent(this, LoginActivity.class);
@@ -94,9 +95,14 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
                     ArrayList<Category> categories = viewModel.categoriesFromJSONObject(data);
                     viewModel.addCategories(categories);
                 }
+            } else if (endpoint.equals(url3)) {
+                code = (Integer) data.get("status");
+                if (code == 200) {
+                    ArrayList<Product> products = viewModel.productsFromJSONObject(data);
+                    viewModel.addProducts(products);
+                }
             }
-
-        } catch (JSONException e) {
+        } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
     }
@@ -119,5 +125,6 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
                 prefsEditor.putBoolean("allowed_location", isGranted);
                 prefsEditor.apply();
             });
+
 
 }

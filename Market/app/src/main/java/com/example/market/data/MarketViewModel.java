@@ -201,7 +201,7 @@ public class MarketViewModel extends AndroidViewModel {
                 String response = sb.toString();
                 jObject = new JSONObject(response);
                 jObject.put("endpoint", endpointURL);
-                System.out.println(response);
+                System.out.println(endpointURL+response);
                 if (saveCookies) {
                     Map<String, List<String>> headerFields = con.getHeaderFields();
                     List<String> cookiesHeader = headerFields.get("Set-Cookie");
