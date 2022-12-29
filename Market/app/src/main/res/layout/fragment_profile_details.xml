@@ -25,12 +25,12 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/back_button"
+                android:id="@+id/logout_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@color/white"
                 android:scaleType="fitCenter"
-                android:src="@drawable/arrow_left" />
+                android:src="@drawable/log_out" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -60,11 +60,12 @@
                 android:orientation="horizontal" />
 
             <ImageButton
-                android:id="@+id/empty_button"
+                android:id="@+id/delete_account_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="@color/white"
                 android:scaleType="fitCenter"
+                android:src="@drawable/trash_2"
                  />
 
         </LinearLayout>

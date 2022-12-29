@@ -33,7 +33,6 @@ import com.bumptech.glide.Glide;
 import com.example.market.BuildConfig;
 import com.example.market.R;
 import com.example.market.data.MarketViewModel;
-import com.example.market.databinding.FragmentProfileBinding;
 import com.example.market.databinding.FragmentProfileDetailsBinding;
 import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.ui.activities.LoginActivity;
@@ -60,7 +59,8 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
         binding = FragmentProfileDetailsBinding.inflate(inflater, container, false);
 
-        binding.backButton.setOnClickListener(this);
+        binding.logoutButton.setOnClickListener(this);
+        binding.deleteAccountButton.setOnClickListener(this);
         binding.updateLocationButton.setOnClickListener(this);
 
         viewModel.sendRequest("/profile/personalinfo", "GET", null, null, false, false, true, this);
@@ -69,11 +69,29 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        if (view == binding.backButton) {
-            NavHostFragment navHostFragment =
-                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
-            NavController navController = navHostFragment.getNavController();
-            navController.navigateUp();
+        if (view == binding.logoutButton) {
+            viewModel.clearCookies();
+            viewModel.removeStoredCredentials();
+            Intent myIntent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(myIntent);
+        }
+        if (view == binding.deleteAccountButton) {
+            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(),0);
+            alert.setTitle(R.string.confirm_deletion_title);
+            alert.setMessage(R.string.confirm_deletion_message);
+            alert.setPositiveButton(R.string.delete_button, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    viewModel.sendRequest("/profile/delete","GET",null,null,false, false,true,ProfileDetailsFragment.this::afterDelete);
+                }
+            });
+
+            alert.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                }
+            });
+            alert.show();
         }
         if (view == binding.updateLocationButton) {
             requestLocation();
@@ -184,6 +202,27 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
+
+    }
+
+    public void afterDelete(JSONObject data) {
+        try {
+            String url1="/profile/delete";
+            int code = data.getInt("status");
+            String endpoint=data.getString("endpoint");
+            if(endpoint.equals(url1)){
+                if(code==200){
+                    viewModel.clearCookies();
+                    viewModel.removeStoredCredentials();
+                    Toast.makeText(getActivity().getApplicationContext(),R.string.successfull_deletion_message,Toast.LENGTH_SHORT).show();
+                    Intent myIntent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(myIntent);
+                }
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
     }
 }

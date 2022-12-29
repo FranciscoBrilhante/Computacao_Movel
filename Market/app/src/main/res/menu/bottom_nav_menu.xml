@@ -17,7 +17,7 @@
         android:title="@string/messages_option" />
 
     <item
-        android:id="@+id/navigation_profile"
+        android:id="@+id/navigation_profile_details"
         android:icon="@drawable/user"
         android:title="@string/profile_tab_title" />
 
