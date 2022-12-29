@@ -127,12 +127,12 @@
 
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/update_location_button"
-                        android:layout_width="70dp"
-                        android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
                         android:background="@drawable/default_border"
                         android:text="@string/update_location_button"
                         android:textAllCaps="false"
-                        android:textSize="12sp" />
+                        android:textSize="16sp" />
                 </LinearLayout>
 
                 <androidx.appcompat.widget.AppCompatButton
@@ -150,7 +150,7 @@
                     android:paddingVertical="5dp"
                     android:text="@string/logout_option"
                     android:textAllCaps="false"
-                    android:textSize="24sp" />
+                    android:textSize="16sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/delete_account_button"
@@ -167,7 +167,7 @@
                     android:paddingVertical="5dp"
                     android:text="@string/delete_account_option"
                     android:textAllCaps="false"
-                    android:textSize="24sp" />
+                    android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
