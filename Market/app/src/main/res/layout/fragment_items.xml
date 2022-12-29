@@ -19,8 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="20dp"
-            android:layout_marginTop="20dp"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingVertical="5dp">
@@ -62,7 +62,7 @@
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="70dp"
         android:layout_marginBottom="50dp">
 
         <androidx.recyclerview.widget.RecyclerView
