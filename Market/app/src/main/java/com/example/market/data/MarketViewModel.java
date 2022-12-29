@@ -21,6 +21,8 @@ import com.example.market.marketDatabase.Contact;
 import com.example.market.marketDatabase.ContactDao;
 import com.example.market.marketDatabase.Image;
 import com.example.market.marketDatabase.MainRoomDatabase;
+import com.example.market.marketDatabase.Message;
+import com.example.market.marketDatabase.MessageDao;
 import com.example.market.marketDatabase.Product;
 import com.example.market.marketDatabase.ProductDao;
 import com.example.market.ui.fragments.LoginFragment;
@@ -71,6 +73,7 @@ public class MarketViewModel extends AndroidViewModel {
     private final ProductDao productDao;
     private final CategoryDao categoryDao;
     private final ContactDao contactDao;
+    private final MessageDao messageDao;
 
 
     private final Executor executor = Executors.newSingleThreadExecutor();
@@ -84,6 +87,7 @@ public class MarketViewModel extends AndroidViewModel {
         productDao = db.productDao();
         categoryDao = db.categoryDao();
         contactDao = db.contactDao();
+        messageDao=db.messageDao();
     }
 
     public LiveData<List<Product>> getAllProducts() {
@@ -97,6 +101,8 @@ public class MarketViewModel extends AndroidViewModel {
     public LiveData<List<Contact>> getAllContacts() {
         return contactDao.getAll();
     }
+
+    public LiveData<List<Message>> getAllMessages() {return messageDao.getAll();}
 
     public void addProducts(ArrayList<Product> products) {
         MainRoomDatabase.databaseWriteExecutor.execute(() -> {
@@ -122,10 +128,22 @@ public class MarketViewModel extends AndroidViewModel {
         });
     }
 
+    public void addMessages(ArrayList<Message> messages) {
+        MainRoomDatabase.databaseWriteExecutor.execute(() -> {
+            messageDao.deleteAll();
+            for (Message message : messages) {
+                messageDao.insert(message);
+            }
+        });
+    }
+
     public void deleteProductByID(int id) {
         MainRoomDatabase.databaseWriteExecutor.execute(() -> {
             productDao.deleteByID(id);
         });
+    }
+
+    public void deleteAllMessages() {
     }
 
     public boolean areCredentialsStored() {
@@ -293,6 +311,46 @@ public class MarketViewModel extends AndroidViewModel {
         return categories;
     }
 
+    public ArrayList<Message>  messagesFromJSONObject(JSONObject data, int myProfileID) throws JSONException,ParseException {
+        ArrayList<Message> messages = new ArrayList<>();
+
+        JSONArray array = data.getJSONArray("received");
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject elem = array.getJSONObject(i);
+            int profileID = elem.getInt("profile_id");
+            String content = elem.getString("content");
+            String timestamp=elem.getString("timestamp");
+
+            SimpleDateFormat format = new SimpleDateFormat(
+                    "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date d = format.parse(timestamp);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(d);
+
+            Message message=new Message(content,calendar,profileID,myProfileID);
+            messages.add(message);
+        }
+        array = data.getJSONArray("sent");
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject elem = array.getJSONObject(i);
+            int profileID = elem.getInt("profile_id");
+            String content = elem.getString("content");
+            String timestamp=elem.getString("timestamp");
+
+            SimpleDateFormat format = new SimpleDateFormat(
+                    "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date d = format.parse(timestamp);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(d);
+
+            Message message=new Message(content,calendar,myProfileID,profileID);
+            messages.add(message);
+        }
+        return messages;
+    }
+
     public void sendProductPhotos(int productID, ArrayList<Image> productImages) throws IOException {
         for (Image image : productImages) {
             File file = new File(image.getPath());
@@ -338,4 +396,7 @@ public class MarketViewModel extends AndroidViewModel {
         }
         return contacts;
     }
+
+
+
 }
