@@ -9,10 +9,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.market.R;
 import com.example.market.data.MarketViewModel;
 import com.example.market.databinding.FragmentMessagesBinding;
 import com.example.market.interfaces.ContactRecyclerViewInterface;
@@ -55,7 +59,11 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
 
     @Override
     public void onClick(int profileID) {
-
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+        NavController navController = navHostFragment.getNavController();
+        NavDirections action = MessagesFragmentDirections.actionNavigationMessagesToUserChatFragment(profileID);
+        navController.navigate(action);
     }
 
     @Override

@@ -85,7 +85,7 @@ def getProfilesWithMessages(request):
 
     user=request.user
     profile=Profile.objects.get(user=user.pk)
-
+    
     all_ids=[]
     messages=Message.objects.filter(userTo=profile.pk)
     for message in messages:

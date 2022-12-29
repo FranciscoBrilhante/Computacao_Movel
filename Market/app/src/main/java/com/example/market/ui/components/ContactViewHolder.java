@@ -29,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class ContactViewHolder extends RecyclerView.ViewHolder{
+public class ContactViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private final ContactRecyclerViewInterface recyclerViewInterface;
     private Contact contact;
     private final View rootView;
@@ -64,6 +64,9 @@ public class ContactViewHolder extends RecyclerView.ViewHolder{
             //Picasso.get().load(fullURL).into(photoView);
         }
 
+        this.profileIcon.setOnClickListener(this);
+        rootView.setOnClickListener(this);
+
     }
 
     static ContactViewHolder create(ViewGroup parent, ContactRecyclerViewInterface recyclerViewInterface) {
@@ -71,4 +74,8 @@ public class ContactViewHolder extends RecyclerView.ViewHolder{
         return new ContactViewHolder(view, recyclerViewInterface);
     }
 
+    @Override
+    public void onClick(View view) {
+        recyclerViewInterface.onClick(contact.getProfileID());
+    }
 }

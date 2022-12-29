@@ -75,5 +75,18 @@
         android:id="@+id/navigation_messages"
         android:name="com.example.market.ui.fragments.MessagesFragment"
         android:label="MessagesFragment"
-        tools:layout="@layout/fragment_messages"/>
+        tools:layout="@layout/fragment_messages">
+        <action
+            android:id="@+id/action_navigation_messages_to_userChatFragment"
+            app:destination="@id/userChatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userChatFragment"
+        android:name="com.example.market.ui.fragments.UserChatFragment"
+        android:label="UserChatFragment"
+        tools:layout="@layout/fragment_user_chat">
+        <argument
+            android:name="profile_id"
+            app:argType="integer" />
+    </fragment>
 </navigation>

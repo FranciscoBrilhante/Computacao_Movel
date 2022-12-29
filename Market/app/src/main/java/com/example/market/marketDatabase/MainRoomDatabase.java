@@ -19,13 +19,14 @@ import java.util.Date;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Product.class, Category.class, Contact.class},version = 1, exportSchema = false)
+@Database(entities = {Product.class, Category.class, Contact.class, Message.class},version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class MainRoomDatabase extends RoomDatabase {
 
     public abstract ProductDao productDao();
     public abstract CategoryDao categoryDao();
     public abstract ContactDao contactDao();
+    public abstract MessageDao messageDao();
 
     private static volatile MainRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS=4;
