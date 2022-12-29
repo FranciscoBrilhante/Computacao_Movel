@@ -134,8 +134,8 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
 
     @Override
     public void onComplete(JSONObject data) {
+        String url1 = "/product/recommended";
         try {
-            String url1 = "/product/recommended";
             int code = data.getInt("status");
             String endpoint = data.getString("endpoint");
             if (endpoint.equals(url1)) {

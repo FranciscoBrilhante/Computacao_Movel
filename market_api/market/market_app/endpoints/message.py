@@ -5,6 +5,7 @@ from ..forms.message_forms import GetByProfile as GetByProfileForm
 import os
 from django.utils import timezone
 from ..utils import *
+from django.db.models import Q
 
 def send(request):
     if not request.user.is_authenticated:
@@ -88,12 +89,38 @@ def getProfilesWithMessages(request):
     all_ids=[]
     messages=Message.objects.filter(userTo=profile.pk)
     for message in messages:
-        if message.userFrom not in all_ids:
+        if message.userFrom.pk not in all_ids:
             all_ids.append(message.userFrom)
     messages=Message.objects.filter(userFrom=profile.pk)
     for message in messages:
-        if message.userTo not in all_ids:
+        if message.userTo.pk not in all_ids:
             all_ids.append(message.userTo.pk)
-    return JsonResponse({'status': 200,'ids':all_ids})
+
+    contacts=[]
+    for id in all_ids:
+        otherProfile=Profile.objects.get(pk=id)
+        otherUser=otherProfile.photo
+        name=otherUser.username
+        photo=otherProfile.photo
+        if photo and hasattr(photo, 'url'):
+            url=photo.url
+        else:
+            url=None
+        
+        query = Q(userTo=id)
+        query.add(Q(userFrom=profile.pk), Q.AND)
+        query.add(Q(userTo=profile.pk) , Q.OR)
+        query.add(Q(userFrom=id), Q.AND)
+        queryset = Message.objects.filter(userTo=id).filter(userFrom=profile.pk) | Message.objects.filter(userTo=profile.pk).filter(userFrom=id)
+        last_message=queryset.order_by('-dateSent')[0].content
+
+        data={'profile_id':id,
+                'profile_name':name,
+                'profile_image':url,
+                'last_message':last_message,
+            }
+        
+        contacts.append(data)
+    return JsonResponse({'status': 200,'contacts':contacts})
 
 

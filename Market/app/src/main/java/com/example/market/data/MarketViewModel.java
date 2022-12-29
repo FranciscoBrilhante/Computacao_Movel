@@ -17,6 +17,8 @@ import com.example.market.BuildConfig;
 import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.marketDatabase.Category;
 import com.example.market.marketDatabase.CategoryDao;
+import com.example.market.marketDatabase.Contact;
+import com.example.market.marketDatabase.ContactDao;
 import com.example.market.marketDatabase.Image;
 import com.example.market.marketDatabase.MainRoomDatabase;
 import com.example.market.marketDatabase.Product;
@@ -68,6 +70,8 @@ public class MarketViewModel extends AndroidViewModel {
     private final MainRoomDatabase db;
     private final ProductDao productDao;
     private final CategoryDao categoryDao;
+    private final ContactDao contactDao;
+
 
     private final Executor executor = Executors.newSingleThreadExecutor();
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -79,6 +83,7 @@ public class MarketViewModel extends AndroidViewModel {
         db = MainRoomDatabase.getDatabase(application);
         productDao = db.productDao();
         categoryDao = db.categoryDao();
+        contactDao = db.contactDao();
     }
 
     public LiveData<List<Product>> getAllProducts() {
@@ -87,6 +92,10 @@ public class MarketViewModel extends AndroidViewModel {
 
     public LiveData<List<Category>> getAllCategories() {
         return categoryDao.getAll();
+    }
+
+    public LiveData<List<Contact>> getAllContacts() {
+        return contactDao.getAll();
     }
 
     public void addProducts(ArrayList<Product> products) {
@@ -101,6 +110,14 @@ public class MarketViewModel extends AndroidViewModel {
         MainRoomDatabase.databaseWriteExecutor.execute(() -> {
             for (Category category : categories) {
                 categoryDao.insert(category);
+            }
+        });
+    }
+
+    public void addContacts(ArrayList<Contact> contacts) {
+        MainRoomDatabase.databaseWriteExecutor.execute(() -> {
+            for (Contact contact : contacts) {
+                contactDao.insert(contact);
             }
         });
     }
@@ -304,5 +321,21 @@ public class MarketViewModel extends AndroidViewModel {
                 }
             });
         }
+    }
+
+    public ArrayList<Contact> contactsFromJSONObject(JSONObject data) throws JSONException {
+        JSONArray array = data.getJSONArray("contacts");
+        ArrayList<Contact>  contacts= new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject elem = array.getJSONObject(i);
+            int id = elem.getInt("profile_id");
+            String name = elem.getString("profile_name");
+            String imageURL = elem.getString("profile_image");
+            String lastMessage = elem.getString("last_message");
+
+            Contact contact=new Contact(id,imageURL,name,lastMessage);
+            contacts.add(contact);
+        }
+        return contacts;
     }
 }
