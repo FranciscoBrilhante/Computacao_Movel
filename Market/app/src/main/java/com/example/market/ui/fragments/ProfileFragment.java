@@ -40,12 +40,10 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, H
         binding=FragmentProfileBinding.inflate(inflater,container,false);
 
         LinearLayout profileView =binding.profile;
-        LinearLayout messagesView =binding.messages;
         LinearLayout logoutView =binding.logout;
         LinearLayout deleteView =binding.delete;
 
         profileView.setOnClickListener(this);
-        messagesView.setOnClickListener(this);
         logoutView.setOnClickListener(this);
         deleteView.setOnClickListener(this);
 
@@ -61,9 +59,6 @@ public class ProfileFragment extends Fragment implements View.OnClickListener, H
             NavController navController = navHostFragment.getNavController();
             NavDirections action = ProfileFragmentDirections.actionNavigationProfileToNavigationProfileDetails();
             navController.navigate(action);
-        }
-        else if(view==binding.messages){
-
         }
         else if(view==binding.logout){
             viewModel.clearCookies();

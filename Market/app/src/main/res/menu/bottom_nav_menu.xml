@@ -12,9 +12,13 @@
         android:title="@string/items_tab_title" />
 
     <item
+        android:id="@+id/message_tab"
+        android:icon="@drawable/message_square"
+        android:title="@string/messages_option" />
+
+    <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/user"
         android:title="@string/profile_tab_title" />
-
 
 </menu>
