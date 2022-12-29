@@ -82,6 +82,10 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         }
         locationTextView.setText(city);
 
+        if(product.getProfileRating()==0.0){
+            ratingTextView.setVisibility(View.INVISIBLE);
+        }
+
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
         String strDate = dateFormat.format(product.getDate().getTime());
         dateTextView.setText(strDate);

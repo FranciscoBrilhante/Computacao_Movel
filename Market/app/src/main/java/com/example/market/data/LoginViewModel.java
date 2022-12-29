@@ -33,7 +33,7 @@ import java.util.concurrent.Executors;
 import java.util.logging.LogRecord;
 
 public class LoginViewModel extends AndroidViewModel {
-    private final Executor executor = Executors.newCachedThreadPool();
+    private final Executor executor = Executors.newSingleThreadExecutor();
     private final Handler handler = new Handler(Looper.getMainLooper());
     private static java.net.CookieManager msCookieManager = new java.net.CookieManager();
 
