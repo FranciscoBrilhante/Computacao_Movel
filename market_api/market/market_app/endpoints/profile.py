@@ -39,7 +39,8 @@ def login(request):
                 request, username=data['username'], password=data['password'])
             if user is not None:
                 login_user(request, user)
-                return JsonResponse({'status': 200})
+                profileID=Profile.objects.get(user=user.pk).pk
+                return JsonResponse({'status': 200,'profile_id':profileID})
             else:
                 return JsonResponse({'status': 404})
     return JsonResponse({'status': 400})
