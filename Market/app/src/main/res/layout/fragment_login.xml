@@ -100,6 +100,7 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:gravity="bottom|center_horizontal"
+            android:minHeight="200dp"
             android:orientation="horizontal"
             android:paddingBottom="10dp">
 
