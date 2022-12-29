@@ -60,7 +60,8 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
 
     @Override
     public void onRefresh() {
-
+        binding.swipeRefreshLayout.setRefreshing(true);
+        viewModel.sendRequest("/message/users","GET",null,null,false,false,true,this);
     }
 
     @Override

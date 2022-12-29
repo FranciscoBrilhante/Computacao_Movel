@@ -99,7 +99,7 @@ def getProfilesWithMessages(request):
     contacts=[]
     for id in all_ids:
         otherProfile=Profile.objects.get(pk=id)
-        otherUser=otherProfile.photo
+        otherUser=otherProfile.user
         name=otherUser.username
         photo=otherProfile.photo
         if photo and hasattr(photo, 'url'):
