@@ -44,8 +44,9 @@
             <ImageButton
                 android:id="@+id/more_button"
                 android:layout_width="40dp"
-                android:layout_height="wrap_content"
+                android:layout_height="40dp"
                 android:layout_marginStart="20dp"
+                android:scaleType="fitCenter"
                 android:background="@drawable/clear_button_background"
                 android:gravity="center"
                 android:src="@drawable/chevron_down" />
@@ -90,11 +91,11 @@
         android:elevation="10dp"
         android:orientation="vertical">
 
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/products_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </FrameLayout>
