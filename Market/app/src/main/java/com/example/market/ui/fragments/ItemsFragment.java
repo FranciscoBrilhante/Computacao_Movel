@@ -20,7 +20,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.market.R;
 import com.example.market.data.MarketViewModel;
 import com.example.market.databinding.FragmentItemsBinding;
-import com.example.market.databinding.FragmentProfileBinding;
 import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.interfaces.RecyclerViewInterface;
 import com.example.market.marketDatabase.Product;
