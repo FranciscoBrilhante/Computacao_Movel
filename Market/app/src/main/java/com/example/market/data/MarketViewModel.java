@@ -69,7 +69,7 @@ public class MarketViewModel extends AndroidViewModel {
     private final ProductDao productDao;
     private final CategoryDao categoryDao;
 
-    private final Executor executor = Executors.newCachedThreadPool();
+    private final Executor executor = Executors.newSingleThreadExecutor();
     private final Handler handler = new Handler(Looper.getMainLooper());
     private static java.net.CookieManager msCookieManager = new java.net.CookieManager();
 

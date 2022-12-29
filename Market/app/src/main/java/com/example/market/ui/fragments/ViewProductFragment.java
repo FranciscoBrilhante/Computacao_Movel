@@ -134,7 +134,9 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
         nameView.setText(data.getString("profile_name"));
         String rating = String.format(Locale.ENGLISH, "%.1f", data.getDouble("rating"));
         ratingView.setText(rating);
-
+        if(data.getDouble("rating")==0.0){
+            ratingView.setVisibility(View.INVISIBLE);
+        }
         //format publication date
         SimpleDateFormat format = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);

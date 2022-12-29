@@ -76,6 +76,9 @@ public class OwnProductViewHolder extends RecyclerView.ViewHolder implements  Vi
             locationTextView.setVisibility(View.INVISIBLE);
         }
         locationTextView.setText(city);
+        if(product.getProfileRating()==0.0){
+            ratingTextView.setVisibility(View.INVISIBLE);
+        }
         priceTextView.setText(String.format(Locale.ENGLISH,"%.0f€", product.getPrice()));
         nameTextView.setText(product.getProfileName());
 
