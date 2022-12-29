@@ -81,4 +81,9 @@
             android:id="@+id/action_navigation_create_product_to_navigation_items"
             app:destination="@id/navigation_items" />
     </fragment>
+    <fragment
+        android:id="@+id/navigation_messages"
+        android:name="com.example.market.ui.fragments.MessagesFragment"
+        android:label="MessagesFragment"
+        tools:layout="@layout/fragment_messages"/>
 </navigation>
