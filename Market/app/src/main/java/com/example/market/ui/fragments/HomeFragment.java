@@ -105,11 +105,11 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         if (view == binding.moreButton) {
             if (actionBarExpanded) {
                 binding.moreFiltersView.setVisibility(View.GONE);
-                binding.moreButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null, getResources().getDrawable(R.drawable.chevron_down));
+                binding.moreButton.setImageResource(R.drawable.chevron_down);
                 actionBarExpanded=false;
             } else {
                 binding.moreFiltersView.setVisibility(View.VISIBLE);
-                binding.moreButton.setCompoundDrawablesRelativeWithIntrinsicBounds(null,null,null, getResources().getDrawable(R.drawable.chevron_up));
+                binding.moreButton.setImageResource(R.drawable.chevron_up);
                 actionBarExpanded=true;
             }
 
