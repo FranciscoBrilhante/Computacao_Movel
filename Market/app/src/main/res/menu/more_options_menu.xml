@@ -4,5 +4,10 @@
     <item
         android:id="@+id/more_options_details"
         android:title="@string/more_options_details" />
-    <item android:title="@string/more_options_report" />
+    <item
+        android:id="@+id/more_options_report"
+        android:title="@string/more_options_report" />
+    <item
+        android:id="@+id/more_options_send_message"
+        android:title="@string/more_options_send_message" />
 </menu>

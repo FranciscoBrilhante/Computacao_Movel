@@ -99,6 +99,15 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         navController.navigate(action);
     }
 
+    @Override
+    public void sendMessage(int profileID) {
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+        NavController navController = navHostFragment.getNavController();
+        NavDirections action = HomeFragmentDirections.actionNavigationHomeToUserChatFragment(profileID);
+        navController.navigate(action);
+    }
+
 
     @Override
     public void onClick(View view) {

@@ -18,6 +18,9 @@
                 android:name="owner"
                 app:argType="boolean"/>
         </action>
+        <action
+            android:id="@+id/action_navigation_home_to_userChatFragment"
+            app:destination="@id/userChatFragment" />
     </fragment>
 
     <fragment
@@ -60,6 +63,9 @@
         <argument
             android:name="id"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_navigation_view_product_to_userChatFragment"
+            app:destination="@id/userChatFragment" />
     </fragment>
 
     <fragment

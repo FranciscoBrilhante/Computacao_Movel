@@ -55,7 +55,7 @@ import java.util.TimeZone;
 public class ViewProductFragment extends Fragment implements HTTTPCallback, View.OnClickListener {
     private boolean owner; //is the user the owner of the product?
     private int id; //product id being viewed
-
+    private int profileID;
     private FragmentViewProductBinding binding;
     private MarketViewModel viewModel;
 
@@ -80,6 +80,7 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
 
         binding.backButton.setOnClickListener(this);
         binding.messageButton.setOnClickListener(this);
+        binding.sendMessageButton.setOnClickListener(this);
         return binding.getRoot();
     }
 
@@ -167,6 +168,8 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
         }
 
         descriptionView.setText(data.getString("description"));
+
+        profileID=data.getInt("profile");
     }
 
     private void initializeProfilePhoto(JSONObject data) throws JSONException {
@@ -217,6 +220,24 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
                     }
                 });
                 alert.show();
+            }
+            else{
+                if(profileID!=0){
+                    NavHostFragment navHostFragment =
+                            (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                    NavController navController = navHostFragment.getNavController();
+                    NavDirections action = ViewProductFragmentDirections.actionNavigationViewProductToUserChatFragment(profileID);
+                    navController.navigate(action);
+                }
+            }
+        }
+        else if(view==binding.sendMessageButton){
+            if(profileID!=0){
+                NavHostFragment navHostFragment =
+                        (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                NavController navController = navHostFragment.getNavController();
+                NavDirections action = ViewProductFragmentDirections.actionNavigationViewProductToUserChatFragment(profileID);
+                navController.navigate(action);
             }
         }
     }

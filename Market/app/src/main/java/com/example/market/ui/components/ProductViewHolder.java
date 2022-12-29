@@ -127,6 +127,10 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
             popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
+                    if(menuItem.getItemId()==R.id.more_options_send_message){
+                        recyclerViewInterface.sendMessage(product.getProfile());
+                        return true;
+                    }
                     return false;
                 }
             });

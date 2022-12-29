@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,13 +53,16 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
 
         profileID = UserChatFragmentArgs.fromBundle(getArguments()).getProfileId();
 
-        adapter = new MessageListAdapter(new MessageListAdapter.MessageDiff());
+        adapter = new MessageListAdapter(new MessageListAdapter.MessageDiff(),(int) viewModel.getStoredCredentials().get("profile_id"));
         RecyclerView recyclerView = binding.messageList;
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager manager=new LinearLayoutManager(getContext());
+        manager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(manager);
 
         viewModel.getAllMessages().observe(requireActivity(), messages -> {
             adapter.submitList(messages);
+            recyclerView.scrollToPosition(messages.size()-1);
         });
 
         Map<String, Object> params = new LinkedHashMap<>();
@@ -67,6 +71,10 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
 
         viewModel.sendRequest("/message/withuser", "GET", params, null, false, false, true, this);
         binding.backButton.setOnClickListener(this);
+
+        binding.sendMessageButton.setOnClickListener(this);
+        binding.swipeRefreshLayout.setRefreshing(false);
+        binding.swipeRefreshLayout.setEnabled(false);
         return binding.getRoot();
     }
 
@@ -74,16 +82,27 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
     public void onComplete(JSONObject data) {
         String url1 = "/profile/info";
         String url2 = "/message/withuser";
+        String url3 = "/message/send";
         try {
             int code = data.getInt("status");
             String endpoint = data.getString("endpoint");
             if (endpoint.equals(url1)) {
                 initializeProfilePhoto(data);
+                if(code==200){
+                    binding.profileName.setText(data.getString("username"));
+                }
             }
             else if(endpoint.equals(url2)){
                 viewModel.deleteAllMessages();
-                ArrayList<Message> messages=viewModel.messagesFromJSONObject(data,profileID);
+                ArrayList<Message> messages=viewModel.messagesFromJSONObject(data);
                 viewModel.addMessages(messages);
+            }
+            else if (endpoint.equals(url3)) {
+                if(code==200){
+                    Map<String, Object> params = new LinkedHashMap<>();
+                    params.put("profile_id", Integer.toString(profileID));
+                    viewModel.sendRequest("/message/withuser", "GET", params, null, false, false, true, this);
+                }
             }
         } catch (JSONException | ParseException e) {
             e.printStackTrace();
@@ -97,6 +116,16 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
                     (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
             NavController navController = navHostFragment.getNavController();
             navController.navigateUp();
+        }
+        if(view==binding.sendMessageButton){
+            String text=binding.messageInput.getText().toString();
+            if(text.length()>0){
+                binding.messageInput.getText().clear();
+                Map<String,Object> params=new LinkedHashMap<>();
+                params.put("profile_id",profileID);
+                params.put("content",text);
+                viewModel.sendRequest("/message/send","POST",null,params,true,false,true,this);
+            }
         }
     }
 

@@ -39,13 +39,13 @@ public class LoginFragment extends Fragment implements HTTTPCallback {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        viewModel =  new ViewModelProvider(this).get(LoginViewModel.class);
+        viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 
         Button loginButton = binding.loginButton;
         loginButton.setOnClickListener(this.loginListener);
 
-        TextView registerLink=binding.registerLink;
+        TextView registerLink = binding.registerLink;
         registerLink.setOnClickListener(this.registerLinkListener);
         return binding.getRoot();
     }
@@ -58,40 +58,45 @@ public class LoginFragment extends Fragment implements HTTTPCallback {
 
     @Override
     public void onComplete(JSONObject data) {
-        Integer code=400;
+        Integer code = 400;
         try {
             code = (Integer) data.get("status");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if(code==200){
-            Toast.makeText(getActivity().getApplicationContext(), R.string.login_success_message,Toast.LENGTH_SHORT).show();
-            SharedPreferences sharedPref = getActivity().getSharedPreferences("credentials",MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            editor.putString("username", binding.usernameInput.getText().toString());
-            editor.putString("password", binding.passwordInput.getText().toString());
-            editor.apply();
+        if (code == 200) {
+            try {
+                Toast.makeText(getActivity().getApplicationContext(), R.string.login_success_message, Toast.LENGTH_SHORT).show();
+                SharedPreferences sharedPref = getActivity().getSharedPreferences("credentials", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString("username", binding.usernameInput.getText().toString());
+                editor.putString("password", binding.passwordInput.getText().toString());
+                int profileID = data.getInt("profile_id");
+                editor.putInt("profile_id", profileID);
+                editor.apply();
 
-            Intent myIntent = new Intent(getActivity(), MainActivity.class);
-            startActivity(myIntent);
-        }
-        else{
-            Toast.makeText(getActivity().getApplicationContext(),R.string.login_fail_message,Toast.LENGTH_SHORT).show();
+                Intent myIntent = new Intent(getActivity(), MainActivity.class);
+                startActivity(myIntent);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(getActivity().getApplicationContext(), R.string.login_fail_message, Toast.LENGTH_SHORT).show();
         }
 
     }
 
-    private View.OnClickListener loginListener =new View.OnClickListener() {
+    private View.OnClickListener loginListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            TextView usernameInput=binding.usernameInput;
-            TextView passwordInput=binding.passwordInput;
+            TextView usernameInput = binding.usernameInput;
+            TextView passwordInput = binding.passwordInput;
 
-            Map<String,Object> params = new LinkedHashMap<>();
+            Map<String, Object> params = new LinkedHashMap<>();
             params.put("username", usernameInput.getText().toString());
             params.put("password", passwordInput.getText().toString());
 
-            viewModel.sendPOSTRequest("/profile/login",params,true,false, LoginFragment.this);
+            viewModel.sendPOSTRequest("/profile/login", params, true, false, LoginFragment.this);
         }
     };
 

@@ -150,7 +150,6 @@ public class MarketViewModel extends AndroidViewModel {
         SharedPreferences sharedPref = application.getSharedPreferences("credentials", MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
         String password = sharedPref.getString("password", null);
-
         return username != null && password != null;
     }
 
@@ -159,9 +158,10 @@ public class MarketViewModel extends AndroidViewModel {
         SharedPreferences sharedPref = application.getSharedPreferences("credentials", MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
         String password = sharedPref.getString("password", null);
-
+        int profileID = sharedPref.getInt("profile_id", -1);
         map.put("username", username);
         map.put("password", password);
+        map.put("profile_id", profileID);
         return map;
     }
 
@@ -170,6 +170,7 @@ public class MarketViewModel extends AndroidViewModel {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.remove("username");
         editor.remove("password");
+        editor.remove("profile_id");
         editor.commit();
     }
 
@@ -311,8 +312,9 @@ public class MarketViewModel extends AndroidViewModel {
         return categories;
     }
 
-    public ArrayList<Message>  messagesFromJSONObject(JSONObject data, int myProfileID) throws JSONException,ParseException {
+    public ArrayList<Message>  messagesFromJSONObject(JSONObject data) throws JSONException,ParseException {
         ArrayList<Message> messages = new ArrayList<>();
+        int myProfileID=(int)getStoredCredentials().get("profile_id");
 
         JSONArray array = data.getJSONArray("received");
         for (int i = 0; i < array.length(); i++) {

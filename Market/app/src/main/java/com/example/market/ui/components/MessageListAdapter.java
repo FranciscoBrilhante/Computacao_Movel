@@ -11,14 +11,16 @@ import com.example.market.marketDatabase.Contact;
 import com.example.market.marketDatabase.Message;
 
 public class MessageListAdapter extends ListAdapter<Message,MessageViewHolder> {
-    public MessageListAdapter(@NonNull DiffUtil.ItemCallback<Message> diffCallback){
+    private  final int profileID;
+    public MessageListAdapter(@NonNull DiffUtil.ItemCallback<Message> diffCallback,int profileID){
         super(diffCallback);
+        this.profileID=profileID;
     }
 
     @Override
     public MessageViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
 
-        return MessageViewHolder.create(parent);
+        return MessageViewHolder.create(parent,this.profileID);
     }
 
     @Override
@@ -36,7 +38,7 @@ public class MessageListAdapter extends ListAdapter<Message,MessageViewHolder> {
 
         @Override
         public boolean areContentsTheSame(@NonNull Message oldItem,@NonNull Message newItem){
-            return oldItem.getContent().equals(newItem.getContent());
+            return oldItem.getContent().equals(newItem.getContent()) && oldItem.getTimestamp().equals(newItem.getTimestamp());
         }
     }
 }

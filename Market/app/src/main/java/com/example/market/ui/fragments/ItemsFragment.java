@@ -75,6 +75,11 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
     }
 
     @Override
+    public void sendMessage(int profileID) {
+
+    }
+
+    @Override
     public void onComplete(JSONObject data) {
         try {
             String url1 = "/product/myproducts";
