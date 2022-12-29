@@ -35,7 +35,7 @@
                     android:layout_height="100dp"
                     app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
                     app:strokeColor="@color/black"
-                    app:strokeWidth="0.5dp" />
+                    app:strokeWidth="2px" />
 
             </LinearLayout>
 
