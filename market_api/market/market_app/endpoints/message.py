@@ -90,7 +90,7 @@ def getProfilesWithMessages(request):
     messages=Message.objects.filter(userTo=profile.pk)
     for message in messages:
         if message.userFrom.pk not in all_ids:
-            all_ids.append(message.userFrom)
+            all_ids.append(message.userFrom.pk)
     messages=Message.objects.filter(userFrom=profile.pk)
     for message in messages:
         if message.userTo.pk not in all_ids:

@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
+
         //if no credentials found redirect to login screen
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
         if (!viewModel.areCredentialsStored()) {
@@ -68,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         //send login request
         Map<String, Object> params = viewModel.getStoredCredentials();
         viewModel.sendRequest("/profile/login", "POST", null, params, true, true, false, this);
+
     }
 
     @Override

@@ -6,10 +6,7 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "contact_table")
 public class Contact {
-    @PrimaryKey(autoGenerate = true)
-    private int id;
-
-    @ColumnInfo(name = "profileID")
+    @PrimaryKey(autoGenerate = false)
     private int profileID;
 
     @ColumnInfo(name = "profileImage")
@@ -26,14 +23,6 @@ public class Contact {
         this.profileImage = profileImage;
         this.profileName = profileName;
         this.lastMessage = lastMessage;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getProfileID() {
