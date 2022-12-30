@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.example.market.R;
 import com.example.market.data.MarketViewModel;
@@ -21,10 +24,12 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.market.databinding.ActivityMainBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,7 +59,20 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        BottomNavigationView bottomNav = findViewById(R.id.nav_view);
+
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+            @Override
+            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+                if(destination.getId() == R.id.navigation_home || destination.getId() == R.id.navigation_items ||
+                        destination.getId() == R.id.navigation_messages || destination.getId() == R.id.navigation_profile_details) {
+                    bottomNav.setVisibility(View.VISIBLE);
+                } else {
+                    bottomNav.setVisibility(View.GONE);
+                }
+            }
+        });
         NavigationUI.setupWithNavController(binding.navView, navController);
 
 
