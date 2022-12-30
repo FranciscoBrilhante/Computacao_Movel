@@ -29,14 +29,33 @@
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="3dp">
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/profile_photo"
+                <RelativeLayout
+                    android:id="@+id/edit_profile_photo"
                     android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                    app:strokeColor="@color/black"
-                    app:strokeWidth="2px" />
+                    android:layout_height="100dp">
 
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/profile_photo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
+                        app:strokeColor="@color/black"
+                        app:strokeWidth="2px" />
+
+                    <ImageView
+                        android:id="@+id/img"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:scaleType="centerCrop"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:padding="5dp"
+                        android:background="@drawable/round_border"
+                        android:src="@drawable/edit_3" />
+
+                </RelativeLayout>
             </LinearLayout>
 
             <LinearLayout
