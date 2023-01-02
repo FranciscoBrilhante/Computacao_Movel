@@ -44,6 +44,8 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
         binding = FragmentMessagesBinding.inflate(inflater, container, false);
 
         adapter = new ContactListAdapter(new ContactListAdapter.ContactDiff(), this);
+        adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
+
         RecyclerView recyclerView = binding.messagesList;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
