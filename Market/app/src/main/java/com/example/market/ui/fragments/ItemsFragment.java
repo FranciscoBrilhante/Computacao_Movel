@@ -52,6 +52,8 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
 
         //configure costume recyclerview for products
         adapter = new OwnProductListAdapter(new OwnProductListAdapter.ProductDiff(), this);
+        adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
+
         RecyclerView recyclerView = binding.productsList;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

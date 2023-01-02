@@ -6,11 +6,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.denzcoskun.imageslider.ImageSlider;
@@ -30,15 +28,15 @@ import java.util.Locale;
 
 public class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ItemClickListener {
     private final TextView titleView;
-    private final TextView descriptionView;
-    private final TextView ratingTextView;
+    //private final TextView descriptionView;
+    //private final TextView ratingTextView;
     private final TextView categoryTextView;
     private final TextView locationTextView;
     private final TextView priceTextView;
     private final TextView dateTextView;
     private final ImageSlider imageSlider;
-    private final TextView nameTextView;
-    private final ImageButton moreOptionsButton;
+    //private final TextView nameTextView;
+    //private final ImageButton moreOptionsButton;
 
     private final RecyclerViewInterface recyclerViewInterface;
     private Product product;
@@ -52,38 +50,38 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         this.recyclerViewInterface = recyclerViewInterface;
 
         titleView = itemView.findViewById(R.id.title_label);
-        descriptionView = itemView.findViewById(R.id.description_label);
         imageSlider = itemView.findViewById(R.id.image_slider);
-        ratingTextView = itemView.findViewById(R.id.rating_label);
         categoryTextView = itemView.findViewById(R.id.category_label);
         locationTextView = itemView.findViewById(R.id.city_label);
         priceTextView = itemView.findViewById(R.id.price_label);
         dateTextView = itemView.findViewById(R.id.date_label);
-        nameTextView = itemView.findViewById(R.id.profile_label);
-
-        moreOptionsButton = itemView.findViewById(R.id.more_options);
-        moreOptionsButton.setOnClickListener(this);
 
         itemView.setOnClickListener(this);
     }
 
     public void bind(Product product) {
         this.product = product;
+        String lang = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
+
         titleView.setText(product.getTitle());
-        descriptionView.setText(product.getDescription());
-        ratingTextView.setText(String.format(Locale.ENGLISH, "%.1f", product.getProfileRating()));
         categoryTextView.setText(product.getCategoryName());
         priceTextView.setText(String.format(Locale.ENGLISH, "%.0f€", product.getPrice()));
-        nameTextView.setText(product.getProfileName());
 
-        String city=product.getProfileLocation();
-        if(city.equals("null")){
-            locationTextView.setVisibility(View.INVISIBLE);
+        String city = product.getProfileLocation();
+
+        System.out.println("Produto:");
+        System.out.println(product);
+        System.out.println("Cidade:");
+        System.out.println(product.getProfileLocation());
+
+        if (city.equals("null")) {
+            if (lang.equals("pt")) city = "Desconhecido";
+            else city = "Unknown";
         }
         locationTextView.setText(city);
 
-        if(product.getProfileRating()==0.0){
-            ratingTextView.setVisibility(View.INVISIBLE);
+        if (product.getProfileRating() == 0.0) {
+            //ratingTextView.setVisibility(View.INVISIBLE);
         }
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
@@ -97,15 +95,13 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
                 imageList.add(new SlideModel(fullURL, ScaleTypes.CENTER_CROP));
             }
         } else {
-            try {
-                String lang = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
-                if (lang.equals("pt")) {
-                    imageList.add(new SlideModel(R.drawable.placeholder_no_image_pt, ScaleTypes.CENTER_CROP));
-                } else {
-                    imageList.add(new SlideModel(R.drawable.placeholder_no_image_en, ScaleTypes.CENTER_CROP));
-                }
-            } catch (Exception ignored) {
+
+            if (lang.equals("pt")) {
+                imageList.add(new SlideModel(R.drawable.placeholder_no_image_pt, ScaleTypes.CENTER_CROP));
+            } else {
+                imageList.add(new SlideModel(R.drawable.placeholder_no_image_en, ScaleTypes.CENTER_CROP));
             }
+
         }
         imageSlider.setImageList(imageList);
         imageSlider.setItemClickListener(this);

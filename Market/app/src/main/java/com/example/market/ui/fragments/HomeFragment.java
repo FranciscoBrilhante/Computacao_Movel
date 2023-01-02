@@ -22,7 +22,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -62,9 +63,13 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
         adapter = new ProductListAdapter(new ProductListAdapter.ProductDiff(), this);
+        adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
+
         RecyclerView recyclerView = binding.productsList;
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+        //recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         CategorySpinnerAdapter categorySpinnerAdapter= new CategorySpinnerAdapter(getContext(),new ArrayList<>());
         binding.categorySpinner.setAdapter(categorySpinnerAdapter);

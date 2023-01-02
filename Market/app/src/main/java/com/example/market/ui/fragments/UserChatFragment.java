@@ -54,6 +54,8 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
         profileID = UserChatFragmentArgs.fromBundle(getArguments()).getProfileId();
 
         adapter = new MessageListAdapter(new MessageListAdapter.MessageDiff(),(int) viewModel.getStoredCredentials().get("profile_id"));
+        adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
+
         RecyclerView recyclerView = binding.messageList;
         recyclerView.setAdapter(adapter);
         LinearLayoutManager manager=new LinearLayoutManager(getContext());
