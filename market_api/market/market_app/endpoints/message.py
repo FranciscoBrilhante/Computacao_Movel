@@ -176,8 +176,12 @@ def sendNotification(message):
         "client_x509_cert_url": os.environ.get('client_x509_cert_url')
     }
 
-    certificate = Certificate(cert_data)
-    firebase_admin.initialize_app(credential=certificate)
+    try:
+        certificate = Certificate(cert_data)
+        firebase_admin.initialize_app(credential=certificate)
+    except:
+        pass
+
     notification=Notification(
             title=f"{username} sent you a message",
             body=f"{message_content}",
