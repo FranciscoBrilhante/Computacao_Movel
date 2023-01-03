@@ -69,7 +69,12 @@ public class OwnProductViewHolder extends RecyclerView.ViewHolder implements  Vi
         titleView.setText(product.getTitle());
         descriptionView.setText(product.getDescription());
         ratingTextView.setText(String.format(Locale.ENGLISH,"%.1f", product.getProfileRating() ));
-        categoryTextView.setText(product.getCategoryName());
+
+        if (lang.equals("pt")) {
+            categoryTextView.setText(product.getCategoryNamePT());
+        }else{
+            categoryTextView.setText(product.getCategoryName());
+        }
 
         String city=product.getProfileLocation();
         if(city.equals("null")){

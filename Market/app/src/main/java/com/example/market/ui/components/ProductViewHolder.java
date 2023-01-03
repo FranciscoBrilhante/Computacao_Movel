@@ -66,9 +66,9 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         titleView.setText(product.getTitle());
 
         if (lang.equals("pt")) {
-            categoryTextView.setText(product.getCategoryName());
-        }else{
             categoryTextView.setText(product.getCategoryNamePT());
+        }else{
+            categoryTextView.setText(product.getCategoryName());
         }
         priceTextView.setText(String.format(Locale.ENGLISH, "%.0f€", product.getPrice()));
 
