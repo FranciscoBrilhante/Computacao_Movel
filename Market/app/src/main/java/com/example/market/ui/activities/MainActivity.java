@@ -1,6 +1,9 @@
 package com.example.market.ui.activities;
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -24,6 +27,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -57,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
     public MarketViewModel viewModel;
     private BottomNavigationView bottomNav;
 
+    private static final String MESSAGE_CHANNEL_ID = "1";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,13 +89,17 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         Map<String, Object> params = viewModel.getStoredCredentials();
         viewModel.sendRequest("/profile/login", "POST", null, params, true, true, false, this);
 
+        enableNotifications();
+        createNotificationChannels();
+
         //receive new token broadcasts from service
-        Intent intent=new Intent(this,ExtendedBroadcastReceiver.class);
+        Intent intent = new Intent(this, ExtendedBroadcastReceiver.class);
         startService(intent);
         retrieveLastTokenAndSend();
-        IntentFilter filter=new IntentFilter();
+        IntentFilter filter = new IntentFilter();
         filter.addAction("sendToken");
-        registerReceiver(new ExtendedBroadcastReceiver(),filter);
+        filter.addAction("postNotification");
+        registerReceiver(new ExtendedBroadcastReceiver(), filter);
     }
 
     @Override
@@ -127,10 +138,10 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         }
     }
 
-    NavController.OnDestinationChangedListener onDestinationChangedListener=new NavController.OnDestinationChangedListener() {
+    NavController.OnDestinationChangedListener onDestinationChangedListener = new NavController.OnDestinationChangedListener() {
         @Override
         public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
-            if(destination.getId() == R.id.navigation_home || destination.getId() == R.id.navigation_items ||
+            if (destination.getId() == R.id.navigation_home || destination.getId() == R.id.navigation_items ||
                     destination.getId() == R.id.navigation_messages || destination.getId() == R.id.navigation_profile_details) {
                 bottomNav.setVisibility(View.VISIBLE);
             } else {
@@ -139,28 +150,90 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         }
     };
 
-    private class ExtendedBroadcastReceiver extends BroadcastReceiver{
+    private class ExtendedBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Map<String, Object> params=new LinkedHashMap<>();
-            params.put("token",intent.getExtras().get("token"));
-            viewModel.sendRequest("/message/token","POST",null,params,true,false,true,MainActivity.this);
+            if(intent.getAction().equals("sendToken")){
+                Map<String, Object> params = new LinkedHashMap<>();
+                params.put("token", intent.getExtras().get("token"));
+                viewModel.sendRequest("/message/token", "POST", null, params, true, false, true, MainActivity.this);
+            }
+            else{
+                String title=intent.getExtras().getString("title");
+                String body=intent.getExtras().getString("body");
+                System.out.println(title);
+                System.out.println(body);
+                sendNotification(title, body, MESSAGE_CHANNEL_ID);
+            }
         }
     }
 
-    private void retrieveLastTokenAndSend(){
+    private void retrieveLastTokenAndSend() {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@androidx.annotation.NonNull Task<String> task) {
-                if(!task.isSuccessful()) {
+                if (!task.isSuccessful()) {
                     System.out.println("Unable to get last token");
                 }
 
-                String token= task.getResult();
-                Map<String, Object> params=new LinkedHashMap<>();
-                params.put("token",token);
-                viewModel.sendRequest("/message/token","POST",null,params,true,false,true,MainActivity.this);
+                String token = task.getResult();
+                Map<String, Object> params = new LinkedHashMap<>();
+                params.put("token", token);
+                viewModel.sendRequest("/message/token", "POST", null, params, true, false, true, MainActivity.this);
             }
         });
     }
+
+    private void createNotificationChannels() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        CharSequence name = getString(R.string.msg_notify_name);
+        String description = getString(R.string.msg_notify_description);
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel channel = new NotificationChannel(MESSAGE_CHANNEL_ID, name, importance);
+        channel.setDescription(description);
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+    }
+
+    private void enableNotifications() {
+        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_DENIED) {
+            SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+            boolean allowedBefore = prefs.getBoolean("allowed_notifications", true);
+            if (allowedBefore) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }
+    }
+
+    private ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+                SharedPreferences.Editor prefsEditor = prefs.edit();
+                prefsEditor.putBoolean("allowed_notifications", isGranted);
+                prefsEditor.apply(); // or commit();
+            });
+
+    private void sendNotification(String title, String contentText, String channelID) {
+        // Create an explicit intent for an Activity in your app
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelID)
+                .setSmallIcon(R.drawable.bell)
+                .setContentTitle(title)
+                .setContentText(contentText)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                // Set the intent that will fire when the user taps the notification
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        // notificationId is a unique int for each notification that you must define
+        notificationManager.notify(0, builder.build());
+    }
+
 }
