@@ -1,22 +1,13 @@
 package com.example.market.ui.fragments;
 
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.RotateDrawable;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -32,7 +23,6 @@ import com.example.market.data.MarketViewModel;
 import com.example.market.databinding.FragmentHomeBinding;
 import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.interfaces.RecyclerViewInterface;
-import com.example.market.marketDatabase.Category;
 import com.example.market.marketDatabase.PriceRange;
 import com.example.market.marketDatabase.Product;
 import com.example.market.ui.components.CategorySpinnerAdapter;
@@ -68,8 +58,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         RecyclerView recyclerView = binding.productsList;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
-        //recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         CategorySpinnerAdapter categorySpinnerAdapter= new CategorySpinnerAdapter(getContext(),new ArrayList<>());
         binding.categorySpinner.setAdapter(categorySpinnerAdapter);
@@ -156,7 +144,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
                 if (code == 200) {
                     ArrayList<Product> products = viewModel.productsFromJSONObject(data);
                     viewModel.addProducts(products);
-                    //adapter.submitList(products);
+                    adapter.submitList(products);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
             }
