@@ -133,6 +133,7 @@ public class ProductsService extends Service {
                 String date=elem.getString("date");
 
                 String categoryName=elem.getString("category_name");
+                String categoryNamePT=elem.getString("category_name_pt");
                 String profileName=elem.getString("profile_name");
                 String profileLocation=elem.getString("profile_location");
 
@@ -151,7 +152,7 @@ public class ProductsService extends Service {
                     Date d = format.parse(date);
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(d);
-                    Product product=new Product(id,title,description,category,price,profile,calendar,imagesURL,categoryName,profileName,rating,profileLocation);
+                    Product product=new Product(id,title,description,category,price,profile,calendar,imagesURL,categoryName,categoryNamePT,profileName,rating,profileLocation);
                     productDao.insert(product);
                 } catch (ParseException e) {
                     e.printStackTrace();

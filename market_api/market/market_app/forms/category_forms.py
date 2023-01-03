@@ -7,6 +7,7 @@ from django.utils.translation import gettext as _
 
 class Add(forms.Form):
     name = forms.CharField(max_length=64)
+    namePT = forms.CharField(max_length=64)
 
     def clean_name(self):
         data = self.cleaned_data['name']

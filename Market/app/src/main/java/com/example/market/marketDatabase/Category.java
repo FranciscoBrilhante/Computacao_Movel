@@ -13,10 +13,13 @@ public class Category {
     @ColumnInfo(name = "name")
     private String name;
 
+    @ColumnInfo(name = "namePT")
+    private String namePT;
 
-    public Category(int id, String name) {
+    public Category(int id, String name,String namePT) {
         this.id = id;
         this.name = name;
+        this.namePT=namePT;
     }
 
     public int getId() {
@@ -33,5 +36,13 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getNamePT() {
+        return namePT;
+    }
+
+    public void setNamePT(String namePT) {
+        this.namePT = namePT;
     }
 }

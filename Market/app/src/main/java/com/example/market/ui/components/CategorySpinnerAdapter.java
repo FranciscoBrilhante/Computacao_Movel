@@ -1,6 +1,7 @@
 package com.example.market.ui.components;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
+import com.denzcoskun.imageslider.constants.ScaleTypes;
+import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.market.R;
 import com.example.market.interfaces.RecyclerViewInterface;
 import com.example.market.marketDatabase.Category;
@@ -48,7 +51,12 @@ public class CategorySpinnerAdapter extends ArrayAdapter<Category> {
         TextView nameView = convertView.findViewById(R.id.category_name);
         Category currentItem = getItem(position);
         if (currentItem != null) {
-            nameView.setText(currentItem.getName());
+            String lang = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
+            if (lang.equals("pt")) {
+                nameView.setText(currentItem.getNamePT());
+            } else {
+                nameView.setText(currentItem.getName());
+            }
         }
         return convertView;
     }

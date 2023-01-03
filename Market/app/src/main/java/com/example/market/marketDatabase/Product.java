@@ -37,6 +37,9 @@ public class Product {
     @ColumnInfo(name = "categoryName")
     private String categoryName;
 
+    @ColumnInfo(name = "categoryNamePT")
+    private String categoryNamePT;
+
     @ColumnInfo(name = "profileName")
     private String profileName;
 
@@ -46,7 +49,7 @@ public class Product {
     @ColumnInfo(name = "profileRating")
     private Double profileRating;
 
-    public Product(int id, String title, String description, int category, Double price, int profile, Calendar date, ArrayList<String> images, String categoryName, String profileName, Double profileRating, String profileLocation) {
+    public Product(int id, String title, String description, int category, Double price, int profile, Calendar date, ArrayList<String> images, String categoryName, String categoryNamePT, String profileName, Double profileRating, String profileLocation) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -56,6 +59,7 @@ public class Product {
         this.date = date;
         this.images = images;
         this.categoryName=categoryName;
+        this.categoryNamePT=categoryNamePT;
         this.profileName=profileName;
         this.profileRating=profileRating;
         this.profileLocation=profileLocation;
@@ -155,5 +159,13 @@ public class Product {
 
     public void setProfileLocation(String profileLocation) {
         this.profileLocation = profileLocation;
+    }
+
+    public String getCategoryNamePT() {
+        return categoryNamePT;
+    }
+
+    public void setCategoryNamePT(String categoryNamePT) {
+        this.categoryNamePT = categoryNamePT;
     }
 }

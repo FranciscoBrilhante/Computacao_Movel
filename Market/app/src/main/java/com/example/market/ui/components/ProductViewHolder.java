@@ -64,7 +64,12 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         String lang = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
 
         titleView.setText(product.getTitle());
-        categoryTextView.setText(product.getCategoryName());
+
+        if (lang.equals("pt")) {
+            categoryTextView.setText(product.getCategoryName());
+        }else{
+            categoryTextView.setText(product.getCategoryNamePT());
+        }
         priceTextView.setText(String.format(Locale.ENGLISH, "%.0f€", product.getPrice()));
 
         String city = product.getProfileLocation();
@@ -95,13 +100,11 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
                 imageList.add(new SlideModel(fullURL, ScaleTypes.CENTER_CROP));
             }
         } else {
-
             if (lang.equals("pt")) {
                 imageList.add(new SlideModel(R.drawable.placeholder_no_image_pt, ScaleTypes.CENTER_CROP));
             } else {
                 imageList.add(new SlideModel(R.drawable.placeholder_no_image_en, ScaleTypes.CENTER_CROP));
             }
-
         }
         imageSlider.setImageList(imageList);
         imageSlider.setItemClickListener(this);

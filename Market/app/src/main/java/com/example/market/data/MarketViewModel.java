@@ -87,7 +87,7 @@ public class MarketViewModel extends AndroidViewModel {
         productDao = db.productDao();
         categoryDao = db.categoryDao();
         contactDao = db.contactDao();
-        messageDao=db.messageDao();
+        messageDao = db.messageDao();
     }
 
     public LiveData<List<Product>> getAllProducts() {
@@ -102,9 +102,11 @@ public class MarketViewModel extends AndroidViewModel {
         return contactDao.getAll();
     }
 
-    public LiveData<List<Message>> getAllMessages() {return messageDao.getAll();}
+    public LiveData<List<Message>> getAllMessages() {
+        return messageDao.getAll();
+    }
 
-    public LiveData<List<Message>> getMessagesWithUser(int id){
+    public LiveData<List<Message>> getMessagesWithUser(int id) {
         return messageDao.getMessagesWithUser(id);
     }
 
@@ -241,7 +243,7 @@ public class MarketViewModel extends AndroidViewModel {
                 String response = sb.toString();
                 jObject = new JSONObject(response);
                 jObject.put("endpoint", endpointURL);
-                System.out.println(endpointURL+response);
+                System.out.println(endpointURL + response);
                 if (saveCookies) {
                     Map<String, List<String>> headerFields = con.getHeaderFields();
                     List<String> cookiesHeader = headerFields.get("Set-Cookie");
@@ -278,8 +280,9 @@ public class MarketViewModel extends AndroidViewModel {
             String date = elem.getString("date");
 
             String categoryName = elem.getString("category_name");
+            String categoryNamePT = elem.getString("category_name_pt");
             String profileName = elem.getString("profile_name");
-            String profileLocation=elem.getString("profile_location");
+            String profileLocation = elem.getString("profile_location");
 
             JSONArray images = elem.getJSONArray("images");
             ArrayList<String> imagesURL = new ArrayList<>();
@@ -295,37 +298,37 @@ public class MarketViewModel extends AndroidViewModel {
             Date d = format.parse(date);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(d);
-            Product product = new Product(id, title, description, category, price, profile, calendar, imagesURL, categoryName, profileName, rating,profileLocation);
+            Product product = new Product(id, title, description, category, price, profile, calendar, imagesURL, categoryName,categoryNamePT, profileName, rating, profileLocation);
             products.add(product);
 
         }
         return products;
     }
 
-    public ArrayList<Category>  categoriesFromJSONObject(JSONObject data) throws JSONException {
+    public ArrayList<Category> categoriesFromJSONObject(JSONObject data) throws JSONException {
         JSONArray array = data.getJSONArray("categories");
         ArrayList<Category> categories = new ArrayList<>();
         for (int i = 0; i < array.length(); i++) {
             JSONObject elem = array.getJSONObject(i);
             int id = elem.getInt("id");
             String name = elem.getString("name");
-
-            Category category=new Category(id,name);
+            String namePT = elem.getString("name_pt");
+            Category category = new Category(id, name, namePT);
             categories.add(category);
         }
         return categories;
     }
 
-    public ArrayList<Message>  messagesFromJSONObject(JSONObject data) throws JSONException,ParseException {
+    public ArrayList<Message> messagesFromJSONObject(JSONObject data) throws JSONException, ParseException {
         ArrayList<Message> messages = new ArrayList<>();
-        int myProfileID=(int)getStoredCredentials().get("profile_id");
+        int myProfileID = (int) getStoredCredentials().get("profile_id");
 
         JSONArray array = data.getJSONArray("received");
         for (int i = 0; i < array.length(); i++) {
             JSONObject elem = array.getJSONObject(i);
             int profileID = elem.getInt("profile_id");
             String content = elem.getString("content");
-            String timestamp=elem.getString("timestamp");
+            String timestamp = elem.getString("timestamp");
 
             SimpleDateFormat format = new SimpleDateFormat(
                     "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
@@ -334,7 +337,7 @@ public class MarketViewModel extends AndroidViewModel {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(d);
 
-            Message message=new Message(content,calendar,profileID,myProfileID);
+            Message message = new Message(content, calendar, profileID, myProfileID);
             messages.add(message);
         }
         array = data.getJSONArray("sent");
@@ -342,7 +345,7 @@ public class MarketViewModel extends AndroidViewModel {
             JSONObject elem = array.getJSONObject(i);
             int profileID = elem.getInt("profile_id");
             String content = elem.getString("content");
-            String timestamp=elem.getString("timestamp");
+            String timestamp = elem.getString("timestamp");
 
             SimpleDateFormat format = new SimpleDateFormat(
                     "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
@@ -351,7 +354,7 @@ public class MarketViewModel extends AndroidViewModel {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(d);
 
-            Message message=new Message(content,calendar,myProfileID,profileID);
+            Message message = new Message(content, calendar, myProfileID, profileID);
             messages.add(message);
         }
         return messages;
@@ -379,6 +382,7 @@ public class MarketViewModel extends AndroidViewModel {
                 public void onFailure(Call call, IOException e) {
                     System.out.println("Error uploading photo");
                 }
+
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     System.out.println(response);
@@ -387,7 +391,7 @@ public class MarketViewModel extends AndroidViewModel {
         }
     }
 
-    public void updateProfilePic(Image pic, HTTTPCallback callback) throws IOException, JSONException{
+    public void updateProfilePic(Image pic, HTTTPCallback callback) throws IOException, JSONException {
         File file = new File(pic.getPath());
         OkHttpClient client = new OkHttpClient().newBuilder().build();
         MediaType mediaType = MediaType.parse("file");
@@ -403,22 +407,23 @@ public class MarketViewModel extends AndroidViewModel {
 
         client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e){
-                JSONObject data=new JSONObject();
+            public void onFailure(Call call, IOException e) {
+                JSONObject data = new JSONObject();
                 try {
-                    data.put("status",400);
-                    data.put("endpoint","/profile/setphoto");
+                    data.put("status", 400);
+                    data.put("endpoint", "/profile/setphoto");
                 } catch (JSONException ex) {
                     ex.printStackTrace();
                 }
                 callback.onComplete(data);
             }
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                JSONObject data=new JSONObject();
+                JSONObject data = new JSONObject();
                 try {
-                    data.put("status",200);
-                    data.put("endpoint","/profile/setphoto");
+                    data.put("status", 200);
+                    data.put("endpoint", "/profile/setphoto");
                 } catch (JSONException ex) {
                     ex.printStackTrace();
                 }
@@ -427,9 +432,9 @@ public class MarketViewModel extends AndroidViewModel {
         });
     }
 
-    public ArrayList<Contact> contactsFromJSONObject(JSONObject data) throws JSONException,ParseException {
+    public ArrayList<Contact> contactsFromJSONObject(JSONObject data) throws JSONException, ParseException {
         JSONArray array = data.getJSONArray("contacts");
-        ArrayList<Contact>  contacts= new ArrayList<>();
+        ArrayList<Contact> contacts = new ArrayList<>();
         for (int i = 0; i < array.length(); i++) {
             JSONObject elem = array.getJSONObject(i);
             int id = elem.getInt("profile_id");
@@ -437,19 +442,18 @@ public class MarketViewModel extends AndroidViewModel {
             String imageURL = elem.getString("profile_image");
             String lastMessage = elem.getString("last_message");
 
-            String timestamp=elem.getString("last_message_timestamp");
+            String timestamp = elem.getString("last_message_timestamp");
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
             format.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date d = format.parse(timestamp);
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(d);
 
-            Contact contact=new Contact(id,imageURL,name,lastMessage,calendar);
+            Contact contact = new Contact(id, imageURL, name, lastMessage, calendar);
             contacts.add(contact);
         }
         return contacts;
     }
-
 
 
 }
