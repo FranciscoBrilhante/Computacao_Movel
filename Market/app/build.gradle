@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'androidx.navigation.safeargs'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -75,5 +76,10 @@ dependencies {
 
     //send photos w/ other parameters
     implementation"com.squareup.okhttp3:okhttp:4.10.0"
+
+    //FCM
+    implementation platform('com.google.firebase:firebase-bom:31.1.1')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-messaging'
 
 }

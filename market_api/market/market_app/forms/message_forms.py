@@ -22,3 +22,7 @@ class GetByProfile(forms.Form):
         if not Profile.objects.filter(pk=data).exists():
             raise ValidationError(_('User with that id does not exist'),code='resource not found')
         return data
+
+class GetNotificationToken(forms.Form):
+    token=forms.CharField()
+    

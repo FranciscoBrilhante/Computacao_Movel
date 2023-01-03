@@ -14,6 +14,7 @@ urlpatterns = [
     path('message/all', message.getAll),
     path('message/withuser', message.getByProfile),
     path('message/users', message.getProfilesWithMessages),
+    path('message/token', message.setNotificationToken),
 
     path('product/add',product.add),
     path('product/addphoto',product.addPhoto),

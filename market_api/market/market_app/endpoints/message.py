@@ -1,11 +1,20 @@
 from ..models import Profile, Message
 from django.http import JsonResponse
-from ..forms.message_forms import Send
+from ..forms.message_forms import Send,GetNotificationToken
 from ..forms.message_forms import GetByProfile as GetByProfileForm
 import os
 from django.utils import timezone
 from ..utils import *
 from django.db.models import Q
+
+import requests
+import json
+
+import firebase_admin
+from firebase_admin.credentials import Certificate
+from firebase_admin.messaging import MulticastMessage, Notification, FCMOptions, AndroidConfig, BatchResponse
+from firebase_admin.messaging import Message as FCMMessage
+from firebase_admin import messaging
 
 def send(request):
     if not request.user.is_authenticated:
@@ -23,9 +32,12 @@ def send(request):
             if profile.pk==profile_pk:
                 return JsonResponse({'status': 400})
             content=data['content']
-
+            
             message=Message(userTo=Profile.objects.get(pk=profile_pk),userFrom=profile,content=content,dateSent=timezone.now())
             message.save()
+            responseFMC=sendNotification(message=message)
+            print(responseFMC)
+            
             return JsonResponse({'status': 200})
             
         elif contains_error(form.errors.as_data(), 'resource not found'):
@@ -124,3 +136,51 @@ def getProfilesWithMessages(request):
     return JsonResponse({'status': 200,'contacts':contacts})
 
 
+def setNotificationToken(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'status': 401})
+
+    if request.method == 'POST':
+        form = GetNotificationToken(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            token = data['token']
+
+            user=request.user
+            profile=Profile.objects.get(user=user.pk)
+            profile.notificationToken=token
+            profile.save()
+            return JsonResponse({'status': 200})
+
+    return JsonResponse({'status': 400})
+
+
+def sendNotification(message):
+    profileTo=message.userTo
+    username=message.userFrom.user.username
+    message_content=message.content
+    token=profileTo.notificationToken
+    if token=="" or token==None:
+        return 
+
+    cert_data={
+        "type": os.environ.get('type'),
+        "project_id": os.environ.get('project_id'),
+        "private_key_id": os.environ.get('private_key_id'),
+        "private_key": os.environ.get('private_key'),
+        "client_email": os.environ.get('client_email'),
+        "client_id": os.environ.get('client_id'),
+        "auth_uri": os.environ.get('auth_uri'),
+        "token_uri": os.environ.get('token_uri'),
+        "auth_provider_x509_cert_url": os.environ.get('auth_provider_x509_cert_url'),
+        "client_x509_cert_url": os.environ.get('client_x509_cert_url')
+    }
+
+    certificate = Certificate(cert_data)
+    firebase_admin.initialize_app(credential=certificate)
+    notification=Notification(
+            title=f"{username} sent you a message",
+            body=f"{message_content}",
+    )
+    message= FCMMessage(notification=notification, token=token)
+    return messaging.send(message)

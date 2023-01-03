@@ -6,7 +6,8 @@ class Profile(models.Model):
     photo = models.ImageField(upload_to='profile_pics',blank=True)
     cityX=models.FloatField()
     cityY=models.FloatField()
-
+    notificationToken=models.CharField(blank=True, null=True, max_length=1024)
+    
 class Message(models.Model):
     userTo=models.ForeignKey(Profile,on_delete=models.CASCADE,related_name="messages_received")
     userFrom=models.ForeignKey(Profile,on_delete=models.CASCADE,related_name="messages_sent")
@@ -35,3 +36,5 @@ class Product(models.Model):
 class ProductImage(models.Model):
     product=models.ForeignKey(Product,on_delete=models.CASCADE)
     image=models.ImageField(upload_to="product_pics")
+
+

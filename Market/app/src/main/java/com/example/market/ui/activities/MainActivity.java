@@ -1,7 +1,10 @@
 package com.example.market.ui.activities;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -29,7 +32,10 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.market.databinding.ActivityMainBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -49,32 +55,20 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
 
     private ActivityMainBinding binding;
     public MarketViewModel viewModel;
+    private BottomNavigationView bottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO); //Disable auto dark mode
-
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        BottomNavigationView bottomNav = findViewById(R.id.nav_view);
+        bottomNav = findViewById(R.id.nav_view);
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
-        navController.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
-            @Override
-            public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
-                if(destination.getId() == R.id.navigation_home || destination.getId() == R.id.navigation_items ||
-                        destination.getId() == R.id.navigation_messages || destination.getId() == R.id.navigation_profile_details) {
-                    bottomNav.setVisibility(View.VISIBLE);
-                } else {
-                    bottomNav.setVisibility(View.GONE);
-                }
-            }
-        });
+        navController.addOnDestinationChangedListener(this.onDestinationChangedListener);
         NavigationUI.setupWithNavController(binding.navView, navController);
-
 
         //if no credentials found redirect to login screen
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
@@ -88,6 +82,13 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         Map<String, Object> params = viewModel.getStoredCredentials();
         viewModel.sendRequest("/profile/login", "POST", null, params, true, true, false, this);
 
+        //receive new token broadcasts from service
+        Intent intent=new Intent(this,ExtendedBroadcastReceiver.class);
+        startService(intent);
+        retrieveLastTokenAndSend();
+        IntentFilter filter=new IntentFilter();
+        filter.addAction("sendToken");
+        registerReceiver(new ExtendedBroadcastReceiver(),filter);
     }
 
     @Override
@@ -126,4 +127,40 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         }
     }
 
+    NavController.OnDestinationChangedListener onDestinationChangedListener=new NavController.OnDestinationChangedListener() {
+        @Override
+        public void onDestinationChanged(@NonNull NavController controller, @NonNull NavDestination destination, @Nullable Bundle arguments) {
+            if(destination.getId() == R.id.navigation_home || destination.getId() == R.id.navigation_items ||
+                    destination.getId() == R.id.navigation_messages || destination.getId() == R.id.navigation_profile_details) {
+                bottomNav.setVisibility(View.VISIBLE);
+            } else {
+                bottomNav.setVisibility(View.GONE);
+            }
+        }
+    };
+
+    private class ExtendedBroadcastReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Map<String, Object> params=new LinkedHashMap<>();
+            params.put("token",intent.getExtras().get("token"));
+            viewModel.sendRequest("/message/token","POST",null,params,true,false,true,MainActivity.this);
+        }
+    }
+
+    private void retrieveLastTokenAndSend(){
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
+            @Override
+            public void onComplete(@androidx.annotation.NonNull Task<String> task) {
+                if(!task.isSuccessful()) {
+                    System.out.println("Unable to get last token");
+                }
+
+                String token= task.getResult();
+                Map<String, Object> params=new LinkedHashMap<>();
+                params.put("token",token);
+                viewModel.sendRequest("/message/token","POST",null,params,true,false,true,MainActivity.this);
+            }
+        });
+    }
 }
