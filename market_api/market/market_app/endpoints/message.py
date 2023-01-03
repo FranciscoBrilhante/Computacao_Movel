@@ -125,11 +125,13 @@ def getProfilesWithMessages(request):
         query.add(Q(userFrom=id), Q.AND)
         queryset = Message.objects.filter(userTo=id).filter(userFrom=profile.pk) | Message.objects.filter(userTo=profile.pk).filter(userFrom=id)
         last_message=queryset.order_by('-dateSent')[0].content
+        last_message_timestamp=queryset.order_by('-dateSent')[0].dateSent
 
         data={'profile_id':id,
                 'profile_name':name,
                 'profile_image':url,
                 'last_message':last_message,
+                'last_message_timestamp':last_message_timestamp
             }
         
         contacts.append(data)
