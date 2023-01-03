@@ -387,6 +387,46 @@ public class MarketViewModel extends AndroidViewModel {
         }
     }
 
+    public void updateProfilePic(Image pic, HTTTPCallback callback) throws IOException, JSONException{
+        File file = new File(pic.getPath());
+        OkHttpClient client = new OkHttpClient().newBuilder().build();
+        MediaType mediaType = MediaType.parse("file");
+        RequestBody body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("profile_photo", "image.jpg",
+                        RequestBody.create(file, MediaType.parse("file")))
+                .build();
+        Request request = new Request.Builder()
+                .url("https://" + BuildConfig.API_ADDRESS + "/profile/setphoto")
+                .method("POST", body)
+                .addHeader("Cookie", "sessionid=" + this.getSessionID())
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e){
+                JSONObject data=new JSONObject();
+                try {
+                    data.put("status",400);
+                    data.put("endpoint","/profile/setphoto");
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
+                }
+                callback.onComplete(data);
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                JSONObject data=new JSONObject();
+                try {
+                    data.put("status",200);
+                    data.put("endpoint","/profile/setphoto");
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
+                }
+                callback.onComplete(data);
+            }
+        });
+    }
+
     public ArrayList<Contact> contactsFromJSONObject(JSONObject data) throws JSONException,ParseException {
         JSONArray array = data.getJSONArray("contacts");
         ArrayList<Contact>  contacts= new ArrayList<>();

@@ -16,6 +16,7 @@ class Message(models.Model):
 
 class Category(models.Model):
     name=models.CharField(max_length=64)
+    namePT=models.CharField(max_length=64)
 
 class Review(models.Model):
     stars=models.FloatField()

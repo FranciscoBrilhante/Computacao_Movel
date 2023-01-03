@@ -40,7 +40,7 @@
                         android:layout_height="match_parent"
                         app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
                         app:strokeColor="@color/black"
-                        app:strokeWidth="2px" />
+                        app:strokeWidth="2dp" />
 
                     <ImageView
                         android:id="@+id/img"
@@ -136,7 +136,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="10dp"
                         android:layout_weight="1"
-                        android:drawableStart="@drawable/map_pin"
+                        android:drawableStart="@drawable/map_pin_heavy"
                         android:drawablePadding="10dp"
                         android:ems="10"
                         android:enabled="false"

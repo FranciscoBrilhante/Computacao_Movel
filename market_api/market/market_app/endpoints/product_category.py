@@ -19,8 +19,8 @@ def add(request):
         if form.is_valid():
             data = form.cleaned_data
             name=data['name']
-        
-            category=Category(name=name)
+            namePT=data['namePT']
+            category=Category(name=name,namePT=namePT)
             category.save()
             return JsonResponse({'status': 200})
             
@@ -57,5 +57,5 @@ def getAll(request):
         return JsonResponse({'status': 401}) 
 
     categories=Category.objects.all()
-    categories_json=[{'id':category.pk,'name':category.name} for category in categories]
+    categories_json=[{'id':category.pk,'name':category.name, 'name_pt':category.namePT} for category in categories]
     return JsonResponse({'status': 200, 'categories':categories_json})

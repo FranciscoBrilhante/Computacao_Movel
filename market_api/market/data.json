@@ -43,203 +43,208 @@
         "model": "market_app.category",
         "pk": 0,
         "fields": {
-            "name": "Appliances"
+            "name": "Appliances",
+            "namePT":"Eletrodomésticos"
         }
     },
     {
         "model": "market_app.category",
         "pk": 1,
         "fields": {
-            "name": "Apps & Games"
+            "name": "Apps & Games",
+            "namePT":"Aplicações e Jogos"
         }
     },
     {
         "model": "market_app.category",
         "pk": 2,
         "fields": {
-            "name": "Arts, Crafts, & Sewing"
+            "name": "Arts, Crafts, & Sewing",
+            "namePT":"Artesanato, Artes e Costura"
         }
     },
     {
         "model": "market_app.category",
         "pk": 3,
         "fields": {
-            "name": "Automotive Parts & Accessories"
-        }
-    },
-    {
-        "model": "market_app.category",
-        "pk": 4,
-        "fields": {
-            "name": "Baby"
+            "name": "Automotive Parts & Accessories",
+            "namePT":"Peças e Acessórios Automóveis"
         }
     },
     {
         "model": "market_app.category",
         "pk": 5,
         "fields": {
-            "name": "Beauty & Personal Care"
+            "name": "Beauty & Personal Care",
+            "namePT":"Beleza e Cuidados Pessoais"
         }
     },
     {
         "model": "market_app.category",
         "pk": 6,
         "fields": {
-            "name": "Books"
+            "name": "Books",
+            "namePT":"Livros"
         }
     },
     {
         "model": "market_app.category",
         "pk": 7,
         "fields": {
-            "name": "CDs & Vinyl"
+            "name": "CDs & Vinyl",
+            "namePT":"CDs e Vinil"
         }
     },
     {
         "model": "market_app.category",
         "pk": 8,
         "fields": {
-            "name": "Cell Phones & Accessories"
+            "name": "Cell Phones & Accessories",
+            "namePT":"Telemóveis e Acessórios"
         }
     },
     {
         "model": "market_app.category",
         "pk": 9,
         "fields": {
-            "name": "Clothing, Shoes and Jewelry"
+            "name": "Clothing, Shoes and Jewelry",
+            "namePT":"Roupa, Calçado e Joalharia"
         }
     },
     {
         "model": "market_app.category",
         "pk": 10,
         "fields": {
-            "name": "Collectibles & Fine Art"
+            "name": "Collectibles & Fine Art",
+            "namePT":"Colecionáveis e Arte"
         }
     },
     {
         "model": "market_app.category",
         "pk": 11,
         "fields": {
-            "name": "Computers"
+            "name": "Computers",
+            "namePT":"Computadores"
         }
     },
     {
         "model": "market_app.category",
         "pk": 12,
         "fields": {
-            "name": "Electronics"
+            "name": "Electronics",
+            "namePT":"Eletrónica"
         }
     },
     {
         "model": "market_app.category",
         "pk": 13,
         "fields": {
-            "name": "Garden & Outdoor"
+            "name": "Garden & Outdoor",
+            "namePT":"Jardim e Exteriores"
         }
     },
     {
         "model": "market_app.category",
         "pk": 14,
         "fields": {
-            "name": "Grocery & Gourmet Food"
+            "name": "Grocery & Gourmet Food",
+            "namePT":"Mercearia e Comida Gourmet"
         }
     },
     {
         "model": "market_app.category",
         "pk": 15,
         "fields": {
-            "name": "Handmade"
+            "name": "Handmade",
+            "namePT":"Feito à Mão"
         }
     },
     {
         "model": "market_app.category",
         "pk": 16,
         "fields": {
-            "name": "Health, Household & Baby Care"
+            "name": "Health, Household & Baby Care",
+            "namePT":"Saúde, Produtos Domésticos e Cuidados de Bebés"
         }
     },
     {
         "model": "market_app.category",
         "pk": 17,
         "fields": {
-            "name": "Home & Kitchen"
+            "name": "Home & Kitchen",
+            "namePT":"Casa e Cozinha"
         }
     },
     {
         "model": "market_app.category",
         "pk": 18,
         "fields": {
-            "name": "Industrial & Scientific"
-        }
-    },
-    {
-        "model": "market_app.category",
-        "pk": 19,
-        "fields": {
-            "name": "Kindle"
+            "name": "Industrial & Scientific",
+            "namePT":"Industrial e Ciêntifico"
         }
     },
     {
         "model": "market_app.category",
         "pk": 20,
         "fields": {
-            "name": "Luggage & Travel Gear"
+            "name": "Luggage & Travel Gear",
+            "namePT":"Malas e Equipamento de Viagem"
         }
     },
     {
         "model": "market_app.category",
         "pk": 21,
         "fields": {
-            "name": "Movies & TV"
+            "name": "Movies & TV",
+            "namePT":"Filmes e Séries"
         }
     },
     {
         "model": "market_app.category",
         "pk": 22,
         "fields": {
-            "name": "Musical Instruments"
+            "name": "Musical Instruments",
+            "namePT":"Instrumentos Musicis"
         }
     },
     {
         "model": "market_app.category",
         "pk": 23,
         "fields": {
-            "name": "Office Products"
+            "name": "Office Products",
+            "namePT":"Produtos de Escritório"
         }
     },
     {
         "model": "market_app.category",
         "pk": 24,
         "fields": {
-            "name": "Pet Supplies"
+            "name": "Pet Supplies",
+            "namePT":"Animais de Estimação"
         }
     },
     {
         "model": "market_app.category",
         "pk": 25,
         "fields": {
-            "name": "Sports & Outdoors"
+            "name": "Sports & Outdoors",
+            "namePT":"Desporto e Ar Livre"
         }
     },
     {
         "model": "market_app.category",
         "pk": 26,
         "fields": {
-            "name": "Tools & Home Improvement"
+            "name": "Tools & Home Improvement",
+            "namePT":"Ferramentas e Melhorias para o Lar"
         }
     },
     {
         "model": "market_app.category",
         "pk": 27,
         "fields": {
-            "name": "Toys & Games"
-        }
-    },
-    {
-        "model": "market_app.category",
-        "pk": 28,
-        "fields": {
-            "name": "Video Games"
+            "name": "Toys & Games",
+            "namePT":"Brinquedos e Jogos"
         }
     },
     {
