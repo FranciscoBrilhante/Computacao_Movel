@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.HomeFragment">
+    tools:context=".ui.fragments.HomeFragment"
+    >
 
     <LinearLayout
         android:id="@+id/home_action_bar"
@@ -13,7 +14,8 @@
         android:animateLayoutChanges="true"
         android:background="@drawable/action_bar_background"
         android:elevation="20dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:backgroundTint="@color/bg1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,7 +39,10 @@
                 android:paddingVertical="3dp"
                 app:iconifiedByDefault="false"
                 app:queryBackground="@android:color/transparent"
-                app:searchIcon="@drawable/search">
+                app:searchIcon="@drawable/search"
+                app:theme="@style/AppSearchView"
+                android:backgroundTint="@color/bg3"
+                >
 
             </androidx.appcompat.widget.SearchView>
 
@@ -49,7 +54,8 @@
                 android:scaleType="fitCenter"
                 android:background="@drawable/clear_button_background"
                 android:gravity="center"
-                android:src="@drawable/chevron_down" />
+                android:src="@drawable/chevron_down"
+                />
 
         </LinearLayout>
 
@@ -58,12 +64,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="25dp"
             android:orientation="horizontal"
             android:visibility="gone">
 
             <Spinner
                 android:id="@+id/category_spinner"
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
@@ -72,6 +79,7 @@
 
             <Spinner
                 android:id="@+id/price_range_spinner"
+                android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -82,21 +90,30 @@
 
     </LinearLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="70dp"
-        android:layout_marginBottom="50dp"
-        android:elevation="10dp"
-        android:orientation="vertical">
+        android:backgroundTint="#587BB7">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/products_list"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="50dp"
+            android:elevation="10dp"
+            android:orientation="vertical"
+            >
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/products_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bg1"
+                android:scrollIndicators="none"
+                />
 
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </LinearLayout>
 </FrameLayout>
 

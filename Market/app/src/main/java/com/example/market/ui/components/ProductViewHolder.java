@@ -75,8 +75,8 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         System.out.println(product.getProfileLocation());
 
         if (city.equals("null")) {
-            if (lang.equals("pt")) city = "Desconhecido";
-            else city = "Unknown";
+            if (lang.equals("pt")) city = "Location desconhecida";
+            else city = "Location unknown";
         }
         locationTextView.setText(city);
 
