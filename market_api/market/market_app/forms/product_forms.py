@@ -46,5 +46,6 @@ class Filter(forms.Form):
     minPrice=forms.IntegerField()
     category=forms.IntegerField()
     page=forms.IntegerField()
+    searchText=forms.CharField(required=False)
 
 

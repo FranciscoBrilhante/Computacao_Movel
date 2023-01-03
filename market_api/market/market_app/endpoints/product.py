@@ -126,8 +126,13 @@ def filter(request):
             maxPrice=data['maxPrice']
             minPrice=data['minPrice']
             category=data['category']
-
-            querySet=Product.objects.all()
+            searchText=data['searchText']
+            
+            if searchText==None or searchText=="":
+                querySet=Product.objects.all()
+            else:
+                querySet=Product.objects.filter(name__unaccent__icontains=searchText)
+                
             if maxPrice!=-1:
                 querySet =querySet & Product.objects.filter(price__lt=maxPrice)
             if minPrice!=-1:
