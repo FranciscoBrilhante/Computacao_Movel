@@ -20,6 +20,9 @@ public interface ProductDao {
     @Query("SELECT * FROM product_table")
     List<Product> getAllList();
 
+    @Query("SELECT * FROM product_table WHERE profile=:id")
+    LiveData<List<Product>> getAllByProfileID(int id);
+
     @Query("DELETE FROM product_table")
     void deleteAll();
 

@@ -41,5 +41,10 @@ class Photo(forms.Form):
             raise ValidationError(_('Product with that ID does not exist'),code='resource does not exist')
         return data
 
-        
+class Filter(forms.Form):
+    maxPrice=forms.IntegerField()
+    minPrice=forms.IntegerField()
+    category=forms.IntegerField()
+    page=forms.IntegerField()
+
 

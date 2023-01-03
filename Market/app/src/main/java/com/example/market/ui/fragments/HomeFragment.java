@@ -23,6 +23,7 @@ import com.example.market.data.MarketViewModel;
 import com.example.market.databinding.FragmentHomeBinding;
 import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.interfaces.RecyclerViewInterface;
+import com.example.market.marketDatabase.Category;
 import com.example.market.marketDatabase.PriceRange;
 import com.example.market.marketDatabase.Product;
 import com.example.market.ui.components.CategorySpinnerAdapter;
@@ -65,13 +66,14 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         PriceRangeSpinnerAdapter priceRangeSpinnerAdapter= new PriceRangeSpinnerAdapter(getContext(),initPriceRange());
         binding.priceRangeSpinner.setAdapter(priceRangeSpinnerAdapter);
 
-
         viewModel.getAllProducts().observe(requireActivity(), products -> {
             adapter.submitList(products);
         });
 
+        categorySpinnerAdapter.add(new Category(-1,"Any Categoy","Qualquer Categoria"));
+        categorySpinnerAdapter.notifyDataSetChanged();
         viewModel.getAllCategories().observe(requireActivity(),categories -> {
-            categorySpinnerAdapter.clear();
+            //categorySpinnerAdapter.clear();
             categorySpinnerAdapter.addAll(categories);
             categorySpinnerAdapter.notifyDataSetChanged();
         });
@@ -120,6 +122,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
 
     private ArrayList<PriceRange> initPriceRange(){
         ArrayList<PriceRange> array=new ArrayList<>();
+        array.add(new PriceRange(null,null,getActivity().getApplicationContext()));
         array.add(new PriceRange(null,10.0,getContext()));
         array.add(new PriceRange(10.0,50.0,getContext()));
         array.add(new PriceRange(50.0,100.0,getContext()));

@@ -63,4 +63,5 @@
     <string name="msg_notify_name">New message received from another user</string>
     <string name="msg_notify_description">Notify when another user sends a message</string>
     <string name="location_unknow_product">Location Unknown</string>
+    <string name="any_price">Any Price</string>
 </resources>

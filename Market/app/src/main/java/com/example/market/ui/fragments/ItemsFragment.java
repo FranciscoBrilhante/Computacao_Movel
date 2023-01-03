@@ -26,6 +26,7 @@ import com.example.market.marketDatabase.Product;
 import com.example.market.ui.activities.LoginActivity;
 import com.example.market.ui.components.OwnProductListAdapter;
 import com.example.market.ui.components.ProductListAdapter;
+import com.example.market.utils.ProductDateComparator;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,8 +59,14 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        viewModel.getProductsByProfileID((int) viewModel.getStoredCredentials().get("profile_id")).observe(requireActivity(),products -> {
+            products.sort(new ProductDateComparator());
+            adapter.submitList(products);
+        });
+
         binding.createButton.setOnClickListener(this);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
+
         //request own user products to populate screen
         viewModel.sendRequest("/product/myproducts", "GET", null, null, false, false, true, this);
         return binding.getRoot();
@@ -78,7 +85,6 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
 
     @Override
     public void sendMessage(int profileID) {
-
     }
 
     @Override
@@ -90,7 +96,7 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
             if (endpoint.equals(url1)) {
                 if (code == 200) {
                     ArrayList<Product> products = viewModel.productsFromJSONObject(data);
-                    adapter.submitList(products);
+                    viewModel.addProducts(products);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
             }

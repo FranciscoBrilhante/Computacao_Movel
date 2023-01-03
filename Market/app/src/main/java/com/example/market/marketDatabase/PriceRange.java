@@ -30,6 +30,9 @@ public class PriceRange {
 
     @NonNull
     public String toString(){
+        if(this.minPrice==null && this.maxPrice==null){
+            return context.getResources().getString(R.string.any_price);
+        }
         if(this.minPrice==null){
             return String.format(Locale.ENGLISH,"%.0f€ %s",maxPrice,context.getResources().getString(R.string.or_less));
         }

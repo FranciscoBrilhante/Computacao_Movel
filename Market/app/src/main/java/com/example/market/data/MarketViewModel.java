@@ -110,6 +110,10 @@ public class MarketViewModel extends AndroidViewModel {
         return messageDao.getMessagesWithUser(id);
     }
 
+    public LiveData<List<Product>> getProductsByProfileID(int id){
+        return productDao.getAllByProfileID(id);
+    }
+
     public void addProducts(ArrayList<Product> products) {
         MainRoomDatabase.databaseWriteExecutor.execute(() -> {
             for (Product product : products) {

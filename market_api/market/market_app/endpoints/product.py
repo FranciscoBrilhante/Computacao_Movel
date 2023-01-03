@@ -118,6 +118,50 @@ def filter(request):
     if not request.user.is_authenticated:
         return JsonResponse({'status': 401}) 
 
+    if request.method == 'GET':
+        form = Filter(request.GET)
+        if form.is_valid():
+            data = form.cleaned_data
+            page=data['page']
+            maxPrice=data['maxPrice']
+            minPrice=data['minPrice']
+            category=data['category']
+
+            querySet=Product.objects.all()
+            if maxPrice!=-1:
+                querySet =querySet & Product.objects.filter(price__lt=maxPrice)
+            if minPrice!=-1:
+                querySet =querySet & Product.objects.filter(price__gte=minPrice)
+            if category!=-1:
+                querySet =querySet & Product.objects.filter(category=category)
+
+            p = Paginator(querySet.order_by("-dateCreated"), 20)
+
+            try:
+                contentPage = p.page(page).object_list
+            except: 
+                return JsonResponse({'status': 200, 'products':[]})
+
+            json_data=[{
+                'id':product.pk, 
+                'title':product.name, 
+                'description':product.description,
+                'category':product.category.pk,
+                'price':product.price,
+                'profile':product.userSelling.pk,
+                'date':product.dateCreated,
+                'category_name':product.category.name,
+                'category_name_pt':product.category.namePT,
+                'profile_location':translateLocation(product.userSelling.cityX,product.userSelling.cityY),
+                'profile_name':product.userSelling.user.username,
+                'images':[productImage.image.url for productImage in ProductImage.objects.filter(product=product.pk)],
+                'rating': computeRating(product.userSelling),
+            } for product in contentPage]
+
+            return JsonResponse({'status': 200, 'products':json_data})
+        
+    return JsonResponse({'status': 400})
+
 def recommended(request):
     if not request.user.is_authenticated:
         return JsonResponse({'status': 401}) 
