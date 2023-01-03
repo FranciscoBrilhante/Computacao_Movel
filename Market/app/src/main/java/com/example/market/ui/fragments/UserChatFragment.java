@@ -29,6 +29,7 @@ import com.example.market.marketDatabase.Contact;
 import com.example.market.marketDatabase.Message;
 import com.example.market.ui.components.ContactListAdapter;
 import com.example.market.ui.components.MessageListAdapter;
+import com.example.market.utils.MessageComparator;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import org.json.JSONException;
@@ -50,11 +51,11 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
         binding = FragmentUserChatBinding.inflate(inflater, container, false);
-
         profileID = UserChatFragmentArgs.fromBundle(getArguments()).getProfileId();
 
         adapter = new MessageListAdapter(new MessageListAdapter.MessageDiff(),(int) viewModel.getStoredCredentials().get("profile_id"));
         adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
+        adapter.setHasStableIds(true);
 
         RecyclerView recyclerView = binding.messageList;
         recyclerView.setAdapter(adapter);
@@ -62,7 +63,8 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
         manager.setStackFromEnd(true);
         recyclerView.setLayoutManager(manager);
 
-        viewModel.getAllMessages().observe(requireActivity(), messages -> {
+        viewModel.getMessagesWithUser(profileID).observe(requireActivity(), messages -> {
+            messages.sort(new MessageComparator());
             adapter.submitList(messages);
             recyclerView.scrollToPosition(messages.size()-1);
         });
@@ -75,7 +77,6 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
         binding.backButton.setOnClickListener(this);
 
         binding.sendMessageButton.setOnClickListener(this);
-        binding.swipeRefreshLayout.setRefreshing(false);
         binding.swipeRefreshLayout.setEnabled(false);
         return binding.getRoot();
     }

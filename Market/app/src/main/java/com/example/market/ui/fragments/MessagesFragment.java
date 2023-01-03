@@ -25,12 +25,14 @@ import com.example.market.marketDatabase.Contact;
 import com.example.market.marketDatabase.Product;
 import com.example.market.ui.components.ContactListAdapter;
 import com.example.market.ui.components.ProductListAdapter;
+import com.example.market.utils.ContactComparator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class MessagesFragment extends Fragment implements ContactRecyclerViewInterface, SwipeRefreshLayout.OnRefreshListener, HTTTPCallback {
     private FragmentMessagesBinding binding;
@@ -45,12 +47,14 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
 
         adapter = new ContactListAdapter(new ContactListAdapter.ContactDiff(), this);
         adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
+        adapter.setHasStableIds(true); //prevent blinking on refresh (combined with getItemID inside adapter class
 
         RecyclerView recyclerView = binding.messagesList;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         viewModel.getAllContacts().observe(requireActivity(), contacts -> {
+            contacts.sort(new ContactComparator());
             adapter.submitList(contacts);
         });
 
@@ -87,7 +91,7 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
             }
-        } catch (JSONException e) {
+        } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
     }

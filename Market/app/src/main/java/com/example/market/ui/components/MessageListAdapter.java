@@ -10,11 +10,26 @@ import com.example.market.interfaces.ContactRecyclerViewInterface;
 import com.example.market.marketDatabase.Contact;
 import com.example.market.marketDatabase.Message;
 
+import java.util.List;
+
 public class MessageListAdapter extends ListAdapter<Message,MessageViewHolder> {
     private  final int profileID;
+    private List<Message> messages;
     public MessageListAdapter(@NonNull DiffUtil.ItemCallback<Message> diffCallback,int profileID){
         super(diffCallback);
         this.profileID=profileID;
+    }
+
+    @Override
+    public void onCurrentListChanged(@NonNull List<Message> previousList, @NonNull List<Message> currentList) {
+        super.onCurrentListChanged(previousList, currentList);
+        this.messages=currentList;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return messages.get(position).getId();
+        //return super.getItemId(position);
     }
 
     @Override

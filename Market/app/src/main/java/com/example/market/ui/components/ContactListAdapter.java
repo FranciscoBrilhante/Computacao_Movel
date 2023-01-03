@@ -10,12 +10,27 @@ import com.example.market.interfaces.ContactRecyclerViewInterface;
 import com.example.market.marketDatabase.Contact;
 import com.example.market.marketDatabase.Product;
 
+import java.util.List;
+
 public class ContactListAdapter extends ListAdapter<Contact,ContactViewHolder> {
     private final ContactRecyclerViewInterface recyclerViewInterface;
+    private List<Contact> contacts;
 
     public ContactListAdapter(@NonNull DiffUtil.ItemCallback<Contact> diffCallback, ContactRecyclerViewInterface recyclerViewInterface){
         super(diffCallback);
         this.recyclerViewInterface=recyclerViewInterface;
+    }
+
+    @Override
+    public void onCurrentListChanged(@NonNull List<Contact> previousList, @NonNull List<Contact> currentList) {
+        super.onCurrentListChanged(previousList, currentList);
+        this.contacts=currentList;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return contacts.get(position).getProfileID();
+        //return super.getItemId(position);
     }
 
     @Override

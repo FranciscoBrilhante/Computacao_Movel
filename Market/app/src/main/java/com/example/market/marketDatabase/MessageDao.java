@@ -22,6 +22,9 @@ public interface MessageDao {
     @Query("DELETE FROM message_table")
     void deleteAll();
 
+    @Query("SELECT * FROM message_table WHERE sender=:id OR receiver=:id")
+    LiveData<List<Message>> getMessagesWithUser(int id);
+
     @Query("DELETE FROM message_table WHERE id=:id")
     void deleteByID(int id);
 

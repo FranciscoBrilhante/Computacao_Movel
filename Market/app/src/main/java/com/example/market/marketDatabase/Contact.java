@@ -4,6 +4,8 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.Calendar;
+
 @Entity(tableName = "contact_table")
 public class Contact {
     @PrimaryKey(autoGenerate = false)
@@ -18,11 +20,15 @@ public class Contact {
     @ColumnInfo(name = "lastMessage")
     private String lastMessage;
 
-    public Contact( int profileID, String profileImage, String profileName, String lastMessage) {
+    @ColumnInfo(name = "lastMessageTimestamp")
+    private Calendar lastMessageTimestamp;
+
+    public Contact( int profileID, String profileImage, String profileName, String lastMessage, Calendar lastMessageTimestamp) {
         this.profileID = profileID;
         this.profileImage = profileImage;
         this.profileName = profileName;
         this.lastMessage = lastMessage;
+        this.lastMessageTimestamp=lastMessageTimestamp;
     }
 
     public int getProfileID() {
@@ -55,5 +61,13 @@ public class Contact {
 
     public void setLastMessage(String lastMessage) {
         this.lastMessage = lastMessage;
+    }
+
+    public Calendar getLastMessageTimestamp() {
+        return lastMessageTimestamp;
+    }
+
+    public void setLastMessageTimestamp(Calendar lastMessageTimestamp) {
+        this.lastMessageTimestamp = lastMessageTimestamp;
     }
 }

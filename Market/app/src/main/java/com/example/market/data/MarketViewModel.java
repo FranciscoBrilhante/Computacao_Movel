@@ -104,6 +104,10 @@ public class MarketViewModel extends AndroidViewModel {
 
     public LiveData<List<Message>> getAllMessages() {return messageDao.getAll();}
 
+    public LiveData<List<Message>> getMessagesWithUser(int id){
+        return messageDao.getMessagesWithUser(id);
+    }
+
     public void addProducts(ArrayList<Product> products) {
         MainRoomDatabase.databaseWriteExecutor.execute(() -> {
             for (Product product : products) {
@@ -383,7 +387,7 @@ public class MarketViewModel extends AndroidViewModel {
         }
     }
 
-    public ArrayList<Contact> contactsFromJSONObject(JSONObject data) throws JSONException {
+    public ArrayList<Contact> contactsFromJSONObject(JSONObject data) throws JSONException,ParseException {
         JSONArray array = data.getJSONArray("contacts");
         ArrayList<Contact>  contacts= new ArrayList<>();
         for (int i = 0; i < array.length(); i++) {
@@ -393,7 +397,14 @@ public class MarketViewModel extends AndroidViewModel {
             String imageURL = elem.getString("profile_image");
             String lastMessage = elem.getString("last_message");
 
-            Contact contact=new Contact(id,imageURL,name,lastMessage);
+            String timestamp=elem.getString("last_message_timestamp");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+            format.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date d = format.parse(timestamp);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(d);
+
+            Contact contact=new Contact(id,imageURL,name,lastMessage,calendar);
             contacts.add(contact);
         }
         return contacts;
