@@ -34,6 +34,7 @@ ALLOWED_HOSTS = ['marketapi.up.railway.app', '127.0.0.1']
 
 INSTALLED_APPS = [
     'market_app.apps.MarketAppConfig',
+    'django.contrib.postgres',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
