@@ -63,4 +63,5 @@
     <string name="more_options_send_message">Enviar Mensagem</string>
     <string name="msg_notify_name">Nova mensagem recebida</string>
     <string name="msg_notify_description">Notificar quando outro utilizador envia uma mensagem</string>
+    <string name="location_unknow_product">Localização Desconhecida</string>
 </resources>

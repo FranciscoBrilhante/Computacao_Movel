@@ -56,12 +56,13 @@ public class ContactViewHolder extends RecyclerView.ViewHolder implements View.O
             profileIcon.setImageDrawable(ContextCompat.getDrawable(rootView.getContext(), R.drawable.placeholder_avatar));
         } else {
             String fullURL = "https://" + BuildConfig.API_ADDRESS + contact.getProfileImage();
-            Glide.with(rootView.getContext())
-                    .load(fullURL)
-                    .override(500, 500) //give resize dimension, you could calculate those
-                    .centerCrop() // scale to fill the ImageView
-                    .into(profileIcon);
-            //Picasso.get().load(fullURL).into(photoView);
+            try{
+                Glide.with(rootView.getContext())
+                        .load(fullURL)
+                        .override(500, 500) //give resize dimension, you could calculate those
+                        .centerCrop() // scale to fill the ImageView
+                        .into(profileIcon);
+            }catch (NullPointerException ignored){}
         }
 
         this.profileIcon.setOnClickListener(this);

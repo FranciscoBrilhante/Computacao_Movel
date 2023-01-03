@@ -53,20 +53,20 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
         binding = FragmentUserChatBinding.inflate(inflater, container, false);
         profileID = UserChatFragmentArgs.fromBundle(getArguments()).getProfileId();
 
-        adapter = new MessageListAdapter(new MessageListAdapter.MessageDiff(),(int) viewModel.getStoredCredentials().get("profile_id"));
+        adapter = new MessageListAdapter(new MessageListAdapter.MessageDiff(), (int) viewModel.getStoredCredentials().get("profile_id"));
         adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
         adapter.setHasStableIds(true);
 
         RecyclerView recyclerView = binding.messageList;
         recyclerView.setAdapter(adapter);
-        LinearLayoutManager manager=new LinearLayoutManager(getContext());
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setStackFromEnd(true);
         recyclerView.setLayoutManager(manager);
 
         viewModel.getMessagesWithUser(profileID).observe(requireActivity(), messages -> {
             messages.sort(new MessageComparator());
             adapter.submitList(messages);
-            recyclerView.scrollToPosition(messages.size()-1);
+            recyclerView.scrollToPosition(messages.size() - 1);
         });
 
         Map<String, Object> params = new LinkedHashMap<>();
@@ -91,17 +91,15 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
             String endpoint = data.getString("endpoint");
             if (endpoint.equals(url1)) {
                 initializeProfilePhoto(data);
-                if(code==200){
+                if (code == 200) {
                     binding.profileName.setText(data.getString("username"));
                 }
-            }
-            else if(endpoint.equals(url2)){
+            } else if (endpoint.equals(url2)) {
                 viewModel.deleteAllMessages();
-                ArrayList<Message> messages=viewModel.messagesFromJSONObject(data);
+                ArrayList<Message> messages = viewModel.messagesFromJSONObject(data);
                 viewModel.addMessages(messages);
-            }
-            else if (endpoint.equals(url3)) {
-                if(code==200){
+            } else if (endpoint.equals(url3)) {
+                if (code == 200) {
                     Map<String, Object> params = new LinkedHashMap<>();
                     params.put("profile_id", Integer.toString(profileID));
                     viewModel.sendRequest("/message/withuser", "GET", params, null, false, false, true, this);
@@ -120,14 +118,14 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
             NavController navController = navHostFragment.getNavController();
             navController.navigateUp();
         }
-        if(view==binding.sendMessageButton){
-            String text=binding.messageInput.getText().toString();
-            if(text.length()>0){
+        if (view == binding.sendMessageButton) {
+            String text = binding.messageInput.getText().toString();
+            if (text.length() > 0) {
                 binding.messageInput.getText().clear();
-                Map<String,Object> params=new LinkedHashMap<>();
-                params.put("profile_id",profileID);
-                params.put("content",text);
-                viewModel.sendRequest("/message/send","POST",null,params,true,false,true,this);
+                Map<String, Object> params = new LinkedHashMap<>();
+                params.put("profile_id", profileID);
+                params.put("content", text);
+                viewModel.sendRequest("/message/send", "POST", null, params, true, false, true, this);
             }
         }
     }
@@ -140,13 +138,15 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
             if (photoURL.equals("null")) {
                 photoView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.placeholder_avatar));
             } else {
-                String fullURL = "https://" + BuildConfig.API_ADDRESS + photoURL;
-                Glide.with(getContext())
-                        .load(fullURL)
-                        .override(500, 500) //give resize dimension, you could calculate those
-                        .centerCrop() // scale to fill the ImageView
-                        .into(photoView);
-                //Picasso.get().load(fullURL).into(photoView);
+                try {
+                    String fullURL = "https://" + BuildConfig.API_ADDRESS + photoURL;
+                    Glide.with(getActivity().getApplicationContext())
+                            .load(fullURL)
+                            .override(500, 500) //give resize dimension, you could calculate those
+                            .centerCrop() // scale to fill the ImageView
+                            .into(photoView);
+                } catch (NullPointerException ignored) {
+                }
             }
         } else {
             photoView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.placeholder_avatar));

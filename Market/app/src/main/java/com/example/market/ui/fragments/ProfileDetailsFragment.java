@@ -120,7 +120,7 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
             requestLocation();
         }
         if (view == binding.img || view == binding.profilePhoto) {
-                verifyStoragePermissions(getActivity());
+            verifyStoragePermissions(getActivity());
         }
     }
 
@@ -147,19 +147,19 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
                     viewModel.sendRequest("/profile/personalinfo", "GET", null, null, false, false, true, this);
                 }
             }
-        } catch (JSONException e) {
+        } catch (JSONException | NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-    private void populateProfileInfo(JSONObject data) throws JSONException {
+    private void populateProfileInfo(JSONObject data) throws JSONException, NullPointerException {
         String username = data.getString("username");
         String email = data.getString("email");
         String photoURL = data.getString("photo");
         String city = data.getString("location");
 
         if (city.equals("null")) {
-            city = getString(R.string.location_undefined);
+            city = getActivity().getResources().getString(R.string.location_undefined);
         }
 
         binding.usernameInput.setText(username);
@@ -170,12 +170,11 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
             binding.profilePhoto.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.placeholder_avatar));
         } else {
             String fullURL = "https://" + BuildConfig.API_ADDRESS + photoURL;
-            Glide.with(getContext())
+            Glide.with(getActivity().getApplicationContext())
                     .load(fullURL)
                     .override(1000, 1000) //give resize dimension, you could calculate those
                     .centerCrop() // scale to fill the ImageView
                     .into(binding.profilePhoto);
-            //Picasso.get().load(fullURL).into(photoView);
         }
     }
 
@@ -253,8 +252,7 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
     private void verifyStoragePermissions(Activity activity) {
         if (ContextCompat.checkSelfPermission(activity.getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
             editPhotoRequestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
-        }
-        else{
+        } else {
             Intent intent = new Intent(Intent.ACTION_PICK);
             intent.setType("image/*");
             startActivityForResult(Intent.createChooser(intent, "Open Gallery"), PICK_IMAGE_REQUEST);
@@ -281,7 +279,7 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
                 }
                 cursor.close();
                 try {
-                    viewModel.updateProfilePic(new Image(part_image, bitmap),this);
+                    viewModel.updateProfilePic(new Image(part_image, bitmap), this);
                 } catch (IOException | JSONException e) {
                     e.printStackTrace();
                 }

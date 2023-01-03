@@ -118,7 +118,7 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
                 NavController navController = navHostFragment.getNavController();
                 navController.navigateUp();
             }
-        } catch (JSONException | ParseException e) {
+        } catch (JSONException | ParseException | NullPointerException e) {
             e.printStackTrace();
         }
     }
@@ -135,7 +135,7 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
         nameView.setText(data.getString("profile_name"));
         String rating = String.format(Locale.ENGLISH, "%.1f", data.getDouble("rating"));
         ratingView.setText(rating);
-        if(data.getDouble("rating")==0.0){
+        if (data.getDouble("rating") == 0.0) {
             ratingView.setVisibility(View.INVISIBLE);
         }
         //format publication date
@@ -150,8 +150,8 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
         String price = String.format(Locale.ENGLISH, "%.0f€", data.getDouble("price"));
         priceView.setText(price);
 
-        String city=data.getString("profile_location");
-        if(city.equals("null")){
+        String city = data.getString("profile_location");
+        if (city.equals("null")) {
             cityView.setVisibility(View.INVISIBLE);
         }
         cityView.setText(city);
@@ -163,16 +163,16 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
             imageList.add(new SlideModel(fullURL, ScaleTypes.CENTER_CROP));
         }
         imageSlider.setImageList(imageList);
-        if(imageList.size()<=0){
+        if (imageList.size() <= 0) {
             imageSlider.setVisibility(View.GONE);
         }
 
         descriptionView.setText(data.getString("description"));
 
-        profileID=data.getInt("profile");
+        profileID = data.getInt("profile");
     }
 
-    private void initializeProfilePhoto(JSONObject data) throws JSONException {
+    private void initializeProfilePhoto(JSONObject data) throws JSONException, NullPointerException {
         ShapeableImageView photoView = binding.photo;
         int code = (Integer) data.get("status");
         if (code == 200) {
@@ -181,12 +181,11 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
                 photoView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.placeholder_avatar));
             } else {
                 String fullURL = "https://" + BuildConfig.API_ADDRESS + photoURL;
-                Glide.with(getContext())
+                Glide.with(getActivity().getApplicationContext())
                         .load(fullURL)
                         .override(500, 500) //give resize dimension, you could calculate those
                         .centerCrop() // scale to fill the ImageView
                         .into(photoView);
-                //Picasso.get().load(fullURL).into(photoView);
             }
         } else {
             photoView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.placeholder_avatar));
@@ -220,9 +219,8 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
                     }
                 });
                 alert.show();
-            }
-            else{
-                if(profileID!=0){
+            } else {
+                if (profileID != 0) {
                     NavHostFragment navHostFragment =
                             (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
                     NavController navController = navHostFragment.getNavController();
@@ -230,9 +228,8 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
                     navController.navigate(action);
                 }
             }
-        }
-        else if(view==binding.sendMessageButton){
-            if(profileID!=0){
+        } else if (view == binding.sendMessageButton) {
+            if (profileID != 0) {
                 NavHostFragment navHostFragment =
                         (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
                 NavController navController = navHostFragment.getNavController();
