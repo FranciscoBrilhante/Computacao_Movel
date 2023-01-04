@@ -38,4 +38,8 @@ class ProductImage(models.Model):
     product=models.ForeignKey(Product,on_delete=models.CASCADE)
     image=models.ImageField(upload_to="product_pics")
 
-
+class Report(models.Model):
+    product=models.ForeignKey(Product,on_delete=models.CASCADE)
+    profile=models.ForeignKey(Profile,on_delete=models.CASCADE)
+    reason=models.CharField(max_length=256)
+    explain=models.CharField(max_length=2048)

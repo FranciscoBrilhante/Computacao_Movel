@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, logout
 from django.contrib.auth import login as login_user
 from ..models import Profile
 from django.http import JsonResponse
-from ..forms.profile_forms import Register, Login, Location, Photo, ProfileId
+from ..forms.profile_forms import Register, Login, Location, Photo, ProfileId,RegisterAdmin
 from PIL import Image
 from django.core.files import File
 import os
@@ -29,6 +29,28 @@ def register(request):
             return JsonResponse({'status': 409})
     return JsonResponse({'status': 400})
 
+
+def registerAdmin(request):
+    if request.method == 'POST':
+        form = RegisterAdmin(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+
+            admin_key=data['admin_key']
+            if os.getenv('admin_key')!=admin_key:
+                    return JsonResponse({'status': 400})
+            
+            user = User.objects.create_user(
+                username=data['username'], email=data['email'], password=data['password'], is_staff=True)
+            profile = Profile(user=user, cityX=0, cityY=0)
+
+            user.save()
+            profile.save()
+        
+            return JsonResponse({'status': 200})
+        elif contains_error(form.errors.as_data(), 'conflict'):
+            return JsonResponse({'status': 409})
+    return JsonResponse({'status': 400})
 
 def login(request):
     if request.method == "POST":
