@@ -1,13 +1,12 @@
 package com.example.market.ui.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -23,28 +22,22 @@ import com.example.market.databinding.FragmentItemsBinding;
 import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.interfaces.RecyclerViewInterface;
 import com.example.market.marketDatabase.Product;
-import com.example.market.ui.activities.LoginActivity;
 import com.example.market.ui.components.OwnProductListAdapter;
-import com.example.market.ui.components.ProductListAdapter;
 import com.example.market.utils.ProductDateComparator;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
-public class ItemsFragment extends Fragment implements RecyclerViewInterface, HTTTPCallback, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
+public class ItemsFragment extends Fragment implements RecyclerViewInterface, HTTTPCallback, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, SearchView.OnQueryTextListener {
 
     private FragmentItemsBinding binding;
     private MarketViewModel viewModel;
     private OwnProductListAdapter adapter;
+    private ArrayList<Product> ownProducts;
+    private String textQuery;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -60,13 +53,13 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         viewModel.getProductsByProfileID((int) viewModel.getStoredCredentials().get("profile_id")).observe(requireActivity(),products -> {
-            products.sort(new ProductDateComparator());
-            adapter.submitList(products);
+            ownProducts=new ArrayList<>(products);
+            filterProductsAndSubmit(ownProducts);
         });
 
         binding.createButton.setOnClickListener(this);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
-
+        binding.searchInput.setOnQueryTextListener(this);
         //request own user products to populate screen
         viewModel.sendRequest("/product/myproducts", "GET", null, null, false, false, true, this);
         return binding.getRoot();
@@ -96,7 +89,8 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
             if (endpoint.equals(url1)) {
                 if (code == 200) {
                     ArrayList<Product> products = viewModel.productsFromJSONObject(data);
-                    viewModel.addProducts(products);
+                    ownProducts=products;
+                    filterProductsAndSubmit(products);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
             }
@@ -120,5 +114,36 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
     public void onRefresh() {
         binding.swipeRefreshLayout.setRefreshing(true);
         viewModel.sendRequest("/product/myproducts", "GET", null, null, false, false, true, this);
+    }
+
+    private void filterProductsAndSubmit(ArrayList<Product> products){
+        if(products==null){
+            return;
+        }
+        ArrayList<Product> aux=new ArrayList<>();
+        products.sort(new ProductDateComparator());
+        if (textQuery!=null){
+            for(Product product:products){
+                if(product.getTitle().toLowerCase().contains(textQuery.toLowerCase())){
+                    aux.add(product);
+                }
+            }
+        }
+        else{
+            aux=new ArrayList<>(products);
+        }
+        adapter.submitList(aux);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        textQuery=newText;
+        filterProductsAndSubmit(ownProducts);
+        return false;
     }
 }

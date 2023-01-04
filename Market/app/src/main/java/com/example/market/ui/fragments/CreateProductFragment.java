@@ -76,12 +76,7 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
     private RecyclerView imageRecyclerView;
     private ArrayList<Image> productImages;
     private CategorySpinnerAdapter categorySpinnerAdapter;
-    private int numberOfUploadedPhotos = 0;
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
+
     private static final int PICK_IMAGE_REQUEST = 345345;
     ActivityResultLauncher<String> requestPermissionLauncher;
 
@@ -136,32 +131,14 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
             navController.navigateUp();
         }
         if (view == binding.uploadPhotoButton) {
+            if(productImages.size()>=5){
+                Toast.makeText(getActivity().getApplicationContext(), R.string.cannot_upload_more_photos, Toast.LENGTH_SHORT).show();
+                return;
+            }
             verifyStoragePermissions(getActivity());
         }
         if (view == binding.uploadButton || view == binding.publishButton) {
-            String title = binding.titleInput.getText().toString();
-            String description = binding.descriptionInput.getText().toString();
-            String price = binding.priceInput.getText().toString();
-
-            if (title.length() <= 0 || description.length() <= 0 || price.length() <= 0) {
-                Toast.makeText(getActivity().getApplicationContext(), R.string.empty_product_info_warning, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Double priceDouble = 0.0;
-            try {
-                priceDouble = Double.parseDouble(price);
-            } catch (NumberFormatException e) {
-                Toast.makeText(getActivity().getApplicationContext(), R.string.price_invalid_warning, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            Map<String, Object> params = new LinkedHashMap<>();
-            params.put("title", title);
-            params.put("description", description);
-            params.put("price", priceDouble);
-            Category cat = (Category) binding.categorySpinner.getSelectedItem();
-            params.put("category", cat.getId());
-
-            viewModel.sendRequest("/product/add", "POST", null, params, true, false, true, this);
+            uploadProduct();
         }
     }
 
@@ -230,6 +207,32 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
                 imageListAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    private void uploadProduct(){
+        String title = binding.titleInput.getText().toString();
+        String description = binding.descriptionInput.getText().toString();
+        String price = binding.priceInput.getText().toString();
+
+        if (title.length() <= 0 || description.length() <= 0 || price.length() <= 0) {
+            Toast.makeText(getActivity().getApplicationContext(), R.string.empty_product_info_warning, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Double priceDouble = 0.0;
+        try {
+            priceDouble = Double.parseDouble(price);
+        } catch (NumberFormatException e) {
+            Toast.makeText(getActivity().getApplicationContext(), R.string.price_invalid_warning, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Map<String, Object> params = new LinkedHashMap<>();
+        params.put("title", title);
+        params.put("description", description);
+        params.put("price", priceDouble);
+        Category cat = (Category) binding.categorySpinner.getSelectedItem();
+        params.put("category", cat.getId());
+
+        viewModel.sendRequest("/product/add", "POST", null, params, true, false, true, this);
     }
 
 }

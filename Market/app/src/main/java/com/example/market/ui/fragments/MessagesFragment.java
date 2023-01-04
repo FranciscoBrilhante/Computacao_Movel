@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -26,6 +27,7 @@ import com.example.market.marketDatabase.Product;
 import com.example.market.ui.components.ContactListAdapter;
 import com.example.market.ui.components.ProductListAdapter;
 import com.example.market.utils.ContactComparator;
+import com.example.market.utils.ProductDateComparator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,10 +36,12 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-public class MessagesFragment extends Fragment implements ContactRecyclerViewInterface, SwipeRefreshLayout.OnRefreshListener, HTTTPCallback {
+public class MessagesFragment extends Fragment implements ContactRecyclerViewInterface, SwipeRefreshLayout.OnRefreshListener, HTTTPCallback, SearchView.OnQueryTextListener {
     private FragmentMessagesBinding binding;
     private MarketViewModel viewModel;
     private ContactListAdapter adapter;
+    private ArrayList<Contact> ownContacts;
+    private String textQuery;
 
     @Nullable
     @Override
@@ -54,10 +58,11 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         viewModel.getAllContacts().observe(requireActivity(), contacts -> {
-            contacts.sort(new ContactComparator());
-            adapter.submitList(contacts);
+            ownContacts=new ArrayList<>(contacts);
+            filterContactsAndSubmit(ownContacts);
         });
 
+        binding.searchInput.setOnQueryTextListener(this);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
         viewModel.sendRequest("/message/users","GET",null,null,false,false,true,this);
         return binding.getRoot();
@@ -87,12 +92,44 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
             if (endpoint.equals(url1)) {
                 if (code == 200) {
                     ArrayList<Contact> contacts = viewModel.contactsFromJSONObject(data);
-                    viewModel.addContacts(contacts);
+                    ownContacts=contacts;
+                    filterContactsAndSubmit(ownContacts);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
             }
         } catch (JSONException | ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    private void filterContactsAndSubmit(ArrayList<Contact> contacts){
+        if(contacts==null){
+            return;
+        }
+        ArrayList<Contact> aux=new ArrayList<>();
+        contacts.sort(new ContactComparator());
+        if (textQuery!=null){
+            for(Contact contact:contacts){
+                if(contact.getProfileName().toLowerCase().contains(textQuery.toLowerCase())){
+                    aux.add(contact);
+                }
+            }
+        }
+        else{
+            aux=new ArrayList<>(contacts);
+        }
+        adapter.submitList(aux);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        textQuery=newText;
+        filterContactsAndSubmit(ownContacts);
+        return false;
     }
 }

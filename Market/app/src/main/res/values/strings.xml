@@ -64,4 +64,5 @@
     <string name="msg_notify_description">Notify when another user sends a message</string>
     <string name="location_unknow_product">Location Unknown</string>
     <string name="any_price">Any Price</string>
+    <string name="cannot_upload_more_photos">Cannot upload more photos (max is 5)</string>
 </resources>
