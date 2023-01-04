@@ -36,6 +36,7 @@ def add(request):
 def remove(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return JsonResponse({'status': 401}) 
+        
     if request.method == 'GET':
         form = ReportID(request.GET)
         if form.is_valid():
