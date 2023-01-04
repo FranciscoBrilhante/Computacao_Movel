@@ -37,9 +37,9 @@ def registerAdmin(request):
             data = form.cleaned_data
 
             admin_key=data['admin_key']
-            if os.getenv('admin_key')!=admin_key:
+            if os.getenv('admin_key',None)!=admin_key:
                     return JsonResponse({'status': 400})
-            
+
             user = User.objects.create_user(
                 username=data['username'], email=data['email'], password=data['password'], is_staff=True)
             profile = Profile(user=user, cityX=0, cityY=0)
