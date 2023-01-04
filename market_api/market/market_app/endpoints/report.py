@@ -36,7 +36,7 @@ def add(request):
 def remove(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return JsonResponse({'status': 401}) 
-        
+
     if request.method == 'GET':
         form = ReportID(request.GET)
         if form.is_valid():
@@ -55,8 +55,9 @@ def remove(request):
 def getAllByProduct(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return JsonResponse({'status': 401}) 
+
     if request.method == 'GET':
-        form = ReportID(request.GET)
+        form = ProductID(request.GET)
         if form.is_valid():
             data = form.cleaned_data
             product_id=data['product_id']
@@ -82,7 +83,7 @@ def clearReports(request):
     if not request.user.is_authenticated or not request.user.is_staff:
         return JsonResponse({'status': 401}) 
     if request.method == 'GET':
-        form = ReportID(request.GET)
+        form = ProductID(request.GET)
         if form.is_valid():
             data = form.cleaned_data
             product_id=data['product_id']

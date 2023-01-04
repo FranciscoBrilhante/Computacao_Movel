@@ -20,7 +20,7 @@ class ReportID(forms.Form):
     report_id = forms.IntegerField()
 
     def clean_report_id(self):
-        data = self.cleaned_data['product_id']
+        data = self.cleaned_data['report_id']
         if not Report.objects.filter(pk=data).exists():
             raise ValidationError(_('Report with that ID does not exist'),code='resource does not exist')
         return data
