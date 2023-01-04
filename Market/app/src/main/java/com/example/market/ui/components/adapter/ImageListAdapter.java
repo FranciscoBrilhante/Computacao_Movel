@@ -1,4 +1,4 @@
-package com.example.market.ui.components;
+package com.example.market.ui.components.adapter;
 
 import android.view.ViewGroup;
 
@@ -8,8 +8,9 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.market.interfaces.ProductImageInterface;
 import com.example.market.marketDatabase.Image;
+import com.example.market.ui.components.holder.ImageViewHolder;
 
-public class ImageListAdapter extends ListAdapter<Image,ImageViewHolder> {
+public class ImageListAdapter extends ListAdapter<Image, ImageViewHolder> {
     private ProductImageInterface productImageInterface;
     public ImageListAdapter(@NonNull DiffUtil.ItemCallback<Image> diffCallback, ProductImageInterface productImageInterface){
         super(diffCallback);

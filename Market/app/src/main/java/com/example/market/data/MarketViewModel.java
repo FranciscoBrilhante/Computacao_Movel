@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.widget.TextView;
 
 import com.example.market.BuildConfig;
 import com.example.market.interfaces.HTTTPCallback;
@@ -25,7 +24,6 @@ import com.example.market.marketDatabase.Message;
 import com.example.market.marketDatabase.MessageDao;
 import com.example.market.marketDatabase.Product;
 import com.example.market.marketDatabase.ProductDao;
-import com.example.market.ui.fragments.LoginFragment;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,11 +34,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

@@ -1,12 +1,10 @@
-package com.example.market.ui.fragments;
+package com.example.market.ui.fragments.main;
 
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -18,11 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -31,43 +26,23 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.market.BuildConfig;
 import com.example.market.R;
 import com.example.market.data.MarketViewModel;
 import com.example.market.databinding.FragmentCreateProductBinding;
-import com.example.market.databinding.FragmentViewProductBinding;
 import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.interfaces.ProductImageInterface;
 import com.example.market.marketDatabase.Category;
 import com.example.market.marketDatabase.Image;
-import com.example.market.marketDatabase.Product;
-import com.example.market.ui.components.CategorySpinnerAdapter;
-import com.example.market.ui.components.ImageListAdapter;
-import com.example.market.ui.components.ProductListAdapter;
+import com.example.market.ui.components.adapter.CategorySpinnerAdapter;
+import com.example.market.ui.components.adapter.ImageListAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class CreateProductFragment extends Fragment implements View.OnClickListener, ProductImageInterface, HTTTPCallback {
     private FragmentCreateProductBinding binding;

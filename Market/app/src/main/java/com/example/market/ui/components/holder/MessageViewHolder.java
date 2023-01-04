@@ -1,25 +1,17 @@
-package com.example.market.ui.components;
+package com.example.market.ui.components.holder;
 
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.core.view.GravityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
-import com.example.market.BuildConfig;
 import com.example.market.R;
-import com.example.market.interfaces.ContactRecyclerViewInterface;
-import com.example.market.marketDatabase.Contact;
 import com.example.market.marketDatabase.Message;
-import com.google.android.material.imageview.ShapeableImageView;
 
 public class MessageViewHolder extends RecyclerView.ViewHolder {
     private Message message;

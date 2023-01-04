@@ -8,7 +8,7 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.example.market.ui.fragments.HomeFragment"
+        android:name="com.example.market.ui.fragments.main.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home" >
         <action
@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/navigation_items"
-        android:name="com.example.market.ui.fragments.ItemsFragment"
+        android:name="com.example.market.ui.fragments.main.ItemsFragment"
         android:label="ItemsFragment"
         tools:layout="@layout/fragment_items" >
         <action
@@ -42,13 +42,13 @@
 
     <fragment
         android:id="@+id/navigation_profile_details"
-        android:name="com.example.market.ui.fragments.ProfileDetailsFragment"
+        android:name="com.example.market.ui.fragments.main.ProfileDetailsFragment"
         android:label="ProfileDetailsFragment"
         tools:layout="@layout/fragment_profile_details" />
 
     <fragment
         android:id="@+id/navigation_view_product"
-        android:name="com.example.market.ui.fragments.ViewProductFragment"
+        android:name="com.example.market.ui.fragments.main.ViewProductFragment"
         android:label="ViewProductFragment"
         tools:layout="@layout/fragment_view_product" >
         <action
@@ -70,7 +70,7 @@
 
     <fragment
         android:id="@+id/navigation_create_product"
-        android:name="com.example.market.ui.fragments.CreateProductFragment"
+        android:name="com.example.market.ui.fragments.main.CreateProductFragment"
         android:label="CreateProductFragment"
         tools:layout="@layout/fragment_create_product">
         <action
@@ -79,7 +79,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_messages"
-        android:name="com.example.market.ui.fragments.MessagesFragment"
+        android:name="com.example.market.ui.fragments.main.MessagesFragment"
         android:label="MessagesFragment"
         tools:layout="@layout/fragment_messages">
         <action
@@ -88,7 +88,7 @@
     </fragment>
     <fragment
         android:id="@+id/userChatFragment"
-        android:name="com.example.market.ui.fragments.UserChatFragment"
+        android:name="com.example.market.ui.fragments.main.UserChatFragment"
         android:label="UserChatFragment"
         tools:layout="@layout/fragment_user_chat">
         <argument

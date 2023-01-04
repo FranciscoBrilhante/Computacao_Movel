@@ -1,4 +1,4 @@
-package com.example.market.ui.components;
+package com.example.market.ui.components.adapter;
 
 import android.view.ViewGroup;
 
@@ -8,23 +8,24 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.market.interfaces.RecyclerViewInterface;
 import com.example.market.marketDatabase.Product;
+import com.example.market.ui.components.holder.AdminProductViewHolder;
 
-public class ProductListAdapter extends ListAdapter<Product,ProductViewHolder> {
+public class AdminProductListAdapter extends ListAdapter<Product, AdminProductViewHolder> {
     private final RecyclerViewInterface recyclerViewInterface;
 
-    public ProductListAdapter(@NonNull DiffUtil.ItemCallback<Product> diffCallback, RecyclerViewInterface recyclerViewInterface){
+    public AdminProductListAdapter(@NonNull DiffUtil.ItemCallback<Product> diffCallback, RecyclerViewInterface recyclerViewInterface){
         super(diffCallback);
         this.recyclerViewInterface=recyclerViewInterface;
     }
 
     @Override
-    public ProductViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
+    public AdminProductViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
 
-        return ProductViewHolder.create(parent,recyclerViewInterface);
+        return AdminProductViewHolder.create(parent,recyclerViewInterface);
     }
 
     @Override
-    public void onBindViewHolder(ProductViewHolder holder, int position) {
+    public void onBindViewHolder(AdminProductViewHolder holder, int position) {
         Product current=getItem(position);
         holder.bind(current);
     }

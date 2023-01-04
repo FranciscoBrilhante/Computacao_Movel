@@ -1,12 +1,8 @@
-package com.example.market.ui.components;
+package com.example.market.ui.components.holder;
 
-import android.content.res.Resources;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -14,20 +10,11 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.denzcoskun.imageslider.constants.ScaleTypes;
-import com.denzcoskun.imageslider.models.SlideModel;
 import com.example.market.BuildConfig;
 import com.example.market.R;
 import com.example.market.interfaces.ContactRecyclerViewInterface;
-import com.example.market.interfaces.RecyclerViewInterface;
 import com.example.market.marketDatabase.Contact;
-import com.example.market.marketDatabase.Product;
 import com.google.android.material.imageview.ShapeableImageView;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Locale;
 
 public class ContactViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private final ContactRecyclerViewInterface recyclerViewInterface;

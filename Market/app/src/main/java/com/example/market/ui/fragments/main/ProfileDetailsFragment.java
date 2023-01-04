@@ -1,4 +1,4 @@
-package com.example.market.ui.fragments;
+package com.example.market.ui.fragments.main;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -9,7 +9,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -23,13 +22,11 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -44,9 +41,6 @@ import com.example.market.databinding.FragmentProfileDetailsBinding;
 import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.marketDatabase.Image;
 import com.example.market.ui.activities.LoginActivity;
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -54,7 +48,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 public class ProfileDetailsFragment extends Fragment implements View.OnClickListener, HTTTPCallback, LocationListener {

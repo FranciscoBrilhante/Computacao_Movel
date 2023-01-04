@@ -1,4 +1,4 @@
-package com.example.market.ui.components;
+package com.example.market.ui.components.adapter;
 
 import android.view.ViewGroup;
 
@@ -6,13 +6,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.example.market.interfaces.ContactRecyclerViewInterface;
-import com.example.market.marketDatabase.Contact;
 import com.example.market.marketDatabase.Message;
+import com.example.market.ui.components.holder.MessageViewHolder;
 
 import java.util.List;
 
-public class MessageListAdapter extends ListAdapter<Message,MessageViewHolder> {
+public class MessageListAdapter extends ListAdapter<Message, MessageViewHolder> {
     private  final int profileID;
     private List<Message> messages;
     public MessageListAdapter(@NonNull DiffUtil.ItemCallback<Message> diffCallback,int profileID){

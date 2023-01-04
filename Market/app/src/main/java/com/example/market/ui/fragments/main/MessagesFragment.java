@@ -1,4 +1,4 @@
-package com.example.market.ui.fragments;
+package com.example.market.ui.fragments.main;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -23,18 +23,14 @@ import com.example.market.databinding.FragmentMessagesBinding;
 import com.example.market.interfaces.ContactRecyclerViewInterface;
 import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.marketDatabase.Contact;
-import com.example.market.marketDatabase.Product;
-import com.example.market.ui.components.ContactListAdapter;
-import com.example.market.ui.components.ProductListAdapter;
+import com.example.market.ui.components.adapter.ContactListAdapter;
 import com.example.market.utils.ContactComparator;
-import com.example.market.utils.ProductDateComparator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class MessagesFragment extends Fragment implements ContactRecyclerViewInterface, SwipeRefreshLayout.OnRefreshListener, HTTTPCallback, SearchView.OnQueryTextListener {
     private FragmentMessagesBinding binding;

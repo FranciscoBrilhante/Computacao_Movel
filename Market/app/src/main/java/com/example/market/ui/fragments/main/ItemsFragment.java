@@ -1,4 +1,4 @@
-package com.example.market.ui.fragments;
+package com.example.market.ui.fragments.main;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,7 +22,7 @@ import com.example.market.databinding.FragmentItemsBinding;
 import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.interfaces.RecyclerViewInterface;
 import com.example.market.marketDatabase.Product;
-import com.example.market.ui.components.OwnProductListAdapter;
+import com.example.market.ui.components.adapter.OwnProductListAdapter;
 import com.example.market.utils.ProductDateComparator;
 
 import org.json.JSONException;

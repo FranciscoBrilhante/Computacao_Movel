@@ -1,12 +1,7 @@
-package com.example.market.ui.fragments;
-
-import static android.content.Context.MODE_PRIVATE;
+package com.example.market.ui.fragments.main;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
@@ -14,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.LayoutInflater;
@@ -32,10 +26,7 @@ import com.example.market.R;
 import com.example.market.data.MarketViewModel;
 import com.example.market.databinding.FragmentViewProductBinding;
 import com.example.market.interfaces.HTTTPCallback;
-import com.example.market.ui.activities.MainActivity;
-import com.example.market.ui.components.ProductListAdapter;
 import com.google.android.material.imageview.ShapeableImageView;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,7 +37,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Formatter;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.example.market.ui.components;
+package com.example.market.ui.components.adapter;
 
 import android.view.ViewGroup;
 
@@ -8,11 +8,11 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.market.interfaces.ContactRecyclerViewInterface;
 import com.example.market.marketDatabase.Contact;
-import com.example.market.marketDatabase.Product;
+import com.example.market.ui.components.holder.ContactViewHolder;
 
 import java.util.List;
 
-public class ContactListAdapter extends ListAdapter<Contact,ContactViewHolder> {
+public class ContactListAdapter extends ListAdapter<Contact, ContactViewHolder> {
     private final ContactRecyclerViewInterface recyclerViewInterface;
     private List<Contact> contacts;
 

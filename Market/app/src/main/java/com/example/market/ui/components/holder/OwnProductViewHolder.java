@@ -1,4 +1,4 @@
-package com.example.market.ui.components;
+package com.example.market.ui.components.holder;
 
 import android.content.res.Resources;
 import android.view.LayoutInflater;

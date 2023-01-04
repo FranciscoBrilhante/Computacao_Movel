@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ui.fragments.CreateProductFragment">
+    tools:context=".ui.fragments.main.CreateProductFragment">
 
     <LinearLayout
         android:id="@+id/home_action_bar"

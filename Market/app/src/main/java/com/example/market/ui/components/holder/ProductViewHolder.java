@@ -1,4 +1,4 @@
-package com.example.market.ui.components;
+package com.example.market.ui.components.holder;
 
 import android.content.res.Resources;
 import android.view.LayoutInflater;
@@ -107,7 +107,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         imageSlider.setItemClickListener(this);
     }
 
-    static ProductViewHolder create(ViewGroup parent, RecyclerViewInterface recyclerViewInterface) {
+    public static ProductViewHolder create(ViewGroup parent, RecyclerViewInterface recyclerViewInterface) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_product, parent, false);
         return new ProductViewHolder(view, recyclerViewInterface);
     }

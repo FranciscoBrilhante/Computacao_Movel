@@ -1,6 +1,5 @@
-package com.example.market.ui.fragments;
+package com.example.market.ui.fragments.main;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,9 +27,9 @@ import com.example.market.interfaces.RecyclerViewInterface;
 import com.example.market.marketDatabase.Category;
 import com.example.market.marketDatabase.PriceRange;
 import com.example.market.marketDatabase.Product;
-import com.example.market.ui.components.CategorySpinnerAdapter;
-import com.example.market.ui.components.PriceRangeSpinnerAdapter;
-import com.example.market.ui.components.ProductListAdapter;
+import com.example.market.ui.components.adapter.CategorySpinnerAdapter;
+import com.example.market.ui.components.adapter.PriceRangeSpinnerAdapter;
+import com.example.market.ui.components.adapter.ProductListAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;

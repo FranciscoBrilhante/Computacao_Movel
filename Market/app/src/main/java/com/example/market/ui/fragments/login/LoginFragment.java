@@ -1,4 +1,4 @@
-package com.example.market.ui.fragments;
+package com.example.market.ui.fragments.login;
 
 import static android.content.Context.MODE_PRIVATE;
 

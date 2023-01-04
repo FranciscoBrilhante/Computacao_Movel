@@ -1,10 +1,9 @@
-package com.example.market.ui.fragments;
+package com.example.market.ui.fragments.main;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,20 +14,15 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.market.BuildConfig;
 import com.example.market.R;
 import com.example.market.data.MarketViewModel;
-import com.example.market.databinding.FragmentMessagesBinding;
 import com.example.market.databinding.FragmentUserChatBinding;
-import com.example.market.interfaces.ContactRecyclerViewInterface;
 import com.example.market.interfaces.HTTTPCallback;
-import com.example.market.marketDatabase.Contact;
 import com.example.market.marketDatabase.Message;
-import com.example.market.ui.components.ContactListAdapter;
-import com.example.market.ui.components.MessageListAdapter;
+import com.example.market.ui.components.adapter.MessageListAdapter;
 import com.example.market.utils.MessageComparator;
 import com.google.android.material.imageview.ShapeableImageView;
 
