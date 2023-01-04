@@ -113,6 +113,11 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
             if (endpoint.equals(url1)) {
                 code = (Integer) data.get("status");
                 if (code == 200) {
+                    if(data.getBoolean("is_staff")){
+                        Intent myIntent = new Intent(this, AdminActivity.class);
+                        startActivity(myIntent);
+                        return;
+                    }
                     viewModel.sendRequest("/category/all", "GET", null, null, false, false, true, this);
                     viewModel.sendRequest("/product/recommended", "GET", null, null, false, false, true, this);
                 } else {

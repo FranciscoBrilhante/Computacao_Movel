@@ -70,6 +70,10 @@ def delete(request):
             data = form.cleaned_data
             product_id=data['product_id']
             product = Product.objects.get(pk=product_id)
+            profile=Profile.objects.get(user=request.user.pk)
+            if product.userSelling!=profile and not profile.user.is_staff:
+                return JsonResponse({'status': 401}) 
+                
             product.delete()
             return JsonResponse({'status': 200})
             

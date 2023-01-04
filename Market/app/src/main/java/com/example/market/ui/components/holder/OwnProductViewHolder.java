@@ -117,7 +117,7 @@ public class OwnProductViewHolder extends RecyclerView.ViewHolder implements  Vi
 
     }
 
-    static OwnProductViewHolder create(ViewGroup parent, RecyclerViewInterface recyclerViewInterface) {
+    public static OwnProductViewHolder create(ViewGroup parent, RecyclerViewInterface recyclerViewInterface) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_own_product, parent, false);
         return new OwnProductViewHolder(view, recyclerViewInterface);
     }

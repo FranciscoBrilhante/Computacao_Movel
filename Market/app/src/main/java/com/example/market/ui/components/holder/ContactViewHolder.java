@@ -57,7 +57,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder implements View.O
 
     }
 
-    static ContactViewHolder create(ViewGroup parent, ContactRecyclerViewInterface recyclerViewInterface) {
+    public static ContactViewHolder create(ViewGroup parent, ContactRecyclerViewInterface recyclerViewInterface) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_contact, parent, false);
         return new ContactViewHolder(view, recyclerViewInterface);
     }

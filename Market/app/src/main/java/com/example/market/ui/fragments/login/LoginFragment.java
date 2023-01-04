@@ -71,8 +71,7 @@ public class LoginFragment extends Fragment implements HTTTPCallback {
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("username", binding.usernameInput.getText().toString());
                 editor.putString("password", binding.passwordInput.getText().toString());
-                int profileID = data.getInt("profile_id");
-                editor.putInt("profile_id", profileID);
+                editor.putInt("profile_id", data.getInt("profile_id"));
                 editor.apply();
 
                 Intent myIntent = new Intent(getActivity(), MainActivity.class);

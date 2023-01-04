@@ -44,7 +44,7 @@ public class MessageViewHolder extends RecyclerView.ViewHolder {
         content.setText(message.getContent());
     }
 
-    static MessageViewHolder create(ViewGroup parent, int profileID) {
+    public static MessageViewHolder create(ViewGroup parent, int profileID) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_message, parent, false);
         return new MessageViewHolder(view, profileID, parent);
     }

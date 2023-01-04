@@ -38,7 +38,7 @@ public class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnC
         removeButton.setOnClickListener(this);
     }
 
-    static ImageViewHolder create(ViewGroup parent,ProductImageInterface productImageInterface){
+    public static ImageViewHolder create(ViewGroup parent, ProductImageInterface productImageInterface){
         View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_image,parent,false);
         return new ImageViewHolder(view,productImageInterface);
     }

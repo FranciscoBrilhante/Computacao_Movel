@@ -56,7 +56,6 @@
             android:layout_width="50dp"
             android:layout_height="wrap_content"
             android:background="@drawable/clear_button_background"
-            android:onClick="showPopup"
             android:scaleType="centerCrop"
             android:src="@drawable/more_horizontal" />
 
