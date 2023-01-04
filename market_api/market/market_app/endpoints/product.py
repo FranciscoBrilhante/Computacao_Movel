@@ -128,7 +128,6 @@ def filter(request):
             category=data['category']
             searchText=data['searchText']
             
-            print(searchText)
             if searchText==None or searchText=="":
                 querySet=Product.objects.all()
             else:

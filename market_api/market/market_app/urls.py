@@ -37,6 +37,7 @@ urlpatterns = [
     path('report/byproduct',report.getAllByProduct),
     path('report/remove',report.remove),
     path('report/clear',report.clearReports),
+    path('report/allproductsreported',report.getAllProductsWithReports),
 
     path('database/clear', database.clear),
     path('database/loginuser', database.login),
