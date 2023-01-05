@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -37,32 +38,34 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
     private FragmentItemsBinding binding;
     private MarketViewModel viewModel;
     private OwnProductListAdapter adapter;
+
     private ArrayList<Product> ownProducts;
-    private String textQuery;
+    private String textQuery="";
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
-        binding = FragmentItemsBinding.inflate(inflater, container, false);
-
-        //configure costume recyclerview for products
         adapter = new OwnProductListAdapter(new OwnProductListAdapter.ProductDiff(), this);
         adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
 
+        viewModel.getProductsByProfileID((int) viewModel.getStoredCredentials().get("profile_id")).observe(requireActivity(),products -> {
+            this.ownProducts=new ArrayList<>(products);
+            filterProductsAndSubmit(ownProducts);
+        });
+    }
+
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+
+        binding = FragmentItemsBinding.inflate(inflater, container, false);
         RecyclerView recyclerView = binding.productsList;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        viewModel.getProductsByProfileID((int) viewModel.getStoredCredentials().get("profile_id")).observe(requireActivity(),products -> {
-            ownProducts=new ArrayList<>(products);
-            filterProductsAndSubmit(ownProducts);
-        });
-
         binding.createButton.setOnClickListener(this);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
         binding.searchInput.setOnQueryTextListener(this);
-        //request own user products to populate screen
-        viewModel.sendRequest("/product/myproducts", "GET", null, null, false, false, true, this);
         return binding.getRoot();
     }
 
@@ -95,8 +98,8 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
             if (endpoint.equals(url1)) {
                 if (code == 200) {
                     ArrayList<Product> products = viewModel.productsFromJSONObject(data);
-                    ownProducts=products;
-                    filterProductsAndSubmit(products);
+                    this.ownProducts=products;
+                    viewModel.addProducts(ownProducts);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
             }

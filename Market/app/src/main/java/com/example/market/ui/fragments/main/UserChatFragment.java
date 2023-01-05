@@ -53,6 +53,7 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
 
         RecyclerView recyclerView = binding.messageList;
         recyclerView.setAdapter(adapter);
+        recyclerView.getItemAnimator().setChangeDuration(0);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setStackFromEnd(true);
         recyclerView.setLayoutManager(manager);

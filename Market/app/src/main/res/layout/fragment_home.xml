@@ -43,7 +43,8 @@
                 app:queryBackground="@android:color/transparent"
                 app:queryHint="@string/search_for_product_hint"
                 app:searchIcon="@drawable/search"
-                app:theme="@style/AppSearchView">
+                app:theme="@style/AppSearchView"
+                tools:ignore="TouchTargetSizeCheck">
 
             </androidx.appcompat.widget.SearchView>
 
@@ -52,11 +53,11 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="20dp"
-                android:scaleType="fitCenter"
                 android:background="@drawable/clear_button_background"
                 android:gravity="center"
+                android:scaleType="fitCenter"
                 android:src="@drawable/chevron_down"
-                />
+                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
         </LinearLayout>
 
