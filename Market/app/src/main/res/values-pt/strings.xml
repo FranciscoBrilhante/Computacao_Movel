@@ -71,4 +71,6 @@
     <string name="reason_label">razão</string>
     <string name="details_label">detalhes</string>
     <string name="clear_reports">Apagar denúncias</string>
+    <string name="search_for_product_hint">Procure por um anúncio</string>
+    <string name="search_for_contacts">Procure por alguem</string>
 </resources>

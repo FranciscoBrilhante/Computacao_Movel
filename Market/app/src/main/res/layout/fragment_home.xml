@@ -34,16 +34,16 @@
                 android:layout_height="40dp"
                 android:layout_weight="1"
                 android:background="@drawable/default_border"
+                android:backgroundTint="@color/white"
                 android:clickable="true"
                 android:inputType="textAutoComplete"
                 android:minWidth="250dp"
                 android:paddingVertical="3dp"
                 app:iconifiedByDefault="false"
                 app:queryBackground="@android:color/transparent"
+                app:queryHint="@string/search_for_product_hint"
                 app:searchIcon="@drawable/search"
-                app:theme="@style/AppSearchView"
-                android:backgroundTint="@color/white"
-                >
+                app:theme="@style/AppSearchView">
 
             </androidx.appcompat.widget.SearchView>
 

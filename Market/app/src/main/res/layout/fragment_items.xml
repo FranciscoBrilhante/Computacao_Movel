@@ -38,8 +38,8 @@
                 android:minWidth="250dp"
                 android:paddingVertical="3dp"
                 app:iconifiedByDefault="false"
-                app:queryHint="Search for a product"
                 app:queryBackground="@android:color/transparent"
+                app:queryHint="@string/search_for_product_hint"
                 app:searchIcon="@drawable/search"
                 tools:ignore="TouchTargetSizeCheck">
 

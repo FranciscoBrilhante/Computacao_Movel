@@ -29,9 +29,6 @@
 
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/search_input"
-                app:iconifiedByDefault="false"
-                app:queryBackground="@android:color/transparent"
-                app:searchIcon="@drawable/search"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_weight="1"
@@ -40,24 +37,14 @@
                 android:inputType="textAutoComplete"
                 android:minWidth="250dp"
                 android:paddingVertical="3dp"
+                app:iconifiedByDefault="false"
+                app:queryBackground="@android:color/transparent"
+                app:queryHint="@string/search_for_contacts"
+                app:searchIcon="@drawable/search"
                 tools:ignore="TouchTargetSizeCheck">
 
             </androidx.appcompat.widget.SearchView>
 
-            <ImageButton
-                android:id="@+id/create_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="20dp"
-                android:background="@color/bg1"
-                app:tint="@color/white"
-                android:gravity="center"
-                android:scaleType="fitCenter"
-                android:src="@drawable/plus"
-                android:textAlignment="center"
-                android:textColor="@color/title_color"
-                android:textStyle="bold"
-                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
         </LinearLayout>
     </LinearLayout>
 
