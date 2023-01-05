@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.example.market.ui.components.SquareLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="10dp"
+    android:layout_width="100dp"
+    android:layout_height="100dp"
+    android:layout_margin="5dp"
     android:orientation="vertical"
     android:gravity="center"
     android:layout_centerInParent="true">
@@ -23,11 +23,13 @@
 
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/remove_photo"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_gravity="end"
             android:background="@drawable/default_border"
+            android:backgroundTint="@color/bg2"
             android:scaleType="fitCenter"
+            app:tint="@color/white"
             android:src="@drawable/x" />
     </FrameLayout>
 

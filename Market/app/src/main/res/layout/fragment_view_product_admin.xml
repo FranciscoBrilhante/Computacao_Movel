@@ -103,9 +103,10 @@
                     android:id="@+id/photo"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:padding="2dp"
                     app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                    app:strokeColor="@color/black"
-                    app:strokeWidth="0.5dp" />
+                    app:strokeColor="@color/bg2"
+                    app:strokeWidth="2dp" />
 
                 <TextView
                     android:id="@+id/name_label"
@@ -195,6 +196,7 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="20dp"
                 android:background="@drawable/default_border"
+                android:backgroundTint="@color/bg1"
                 android:padding="1dp"
                 app:iss_auto_cycle="false"
                 app:iss_corner_radius="10"
@@ -209,9 +211,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:background="@drawable/default_border"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
+                android:backgroundTint="@color/bg1"
+                android:paddingTop="20dp"
+                android:paddingBottom="10dp"
                 android:text="TextView"
+                android:textColor="@color/title_color"
                 android:textSize="20sp" />
 
         </LinearLayout>

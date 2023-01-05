@@ -27,7 +27,7 @@
     <string name="prod_description_title">Descrição</string>
     <string name="description_prompt">Descreve aqui o produto que pretendes vender...</string>
     <string name="prod_category_title">Categoria</string>
-    <string name="upload_image_title">Carregar foto</string>
+    <string name="upload_image_title">Carregar fotos</string>
     <string name="publish_button">Publicar</string>
     <string name="profile_option">Perfil</string>
     <string name="messages_option">Mensagens</string>

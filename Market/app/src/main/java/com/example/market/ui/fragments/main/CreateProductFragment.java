@@ -8,12 +8,14 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -24,6 +26,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.market.R;
@@ -33,7 +36,7 @@ import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.interfaces.ProductImageInterface;
 import com.example.market.marketDatabase.Category;
 import com.example.market.marketDatabase.Image;
-import com.example.market.ui.components.adapter.CategorySpinnerAdapter;
+import com.example.market.ui.components.adapter.CreateSpinnerAdapter;
 import com.example.market.ui.components.adapter.ImageListAdapter;
 
 import org.json.JSONException;
@@ -50,7 +53,7 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
     private ImageListAdapter imageListAdapter;
     private RecyclerView imageRecyclerView;
     private ArrayList<Image> productImages;
-    private CategorySpinnerAdapter categorySpinnerAdapter;
+    private CreateSpinnerAdapter categorySpinnerAdapter;
 
     private static final int PICK_IMAGE_REQUEST = 345345;
     ActivityResultLauncher<String> requestPermissionLauncher;
@@ -63,13 +66,13 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
         binding = FragmentCreateProductBinding.inflate(inflater, container, false);
 
 
-        categorySpinnerAdapter = new CategorySpinnerAdapter(getContext(), new ArrayList<>());
+        categorySpinnerAdapter = new CreateSpinnerAdapter(getContext(), new ArrayList<>());
         binding.categorySpinner.setAdapter(categorySpinnerAdapter);
 
         imageListAdapter = new ImageListAdapter(new ImageListAdapter.ImageDiff(), this);
         imageRecyclerView = binding.imageRecyclerView;
         imageRecyclerView.setAdapter(imageListAdapter);
-        imageRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        imageRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         productImages = new ArrayList<>();
         imageListAdapter.submitList(productImages);

@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg1">
 
     <LinearLayout
         android:id="@+id/home_action_bar"
@@ -12,6 +13,7 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
         android:background="@drawable/action_bar_background"
+        android:backgroundTint="@color/bg1"
         android:elevation="20dp"
         android:orientation="vertical">
 
@@ -28,8 +30,9 @@
                 android:id="@+id/back_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@color/white"
+                android:background="@color/bg1"
                 android:scaleType="fitCenter"
+                app:tint="@color/white"
                 android:src="@drawable/arrow_left" />
 
             <LinearLayout
@@ -63,8 +66,9 @@
                 android:id="@+id/message_button"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:background="@color/white"
+                android:background="@color/bg1"
                 android:scaleType="fitCenter"
+                app:tint="@color/white"
                 android:src="@drawable/send" />
 
         </LinearLayout>
@@ -97,9 +101,10 @@
                     android:id="@+id/photo"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
+                    android:padding="2dp"
                     app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                    app:strokeColor="@color/black"
-                    app:strokeWidth="0.5dp" />
+                    app:strokeColor="@color/bg2"
+                    app:strokeWidth="2dp" />
 
                 <TextView
                     android:id="@+id/name_label"
@@ -123,7 +128,8 @@
                     android:text="3.5"
                     android:textColor="@color/title_color"
                     android:textSize="16sp"
-                    app:drawableEndCompat="@drawable/star" />
+                    app:drawableEndCompat="@drawable/star"
+                    android:drawableTint="@color/white"/>
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -178,7 +184,8 @@
                     android:text="Coimbraasdasdasdasdasd"
                     android:textColor="@color/title_color"
                     android:textSize="24sp"
-                    app:drawableEndCompat="@drawable/map_pin" />
+                    app:drawableEndCompat="@drawable/map_pin"
+                    android:drawableTint="@color/white"/>
             </LinearLayout>
 
             <com.denzcoskun.imageslider.ImageSlider
@@ -188,6 +195,7 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginVertical="20dp"
                 android:background="@drawable/default_border"
+                android:backgroundTint="@color/bg1"
                 android:padding="1dp"
                 app:iss_auto_cycle="false"
                 app:iss_corner_radius="10"
@@ -202,9 +210,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:background="@drawable/default_border"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="10dp"
+                android:backgroundTint="@color/bg1"
+                android:paddingBottom="10dp"
+                android:paddingTop="20dp"
                 android:text="TextView"
+                android:textColor="@color/title_color"
                 android:textSize="20sp" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -216,11 +226,14 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/default_border"
+                android:backgroundTint="@color/bg2"
+                android:drawableTint="@color/white"
                 android:drawableStart="@drawable/send"
                 android:drawablePadding="5dp"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="5dp"
                 android:text="@string/send_message_button"
+                android:textColor="@color/title_color"
                 android:textAllCaps="false"
                 android:textSize="24sp" />
         </LinearLayout>

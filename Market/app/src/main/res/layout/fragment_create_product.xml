@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragments.main.CreateProductFragment">
+    tools:context=".ui.fragments.main.CreateProductFragment"
+    android:background="@color/bg1">
 
     <LinearLayout
         android:id="@+id/home_action_bar"
@@ -13,6 +14,7 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
         android:background="@drawable/action_bar_background"
+        android:backgroundTint="@color/bg1"
         android:elevation="20dp"
         android:orientation="vertical">
 
@@ -29,9 +31,10 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="20dp"
-                android:background="@color/white"
+                android:background="@color/bg1"
                 android:gravity="center"
                 android:scaleType="fitCenter"
+                app:tint="@color/white"
                 android:src="@drawable/arrow_left"
                 android:textAlignment="center"
                 android:textColor="@color/title_color"
@@ -49,7 +52,6 @@
                 android:text="Create Listing"
                 android:textSize="24sp"
                 android:textColor="@color/title_color"
-                android:textStyle="bold"
                 />
 
             <ImageButton
@@ -57,9 +59,10 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_marginStart="20dp"
-                android:background="@color/white"
+                android:background="@color/bg1"
                 android:gravity="center"
                 android:scaleType="fitCenter"
+                app:tint="@color/white"
                 android:src="@drawable/upload_cloud"
                 android:textAlignment="center"
                 android:textColor="@color/title_color"
@@ -95,8 +98,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/prod_title_title"
                     android:textColor="@color/title_color"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -111,7 +113,7 @@
                     android:text="@string/prod_price_title"
                     android:textAlignment="textEnd"
                     android:textColor="@color/title_color"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -120,17 +122,20 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="5dp"
-                android:gravity="center_vertical"
+                android:gravity="top"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/title_input"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/prod_title_title"
                     android:minWidth="200dp"
-                    android:textColor="@color/subtext_color"
-                    android:textSize="20sp" />
+                    android:maxWidth="250dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/white"
+                    android:textColorHint="@color/title_color"
+                    android:hint="@string/prod_title_title"
+                    android:textColor="@color/title_color"
+                    android:textSize="18sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -142,11 +147,15 @@
                     android:id="@+id/price_input"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColorHint="@color/title_color"
+                    android:maxLength="9"
                     android:hint="@string/prod_price_title"
+                    android:maxWidth="110dp"
+                    android:backgroundTint="@color/white"
                     android:inputType="numberDecimal"
                     android:textAlignment="textEnd"
-                    android:textColor="@color/subtext_color"
-                    android:textSize="20sp" />
+                    android:textColor="@color/title_color"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <TextView
@@ -157,8 +166,7 @@
                 android:layout_marginTop="30dp"
                 android:text="@string/prod_description_title"
                 android:textColor="@color/title_color"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textSize="20sp" />
 
             <EditText
                 android:id="@+id/description_input"
@@ -167,15 +175,17 @@
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="5dp"
                 android:background="@drawable/default_border"
+                android:backgroundTint="@color/bg2"
                 android:ems="10"
                 android:gravity="start"
+                android:textColorHint="@color/title_color"
                 android:hint="@string/description_prompt"
                 android:inputType="textMultiLine"
                 android:paddingHorizontal="10dp"
-                android:paddingVertical="5dp"
+                android:paddingVertical="10dp"
                 android:textAlignment="viewStart"
-                android:textColor="@color/subtext_color"
-                android:textSize="20sp" />
+                android:textColor="@color/title_color"
+                android:textSize="18sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -195,16 +205,17 @@
                     android:text="@string/prod_category_title"
                     android:textAlignment="textEnd"
                     android:textColor="@color/title_color"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp" />
 
                 <Spinner
                     android:id="@+id/category_spinner"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
                     android:layout_weight="1"
-                    android:background="@drawable/default_border" />
+                    android:background="@drawable/default_border"
+                    />
+
             </LinearLayout>
 
             <LinearLayout
@@ -212,22 +223,23 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal"
-                android:paddingVertical="5dp">
+                android:layout_gravity="center_vertical"
+                android:gravity="center">
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/upload_photo_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="5dp"
                     android:background="@drawable/default_border"
+                    android:backgroundTint="@color/bg2"
                     android:drawableStart="@drawable/image"
                     android:drawablePadding="10dp"
+                    android:drawableTint="@color/white"
                     android:paddingHorizontal="10dp"
                     android:text="@string/upload_image_title"
+                    android:textColor="@color/title_color"
                     android:textAllCaps="false"
-                    android:textSize="24sp" />
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -236,24 +248,24 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="30dp" />
+                android:layout_marginBottom="10dp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/publish_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginHorizontal="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="5dp"
                 android:background="@drawable/default_border"
+                android:backgroundTint="@color/bg2"
                 android:drawableStart="@drawable/upload_cloud"
-                android:drawablePadding="5dp"
-                android:paddingHorizontal="20dp"
-                android:paddingVertical="5dp"
+                android:drawablePadding="10dp"
+                android:drawableTint="@color/white"
+                android:paddingHorizontal="10dp"
+                android:textColor="@color/title_color"
                 android:text="@string/publish_button"
                 android:textAllCaps="false"
-                android:textSize="24sp" />
+                android:textSize="20sp"
+                android:textStyle="bold"/>
         </LinearLayout>
     </ScrollView>
 
