@@ -21,8 +21,19 @@ public class ReportListAdapter extends ListAdapter<Report, ReportViewHolder> {
     }
 
     @Override
-    public ReportViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
+    public void onCurrentListChanged(@NonNull List<Report> previousList, @NonNull List<Report> currentList) {
+        super.onCurrentListChanged(previousList, currentList);
+        this.reports=currentList;
+    }
 
+    @Override
+    public long getItemId(int position) {
+        return reports.get(position).getReportID();
+        //return super.getItemId(position);
+    }
+
+    @Override
+    public ReportViewHolder onCreateViewHolder(ViewGroup parent,int viewType){
         return ReportViewHolder.create(parent);
     }
 

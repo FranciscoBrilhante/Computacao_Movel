@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/more_options_clear_reports"
+        android:title="@string/clear_reports" />
+    <item
+        android:id="@+id/more_options_delete"
+        android:title="@string/delete_product" />
+
+</menu>

@@ -43,7 +43,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -67,7 +67,7 @@
                 android:layout_height="30dp"
                 android:background="@color/bg1"
                 android:scaleType="fitCenter"
-                android:src="@drawable/trash_2_light" />
+                android:src="@drawable/more_horizontal_white" />
 
         </LinearLayout>
     </LinearLayout>
@@ -219,7 +219,7 @@
                 android:textSize="20sp" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/reports_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -232,9 +232,9 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/reports"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp"
+                android:layout_height="0dp"
                 android:layout_marginTop="10dp"
+                android:layout_weight="1"
                 android:scrollIndicators="none" />
 
         </LinearLayout>

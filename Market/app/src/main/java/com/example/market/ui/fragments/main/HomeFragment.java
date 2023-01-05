@@ -37,6 +37,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class HomeFragment extends Fragment implements RecyclerViewInterface, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener, HTTTPCallback, SearchView.OnQueryTextListener {
@@ -49,6 +50,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     private String queryText = "";
     private Category categorySelected;
     private PriceRange priceRangeSelected;
+    private ArrayList<Product> products;
 
     private CategorySpinnerAdapter categorySpinnerAdapter;
     private PriceRangeSpinnerAdapter priceRangeSpinnerAdapter;
@@ -61,9 +63,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
 
         categorySpinnerAdapter = new CategorySpinnerAdapter(getContext(), new ArrayList<>());
-        priceRangeSpinnerAdapter = new PriceRangeSpinnerAdapter(getContext(), initPriceRange());
+        priceRangeSpinnerAdapter = new PriceRangeSpinnerAdapter(getContext(), viewModel.getDefaultPriceRanges(getContext()));
 
-        viewModel.getAllCategories().observe(requireActivity(), categories -> {
+        viewModel.getAllCategories().observe(requireActivity(),categories -> {
             categorySpinnerAdapter.clear();
             categorySpinnerAdapter.add(new Category(-1, "Any Category", "Qualquer Categoria"));
             categorySpinnerAdapter.addAll(categories);
@@ -71,9 +73,8 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         });
 
         viewModel.getAllProducts().observe(requireActivity(), products -> {
-            if (queryText.equals("") && (categorySelected == null || categorySelected.getId() == -1) && (priceRangeSelected == null || (priceRangeSelected.getMaxPrice() == null && priceRangeSelected.getMinPrice() == null))) {
-                adapter.submitList(products);
-            }
+            this.products=new ArrayList<>(products);
+            filterProductsAndSubmit(this.products);
         });
     }
 
@@ -95,9 +96,12 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         binding.searchInput.setOnQueryTextListener(this);
         binding.priceRangeSpinner.setOnItemSelectedListener(priceRangeSpinnerListener);
         binding.categorySpinner.setOnItemSelectedListener(categorySpinnerListener);
+
+
         return binding.getRoot();
     }
 
+    //go to product page
     @Override
     public void onClick(Product product) {
         boolean isOwner = product.getProfileName().equals(viewModel.getStoredCredentials().get("username"));
@@ -105,15 +109,15 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
                 (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
         NavController navController = navHostFragment.getNavController();
         NavDirections action = HomeFragmentDirections.actionNavigationHomeToNavigationViewProduct(isOwner, product.getId());
-
         navController.navigate(action);
     }
 
+    //user clicked in delete product in product options
     @Override
     public void delete(Product product) {
 
     }
-
+    //user clicked in send message in product options
     @Override
     public void sendMessage(int profileID) {
         NavHostFragment navHostFragment =
@@ -123,7 +127,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         navController.navigate(action);
     }
 
-
+    //user clicked in arrow to show more filter options
     @Override
     public void onClick(View view) {
         if (view == binding.moreButton) {
@@ -140,23 +144,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         }
     }
 
-    private ArrayList<PriceRange> initPriceRange() {
-        ArrayList<PriceRange> array = new ArrayList<>();
-        array.add(new PriceRange(null, null, getActivity().getApplicationContext()));
-        array.add(new PriceRange(null, 10.0, getContext()));
-        array.add(new PriceRange(10.0, 50.0, getContext()));
-        array.add(new PriceRange(50.0, 100.0, getContext()));
-        array.add(new PriceRange(100.0, 500.0, getContext()));
-        array.add(new PriceRange(500.0, null, getContext()));
-        return array;
-    }
-
-    @Override
-    public void onRefresh() {
-        binding.swipeRefreshLayout.setRefreshing(true);
-        sendFilterRequest();
-    }
-
     @Override
     public void onComplete(JSONObject data) {
         String url1 = "/product/recommended";
@@ -164,18 +151,10 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         try {
             int code = data.getInt("status");
             String endpoint = data.getString("endpoint");
-            if (endpoint.equals(url1)) {
+            if (endpoint.equals(url1)) { // /product/recommended
                 if (code == 200) {
                     ArrayList<Product> products = viewModel.productsFromJSONObject(data);
                     viewModel.addProducts(products);
-                    adapter.submitList(products);
-                }
-                binding.swipeRefreshLayout.setRefreshing(false);
-            }
-            if (endpoint.equals(url2)) {
-                if (code == 200) {
-                    ArrayList<Product> products = viewModel.productsFromJSONObject(data);
-                    adapter.submitList(products);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
             }
@@ -184,26 +163,57 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         }
     }
 
+    private void filterProductsAndSubmit(ArrayList<Product> products){
+        ArrayList<Product> aux=new ArrayList<>();
+        for(Product product: products){
+            boolean toAdd=true;
+            if(!product.getTitle().toLowerCase(Locale.ROOT).contains(queryText.toLowerCase(Locale.ROOT))){
+                toAdd=false;
+            }
+            if(priceRangeSelected!=null){
+                if(priceRangeSelected.getMaxPrice()!=null && priceRangeSelected.getMaxPrice()<product.getPrice()){
+                    toAdd=false;
+                }
+                if(priceRangeSelected.getMinPrice()!=null && priceRangeSelected.getMinPrice()>product.getPrice()){
+                    toAdd=false;
+                }
+            }
+            if(categorySelected!=null && categorySelected.getId()!=-1 && categorySelected.getId()!=product.getCategory()){
+                toAdd=false;
+            }
+
+            if(toAdd){
+                aux.add(product);
+            }
+        }
+        adapter.submitList(aux);
+    }
+
+    //user forced page refresh
+    @Override
+    public void onRefresh() {
+        binding.swipeRefreshLayout.setRefreshing(true);
+        viewModel.sendRequest("/product/recommended", "GET", null, null, false, false, true, this);
+    }
+
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
+    public boolean onQueryTextChange(String newText) {//query text changed
         this.queryText = newText;
-        sendFilterRequest();
+        filterProductsAndSubmit(this.products);
         return true;
     }
 
+    //category selected changed
     private AdapterView.OnItemSelectedListener categorySpinnerListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            Category aux=categorySelected;
             categorySelected = (Category) binding.categorySpinner.getSelectedItem();
-            if(aux!=null){
-                sendFilterRequest();
-            }
+            filterProductsAndSubmit(HomeFragment.this.products);
         }
 
         @Override
@@ -211,50 +221,16 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         }
     };
 
+    //pricerange selected changed
     private AdapterView.OnItemSelectedListener priceRangeSpinnerListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            PriceRange aux=priceRangeSelected;
             priceRangeSelected = (PriceRange) binding.priceRangeSpinner.getSelectedItem();
-            if(aux!=null){
-                sendFilterRequest();
-            }
+            filterProductsAndSubmit(HomeFragment.this.products);
         }
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
         }
     };
-
-    private void sendFilterRequest() {
-        if (queryText.equals("") && (categorySelected == null || categorySelected.getId() == -1) && (priceRangeSelected == null || (priceRangeSelected.getMaxPrice() == null && priceRangeSelected.getMinPrice() == null))) {
-            viewModel.sendRequest("/product/recommended", "GET", null, null, false, false, true, this);
-            return;
-        }
-
-        Map<String, Object> params = new LinkedHashMap<>();
-        params.put("searchText", queryText);
-        params.put("page", Integer.toString(1));
-        System.out.println(categorySelected);
-        if (categorySelected == null || categorySelected.getId() == -1) {
-            params.put("category", Integer.toString(-1));
-        } else {
-            params.put("category", Integer.toString(categorySelected.getId()));
-        }
-        if (priceRangeSelected == null) {
-            params.put("minPrice", Integer.toString(-1));
-            params.put("maxPrice", Integer.toString(-1));
-        } else {
-            if (priceRangeSelected.getMinPrice() == null)
-                params.put("minPrice", Integer.toString(-1));
-            else params.put("minPrice", Double.toString(priceRangeSelected.getMinPrice()));
-
-            if (priceRangeSelected.getMaxPrice() == null)
-                params.put("maxPrice", Integer.toString(-1));
-            else params.put("maxPrice", Double.toString(priceRangeSelected.getMaxPrice()));
-        }
-
-        System.out.println(params);
-        viewModel.sendRequest("/product/filter", "GET", params, null, false, false, true, this);
-    }
 }

@@ -70,4 +70,5 @@
     <string name="delete_product">Eliminar</string>
     <string name="reason_label">razão</string>
     <string name="details_label">detalhes</string>
+    <string name="clear_reports">Apagar denúncias</string>
 </resources>

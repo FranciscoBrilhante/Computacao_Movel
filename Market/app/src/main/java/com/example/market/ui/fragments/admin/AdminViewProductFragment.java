@@ -4,8 +4,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +41,7 @@ import com.google.android.material.imageview.ShapeableImageView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -73,7 +77,7 @@ public class AdminViewProductFragment extends Fragment implements HTTTPCallback,
 
 
         adapter = new ReportListAdapter(new ReportListAdapter.ReportDiff());
-        adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
+        //adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
         RecyclerView recyclerView = binding.reports;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -90,6 +94,7 @@ public class AdminViewProductFragment extends Fragment implements HTTTPCallback,
         String url2 = "/profile/info";
         String url3 = "/product/delete";
         String url4 = "/report/byproduct";
+        String url5 = "/report/clear";
         try {
             String endpoint = (String) data.get("endpoint");
             if (endpoint.equals(url1)) {
@@ -113,15 +118,23 @@ public class AdminViewProductFragment extends Fragment implements HTTTPCallback,
                 viewModel.deleteProductByID(id);
                 Toast.makeText(getActivity().getApplicationContext(), R.string.successfull_deletion_product_message, Toast.LENGTH_SHORT).show();
                 NavHostFragment navHostFragment =
-                        (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                        (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_admin);
                 NavController navController = navHostFragment.getNavController();
                 navController.navigateUp();
             } else if (endpoint.equals(url4)) {
                 code = (Integer) data.get("status");
                 if (code == 200) {
-                    ArrayList<Report> reports=viewModel.reportsFromJSONObject(data);
+                    ArrayList<Report> reports = viewModel.reportsFromJSONObject(data);
                     System.out.println(reports.size());
                     adapter.submitList(reports);
+                    System.out.println(reports);
+                }
+            } else if (endpoint.equals(url5)) {
+                code = (Integer) data.get("status");
+                if (code == 200) {
+                    Map<String, Object> params = new LinkedHashMap<>();
+                    params.put("product_id", Integer.toString(id));
+                    viewModel.sendRequest("/report/byproduct", "GET", params, null, false, false, true, this);
                 }
             }
         } catch (JSONException | ParseException | NullPointerException e) {
@@ -137,6 +150,7 @@ public class AdminViewProductFragment extends Fragment implements HTTTPCallback,
         TextView cityView = binding.cityLabelViewItem;
         ImageSlider imageSlider = binding.imageSlider;
         TextView descriptionView = binding.descriptionLabelViewItem;
+        TextView titleView = binding.title;
 
         String profileName = data.getString("profile_name");
         Double ratingData = data.getDouble("rating");
@@ -145,18 +159,20 @@ public class AdminViewProductFragment extends Fragment implements HTTTPCallback,
         String price = String.format(Locale.ENGLISH, "%.0f€", priceData);
         String city = data.getString("profile_location");
         String description = data.getString("description");
+        String title = data.getString("title");
 
         nameView.setText(profileName);
         cityView.setText(city);
         priceView.setText(price);
         ratingView.setText(rating);
         descriptionView.setText(description);
+        titleView.setText(title);
 
         if (data.getDouble("rating") == 0.0) {
             ratingView.setVisibility(View.INVISIBLE);
         }
         if (city.equals("null")) {
-            cityView.setVisibility(View.INVISIBLE);
+            cityView.setText(getResources().getString(R.string.location_unknow_product));
         }
         //format publication date
         SimpleDateFormat format = new SimpleDateFormat(
@@ -208,23 +224,43 @@ public class AdminViewProductFragment extends Fragment implements HTTTPCallback,
             navController.navigateUp();
         }
         if (view == binding.deleteButton) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(), 0);
-            alert.setTitle(R.string.confirm_deletion_product_title);
-            alert.setMessage(R.string.confirm_deletion_product_message);
-            alert.setPositiveButton(R.string.delete_button, new DialogInterface.OnClickListener() {
+            PopupMenu popupMenu = new PopupMenu(getContext(), view);
+            MenuInflater inflater = popupMenu.getMenuInflater();
+            inflater.inflate(R.menu.admin_view_product_options_menu, popupMenu.getMenu());
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                 @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    Map<String, Object> params = new LinkedHashMap<>();
-                    params.put("product_id", Integer.toString(id));
-                    viewModel.sendRequest("/product/delete", "GET", params, null, false, false, true, AdminViewProductFragment.this::onComplete);
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    if (menuItem.getItemId() == R.id.more_options_delete) {
+                        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity(), 0);
+                        alert.setTitle(R.string.confirm_deletion_product_title);
+                        alert.setMessage(R.string.confirm_deletion_product_message);
+                        alert.setPositiveButton(R.string.delete_button, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Map<String, Object> params = new LinkedHashMap<>();
+                                params.put("product_id", Integer.toString(id));
+                                viewModel.sendRequest("/product/delete", "GET", params, null, false, false, true, AdminViewProductFragment.this::onComplete);
+                            }
+                        });
+                        alert.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                            }
+                        });
+                        alert.show();
+                        return true;
+                    } else if (menuItem.getItemId() == R.id.more_options_clear_reports) {
+                        Map<String, Object> params = new LinkedHashMap<>();
+                        params.put("product_id", Integer.toString(id));
+                        viewModel.sendRequest("/report/clear", "GET", params, null, false, false, true, AdminViewProductFragment.this::onComplete);
+                        return true;
+                    }
+                    return false;
                 }
             });
-            alert.setNegativeButton(R.string.cancel_button, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                }
-            });
-            alert.show();
+            popupMenu.show();
+
+
         }
     }
 }

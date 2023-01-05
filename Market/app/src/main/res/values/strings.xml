@@ -69,4 +69,5 @@
     <string name="delete_product">Delete product</string>
     <string name="reason_label">reason</string>
     <string name="details_label">details</string>
+    <string name="clear_reports">Clear reports</string>
 </resources>
