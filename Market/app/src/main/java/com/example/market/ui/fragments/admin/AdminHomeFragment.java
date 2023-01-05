@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +33,8 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class AdminHomeFragment extends Fragment implements RecyclerViewInterface, SwipeRefreshLayout.OnRefreshListener, HTTTPCallback, SearchView.OnQueryTextListener {
 
@@ -77,6 +80,14 @@ public class AdminHomeFragment extends Fragment implements RecyclerViewInterface
     }
 
     @Override
+    public void delete(Product product) {
+        Map<String,Object> params=new LinkedHashMap<>();
+        params.put("product_id",Integer.toString(product.getId()));
+        viewModel.sendRequest("/product/delete", "GET", params, null, false, false, true, this);
+        viewModel.deleteProductByID(product.getId());
+    }
+
+    @Override
     public void sendMessage(int profileID) {
     }
 
@@ -89,6 +100,7 @@ public class AdminHomeFragment extends Fragment implements RecyclerViewInterface
     @Override
     public void onComplete(JSONObject data) {
         String url1 = "/report/allproductsreported";
+        String url2 = "/product/delete";
         try {
             int code = data.getInt("status");
             String endpoint = data.getString("endpoint");
@@ -98,6 +110,12 @@ public class AdminHomeFragment extends Fragment implements RecyclerViewInterface
                     filterProductsAndSubmit(productsReported);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
+            }
+            if (endpoint.equals(url2)) {
+                if (code == 200) {
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.successfull_deletion_message, Toast.LENGTH_SHORT).show();
+                    viewModel.sendRequest("/report/allproductsreported", "GET", null, null, false, false, true, this);
+                }
             }
         } catch (JSONException | ParseException e) {
             e.printStackTrace();

@@ -78,6 +78,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         dateTextView.setText(strDate);
 
         ArrayList<SlideModel> imageList = new ArrayList<SlideModel>();
+
         if (product.getImages().size() > 0) {
             for (String imgURL : product.getImages()) {
                 String fullURL = "https://" + BuildConfig.API_ADDRESS + imgURL;

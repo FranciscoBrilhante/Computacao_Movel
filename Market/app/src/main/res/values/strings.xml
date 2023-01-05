@@ -67,4 +67,6 @@
     <string name="cannot_upload_more_photos">Cannot upload more photos (max is 5)</string>
     <string name="reports">Reports</string>
     <string name="delete_product">Delete product</string>
+    <string name="reason_label">reason</string>
+    <string name="details_label">details</string>
 </resources>

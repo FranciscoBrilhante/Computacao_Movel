@@ -16,6 +16,9 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.denzcoskun.imageslider.ImageSlider;
@@ -26,6 +29,9 @@ import com.example.market.R;
 import com.example.market.data.MarketViewModel;
 import com.example.market.databinding.FragmentViewProductAdminBinding;
 import com.example.market.interfaces.HTTTPCallback;
+import com.example.market.marketDatabase.Report;
+import com.example.market.ui.components.adapter.ProductListAdapter;
+import com.example.market.ui.components.adapter.ReportListAdapter;
 import com.example.market.ui.fragments.main.ViewProductFragmentDirections;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -47,6 +53,7 @@ public class AdminViewProductFragment extends Fragment implements HTTTPCallback,
     private int id; //product id being viewed
     private FragmentViewProductAdminBinding binding;
     private MarketViewModel viewModel;
+    private ReportListAdapter adapter;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -60,6 +67,17 @@ public class AdminViewProductFragment extends Fragment implements HTTTPCallback,
         params.put("product_id", Integer.toString(id));
         viewModel.sendRequest("/product/details", "GET", params, null, false, false, true, this);
 
+        params = new LinkedHashMap<>();
+        params.put("product_id", Integer.toString(id));
+        viewModel.sendRequest("/report/byproduct", "GET", params, null, false, false, true, this);
+
+
+        adapter = new ReportListAdapter(new ReportListAdapter.ReportDiff());
+        adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
+        RecyclerView recyclerView = binding.reports;
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         binding.backButton.setOnClickListener(this);
         binding.deleteButton.setOnClickListener(this);
         return binding.getRoot();
@@ -71,6 +89,7 @@ public class AdminViewProductFragment extends Fragment implements HTTTPCallback,
         String url1 = "/product/details";
         String url2 = "/profile/info";
         String url3 = "/product/delete";
+        String url4 = "/report/byproduct";
         try {
             String endpoint = (String) data.get("endpoint");
             if (endpoint.equals(url1)) {
@@ -97,6 +116,13 @@ public class AdminViewProductFragment extends Fragment implements HTTTPCallback,
                         (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
                 NavController navController = navHostFragment.getNavController();
                 navController.navigateUp();
+            } else if (endpoint.equals(url4)) {
+                code = (Integer) data.get("status");
+                if (code == 200) {
+                    ArrayList<Report> reports=viewModel.reportsFromJSONObject(data);
+                    System.out.println(reports.size());
+                    adapter.submitList(reports);
+                }
             }
         } catch (JSONException | ParseException | NullPointerException e) {
             e.printStackTrace();

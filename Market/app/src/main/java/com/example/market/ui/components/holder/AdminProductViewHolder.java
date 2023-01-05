@@ -141,6 +141,7 @@ public class AdminProductViewHolder extends RecyclerView.ViewHolder implements V
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
                 if (menuItem.getItemId() == R.id.more_options_delete) {
+                    recyclerViewInterface.delete(product);
                     return true;
                 } else if (menuItem.getItemId() == R.id.more_options_details) {
                     recyclerViewInterface.onClick(product);

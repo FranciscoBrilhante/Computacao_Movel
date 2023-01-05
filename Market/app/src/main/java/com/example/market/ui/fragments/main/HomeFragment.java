@@ -56,31 +56,12 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-
         adapter = new ProductListAdapter(new ProductListAdapter.ProductDiff(), this);
         adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
 
-        RecyclerView recyclerView = binding.productsList;
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-
         categorySpinnerAdapter = new CategorySpinnerAdapter(getContext(), new ArrayList<>());
-        binding.categorySpinner.setAdapter(categorySpinnerAdapter);
-
         priceRangeSpinnerAdapter = new PriceRangeSpinnerAdapter(getContext(), initPriceRange());
-        binding.priceRangeSpinner.setAdapter(priceRangeSpinnerAdapter);
-
-        viewModel.getAllProducts().observe(requireActivity(), products -> {
-            if (queryText.equals("") && (categorySelected == null || categorySelected.getId() == -1) && (priceRangeSelected == null || (priceRangeSelected.getMaxPrice() == null && priceRangeSelected.getMinPrice() == null))) {
-                adapter.submitList(products);
-            }
-        });
 
         viewModel.getAllCategories().observe(requireActivity(), categories -> {
             categorySpinnerAdapter.clear();
@@ -89,13 +70,31 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
             categorySpinnerAdapter.notifyDataSetChanged();
         });
 
+        viewModel.getAllProducts().observe(requireActivity(), products -> {
+            if (queryText.equals("") && (categorySelected == null || categorySelected.getId() == -1) && (priceRangeSelected == null || (priceRangeSelected.getMaxPrice() == null && priceRangeSelected.getMinPrice() == null))) {
+                adapter.submitList(products);
+            }
+        });
+    }
+
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
+
+        binding = FragmentHomeBinding.inflate(inflater, container, false);
+
+        RecyclerView recyclerView = binding.productsList;
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+        binding.categorySpinner.setAdapter(categorySpinnerAdapter);
+        binding.priceRangeSpinner.setAdapter(priceRangeSpinnerAdapter);
+
+
         binding.moreButton.setOnClickListener(this);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
-
         binding.searchInput.setOnQueryTextListener(this);
         binding.priceRangeSpinner.setOnItemSelectedListener(priceRangeSpinnerListener);
         binding.categorySpinner.setOnItemSelectedListener(categorySpinnerListener);
-
         return binding.getRoot();
     }
 
@@ -108,6 +107,11 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         NavDirections action = HomeFragmentDirections.actionNavigationHomeToNavigationViewProduct(isOwner, product.getId());
 
         navController.navigate(action);
+    }
+
+    @Override
+    public void delete(Product product) {
+
     }
 
     @Override

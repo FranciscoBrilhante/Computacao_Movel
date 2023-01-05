@@ -24,6 +24,7 @@ import com.example.market.marketDatabase.Message;
 import com.example.market.marketDatabase.MessageDao;
 import com.example.market.marketDatabase.Product;
 import com.example.market.marketDatabase.ProductDao;
+import com.example.market.marketDatabase.Report;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -357,6 +358,21 @@ public class MarketViewModel extends AndroidViewModel {
             messages.add(message);
         }
         return messages;
+    }
+
+    public ArrayList<Report> reportsFromJSONObject(JSONObject data) throws JSONException {
+        JSONArray array = data.getJSONArray("reports");
+        ArrayList<Report> reports = new ArrayList<>();
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject elem = array.getJSONObject(i);
+            String reason = elem.getString("reason");
+            String explain = elem.getString("explain");
+            int profileID= elem.getInt("profile_id");
+            int productID= elem.getInt("product_id");
+            int reportID=elem.getInt("report_id");
+            reports.add(new Report(reason,explain,productID,profileID,reportID));
+        }
+        return reports;
     }
 
     public void sendProductPhotos(int productID, ArrayList<Image> productImages) throws IOException {

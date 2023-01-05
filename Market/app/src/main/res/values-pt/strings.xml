@@ -68,4 +68,6 @@
     <string name="cannot_upload_more_photos">Não é possível carregar mais imagens (máxmimo 5)</string>
     <string name="reports">Denúncias</string>
     <string name="delete_product">Eliminar</string>
+    <string name="reason_label">razão</string>
+    <string name="details_label">detalhes</string>
 </resources>

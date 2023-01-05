@@ -78,6 +78,11 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
     }
 
     @Override
+    public void delete(Product product) {
+
+    }
+
+    @Override
     public void sendMessage(int profileID) {
     }
 
