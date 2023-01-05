@@ -175,6 +175,7 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
                         .load(fullURL)
                         .override(500, 500) //give resize dimension, you could calculate those
                         .centerCrop() // scale to fill the ImageView
+                        .error(R.drawable.placeholder_avatar)
                         .into(photoView);
             }
         } else {

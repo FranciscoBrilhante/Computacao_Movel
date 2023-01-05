@@ -167,6 +167,7 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
                     .load(fullURL)
                     .override(1000, 1000) //give resize dimension, you could calculate those
                     .centerCrop() // scale to fill the ImageView
+                    .error(R.drawable.placeholder_avatar)
                     .into(binding.profilePhoto);
         }
     }

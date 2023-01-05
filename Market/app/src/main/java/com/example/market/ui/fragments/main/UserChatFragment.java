@@ -89,7 +89,6 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
                     binding.profileName.setText(data.getString("username"));
                 }
             } else if (endpoint.equals(url2)) {
-                viewModel.deleteAllMessages();
                 ArrayList<Message> messages = viewModel.messagesFromJSONObject(data);
                 viewModel.addMessages(messages);
             } else if (endpoint.equals(url3)) {

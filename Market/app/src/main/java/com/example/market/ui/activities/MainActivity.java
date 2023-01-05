@@ -19,6 +19,8 @@ import com.example.market.R;
 import com.example.market.data.MarketViewModel;
 import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.marketDatabase.Category;
+import com.example.market.marketDatabase.Contact;
+import com.example.market.marketDatabase.Message;
 import com.example.market.marketDatabase.Product;
 import com.example.market.services.ProductsService;
 
@@ -108,12 +110,14 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         String url1 = "/profile/login";
         String url2 = "/category/all";
         String url3 = "/product/recommended";
+        String url4 = "/message/users";
+        String url5 = "/message/withuser";
         try {
             String endpoint = (String) data.get("endpoint");
             if (endpoint.equals(url1)) {
                 code = (Integer) data.get("status");
                 if (code == 200) {
-                    if(data.getBoolean("is_staff")){
+                    if (data.getBoolean("is_staff")) {
                         Intent myIntent = new Intent(this, AdminActivity.class);
                         startActivity(myIntent);
                         return;
@@ -137,6 +141,22 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
                     ArrayList<Product> products = viewModel.productsFromJSONObject(data);
                     viewModel.addProducts(products);
                 }
+            } else if (endpoint.equals(url4)) {
+                code = (Integer) data.get("status");
+                if (code == 200) {
+                    ArrayList<Contact> contacts = viewModel.contactsFromJSONObject(data);
+                    for (Contact contact : contacts) {
+                        Map<String, Object> params = new LinkedHashMap<>();
+                        params.put("profile_id", Integer.toString(contact.getProfileID()));
+                        viewModel.sendRequest("/message/withuser", "GET", params, null, false, false, true, this);
+                    }
+                }
+            }else if (endpoint.equals(url5)) {
+                code = (Integer) data.get("status");
+                if (code == 200) {
+                    ArrayList<Message> messages = viewModel.messagesFromJSONObject(data);
+                    viewModel.addMessages(messages);
+                }
             }
         } catch (JSONException | ParseException e) {
             e.printStackTrace();
@@ -158,16 +178,14 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
     private class ExtendedBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals("sendToken")){
+            if (intent.getAction().equals("sendToken")) {
                 Map<String, Object> params = new LinkedHashMap<>();
                 params.put("token", intent.getExtras().get("token"));
                 viewModel.sendRequest("/message/token", "POST", null, params, true, false, true, MainActivity.this);
-            }
-            else{
-                String title=intent.getExtras().getString("title");
-                String body=intent.getExtras().getString("body");
-                System.out.println(title);
-                System.out.println(body);
+            } else {//received notification
+                String title = intent.getExtras().getString("title");
+                String body = intent.getExtras().getString("body");
+                viewModel.sendRequest("/message/users", "GET", null, null, false, false, true, MainActivity.this::onComplete);
                 sendNotification(title, body, MESSAGE_CHANNEL_ID);
             }
         }
