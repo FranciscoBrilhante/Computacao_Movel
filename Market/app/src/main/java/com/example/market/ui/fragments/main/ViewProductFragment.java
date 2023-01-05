@@ -121,10 +121,26 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
         TextView cityView = binding.cityLabelViewItem;
         ImageSlider imageSlider = binding.imageSlider;
         TextView descriptionView = binding.descriptionLabelViewItem;
+        TextView titleView =binding.title;
 
-        nameView.setText(data.getString("profile_name"));
-        String rating = String.format(Locale.ENGLISH, "%.1f", data.getDouble("rating"));
+        profileID = data.getInt("profile");
+
+        String title=data.getString("title");
+        String profileName=data.getString("profile_name");
+        Double ratingData=data.getDouble("rating");
+        String rating = String.format(Locale.ENGLISH, "%.1f",ratingData );
+        String timeData=data.getString("date");
+        Double priceData=data.getDouble("price");
+        String price = String.format(Locale.ENGLISH, "%.0f€",priceData );
+        String city = data.getString("profile_location");
+        String description=data.getString("description");
+
+        titleView.setText(title);
+        nameView.setText(profileName);
         ratingView.setText(rating);
+        priceView.setText(price);
+        descriptionView.setText(description);
+
         if (data.getDouble("rating") == 0.0) {
             ratingView.setVisibility(View.INVISIBLE);
         }
@@ -132,19 +148,15 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
         SimpleDateFormat format = new SimpleDateFormat(
                 "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
         format.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date d = format.parse(data.getString("date"));
+        Date d = format.parse(timeData);
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
         String strDate = dateFormat.format(d);
         dateView.setText(strDate);
 
-        String price = String.format(Locale.ENGLISH, "%.0f€", data.getDouble("price"));
-        priceView.setText(price);
-
-        String city = data.getString("profile_location");
-        if (city.equals("null")) {
-            cityView.setVisibility(View.INVISIBLE);
-        }
         cityView.setText(city);
+        if (city.equals("null")) {
+            cityView.setText(getResources().getString(R.string.location_unknow_product));
+        }
 
         ArrayList<SlideModel> imageList = new ArrayList<SlideModel>();
         JSONArray images = data.getJSONArray("images");
@@ -157,9 +169,6 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
             imageSlider.setVisibility(View.GONE);
         }
 
-        descriptionView.setText(data.getString("description"));
-
-        profileID = data.getInt("profile");
     }
 
     private void initializeProfilePhoto(JSONObject data) throws JSONException, NullPointerException {

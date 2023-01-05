@@ -44,7 +44,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -52,7 +52,7 @@
                 android:maxWidth="250dp"
                 android:maxLines="1"
                 android:scrollHorizontally="false"
-                android:text="Blackview BL8800 asdasdasdasdasdas"
+                tools:text="Blackview BL8800 asdasdasdasdasdas"
                 android:textColor="@color/title_color"
                 android:textSize="24sp" />
 
@@ -115,7 +115,7 @@
                     android:ellipsize="end"
                     android:maxWidth="100dp"
                     android:maxLines="1"
-                    android:text="João Mário"
+                    tools:text="João Mário"
                     android:textColor="@color/title_color"
                     android:textSize="16sp" />
 
@@ -125,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:drawablePadding="5dp"
                     android:gravity="center_vertical"
-                    android:text="3.5"
+                    tools:text="3.5"
                     android:textColor="@color/title_color"
                     android:textSize="16sp"
                     app:drawableEndCompat="@drawable/star"
@@ -144,7 +144,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
-                    android:text="03/11/22"
+                    tools:text="03/11/22"
                     android:textColor="@color/title_color"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -162,7 +162,7 @@
                     android:id="@+id/price_label_view_item"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="200€"
+                    tools:text="200€"
                     android:textColor="@color/title_color"
                     android:textSize="24sp" />
 
@@ -181,7 +181,7 @@
                     android:gravity="center_vertical"
                     android:maxWidth="300dp"
                     android:maxLines="1"
-                    android:text="Coimbraasdasdasdasdasd"
+                    tools:text="Coimbraasdasdasdasdasd"
                     android:textColor="@color/title_color"
                     android:textSize="24sp"
                     app:drawableEndCompat="@drawable/map_pin"
@@ -213,7 +213,7 @@
                 android:backgroundTint="@color/bg1"
                 android:paddingBottom="10dp"
                 android:paddingTop="20dp"
-                android:text="TextView"
+                tools:text="TextView"
                 android:textColor="@color/title_color"
                 android:textSize="20sp" />
 
