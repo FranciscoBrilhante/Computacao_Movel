@@ -64,7 +64,7 @@
     <string name="msg_notify_name">Nova mensagem recebida</string>
     <string name="msg_notify_description">Notificar quando outro utilizador envia uma mensagem</string>
     <string name="location_unknow_product">Localização Desconhecida</string>
-    <string name="any_price">Qual Preço</string>
+    <string name="any_price">Qualquer Preço</string>
     <string name="cannot_upload_more_photos">Não é possível carregar mais imagens (máxmimo 5)</string>
     <string name="reports">Denúncias</string>
     <string name="delete_product">Eliminar</string>

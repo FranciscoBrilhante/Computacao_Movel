@@ -13,12 +13,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/bubble_incoming"
+        android:backgroundTint="@color/bg2"
         android:maxWidth="300dp"
         android:paddingStart="25dp"
         android:paddingTop="8dp"
         android:paddingEnd="25dp"
         android:paddingBottom="10dp"
-        android:text="TextViewasdasdasdsadsadasdasdasdsadasdasdasdasdasdasdasdasddsasdsadsadasdasdasdasdasdasdas"
+        android:text="TextView"
         android:textColor="@color/title_color"
         android:textSize="20sp" />
 </LinearLayout>

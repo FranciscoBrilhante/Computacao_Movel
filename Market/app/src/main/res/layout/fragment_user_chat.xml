@@ -2,33 +2,36 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg1"
+    >
 
     <LinearLayout
         android:id="@+id/user_chat_action_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="60dp"
         android:animateLayoutChanges="true"
         android:background="@drawable/action_bar_background"
+        android:backgroundTint="@color/bg1"
         android:elevation="20dp"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="20dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="20dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/back_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:background="@color/white"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@color/bg1"
                 android:scaleType="fitCenter"
-                android:src="@drawable/arrow_left" />
+                android:src="@drawable/arrow_left"
+                app:tint="@color/white"/>
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/profile_icon"
@@ -36,8 +39,10 @@
                 android:layout_height="40dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="10dp"
+                android:padding="2dp"
                 app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                app:strokeColor="@color/black"/>
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/bg2"/>
 
             <TextView
                 android:id="@+id/profile_name"
@@ -58,22 +63,24 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="70dp"
-        android:layout_marginBottom="70dp">
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="60dp"
+        android:paddingVertical="10dp">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/message_list"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:background="@color/bg1" />
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:id="@+id/send_message_layout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="60dp"
         android:layout_gravity="bottom"
-        android:background="@color/white"
+        android:backgroundTint="@color/bg1"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingHorizontal="20dp">
@@ -81,10 +88,11 @@
         <EditText
             android:id="@+id/message_input"
             android:layout_width="0dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
             android:background="@drawable/default_border"
+            android:backgroundTint="@color/white"
             android:ems="10"
             android:hint="@string/write_message_prompt"
             android:inputType="textAutoComplete"
@@ -93,10 +101,11 @@
 
         <ImageButton
             android:id="@+id/send_message_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:background="@drawable/clear_button_background"
             android:scaleType="fitCenter"
+            app:tint="@color/white"
             android:src="@drawable/send_horizontal" />
     </LinearLayout>
 </FrameLayout>

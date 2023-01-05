@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragments.main.HomeFragment"
+    android:background="@color/bg1"
     >
 
     <LinearLayout
@@ -41,7 +42,7 @@
                 app:queryBackground="@android:color/transparent"
                 app:searchIcon="@drawable/search"
                 app:theme="@style/AppSearchView"
-                android:backgroundTint="@color/bg3"
+                android:backgroundTint="@color/white"
                 >
 
             </androidx.appcompat.widget.SearchView>
@@ -92,8 +93,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:backgroundTint="#587BB7">
+        android:layout_height="match_parent">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"

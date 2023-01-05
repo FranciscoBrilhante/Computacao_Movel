@@ -29,15 +29,12 @@ import java.util.Locale;
 
 public class OwnProductViewHolder extends RecyclerView.ViewHolder implements  View.OnClickListener, ItemClickListener {
     private final TextView titleView;
-    private final TextView descriptionView;
-    private final TextView ratingTextView;
     private final TextView categoryTextView;
     private final TextView locationTextView;
     private final TextView priceTextView;
     private final TextView dateTextView;
     private final ImageSlider imageSlider;
-    private final TextView nameTextView;
-    private  final ImageButton moreOptionsButton;
+    //private final ImageButton moreOptionsButton;
     private final RecyclerViewInterface recyclerViewInterface;
     private Product product;
     private final View rootView;
@@ -48,27 +45,23 @@ public class OwnProductViewHolder extends RecyclerView.ViewHolder implements  Vi
         this.recyclerViewInterface=recyclerViewInterface;
 
         titleView = itemView.findViewById(R.id.title_label);
-        descriptionView = itemView.findViewById(R.id.description_label);
         imageSlider= itemView.findViewById(R.id.image_slider);
-        ratingTextView=itemView.findViewById(R.id.rating_label);
         categoryTextView=itemView.findViewById(R.id.category_label);
         locationTextView=itemView.findViewById(R.id.city_label);
         priceTextView=itemView.findViewById(R.id.price_label);
         dateTextView=itemView.findViewById(R.id.date_label);
-        nameTextView=itemView.findViewById(R.id.profile_label);
 
-        moreOptionsButton = itemView.findViewById(R.id.more_options);
-        moreOptionsButton.setOnClickListener(this);
+        //moreOptionsButton = itemView.findViewById(R.id.more_options);
+        //moreOptionsButton.setOnClickListener(this);
 
         itemView.setOnClickListener(this);
     }
 
     public void bind(Product product) {
-        String lang= Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
         this.product = product;
+        String lang= Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
+
         titleView.setText(product.getTitle());
-        descriptionView.setText(product.getDescription());
-        ratingTextView.setText(String.format(Locale.ENGLISH,"%.1f", product.getProfileRating() ));
 
         if (lang.equals("pt")) {
             categoryTextView.setText(product.getCategoryNamePT());
@@ -76,45 +69,31 @@ public class OwnProductViewHolder extends RecyclerView.ViewHolder implements  Vi
             categoryTextView.setText(product.getCategoryName());
         }
 
-        String city=product.getProfileLocation();
-        if(city.equals("null")){
-            locationTextView.setVisibility(View.INVISIBLE);
-        }
+        priceTextView.setText(String.format(Locale.ENGLISH, "%.2f€", product.getPrice()));
+
+        String city = product.getProfileLocation();
+        if (city.equals("null")) city = rootView.getResources().getString(R.string.location_unknow_product);
         locationTextView.setText(city);
-        if(product.getProfileRating()==0.0){
-            ratingTextView.setVisibility(View.INVISIBLE);
-        }
-        priceTextView.setText(String.format(Locale.ENGLISH,"%.0f€", product.getPrice()));
-        nameTextView.setText(product.getProfileName());
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy",Locale.ENGLISH);
         String strDate = dateFormat.format(product.getDate().getTime());
         dateTextView.setText(strDate);
 
-        ArrayList<SlideModel> imageList =new ArrayList<SlideModel>();
-        if(product.getImages().size()>0){
-            for(String imgURL: product.getImages()){
-                String fullURL="https://"+BuildConfig.API_ADDRESS+imgURL;
+        ArrayList<SlideModel> imageList = new ArrayList<SlideModel>();
+        if (product.getImages().size() > 0) {
+            for (String imgURL : product.getImages()) {
+                String fullURL = "https://" + BuildConfig.API_ADDRESS + imgURL;
                 imageList.add(new SlideModel(fullURL, ScaleTypes.CENTER_CROP));
             }
-
-        }
-        else {
-            try{
-                if(lang.equals("pt")){
-                    imageList.add(new SlideModel(R.drawable.placeholder_no_image_pt, ScaleTypes.CENTER_CROP));
-                }
-                else{
-                    imageList.add(new SlideModel(R.drawable.placeholder_no_image_en, ScaleTypes.CENTER_CROP));
-                }
-            }
-            catch (Exception ignored){
+        } else {
+            if (lang.equals("pt")) {
+                imageList.add(new SlideModel(R.drawable.placeholder_no_image_pt, ScaleTypes.CENTER_CROP));
+            } else {
+                imageList.add(new SlideModel(R.drawable.placeholder_no_image_en, ScaleTypes.CENTER_CROP));
             }
         }
         imageSlider.setImageList(imageList);
         imageSlider.setItemClickListener(this);
-
-
     }
 
     public static OwnProductViewHolder create(ViewGroup parent, RecyclerViewInterface recyclerViewInterface) {
@@ -127,7 +106,7 @@ public class OwnProductViewHolder extends RecyclerView.ViewHolder implements  Vi
         if(view.getId()==rootView.getId() || view.getId()==R.id.image_slider){
             recyclerViewInterface.onClick(product);
         }
-        else if(view.getId()==R.id.more_options){
+        /*else if(view.getId()==R.id.more_options){
             PopupMenu popupMenu=new PopupMenu(rootView.getContext(),view);
             MenuInflater inflater=popupMenu.getMenuInflater();
             inflater.inflate(R.menu.own_more_options_menu, popupMenu.getMenu());
@@ -143,7 +122,7 @@ public class OwnProductViewHolder extends RecyclerView.ViewHolder implements  Vi
             });
 
             popupMenu.show();
-        }
+        }*/
 
     }
 

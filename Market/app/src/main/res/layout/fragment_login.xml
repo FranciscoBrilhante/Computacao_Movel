@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
+    android:background="@color/bg1"
     tools:context=".ui.fragments.login.LoginFragment">
 
     <LinearLayout
@@ -52,7 +53,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:drawableStart="@drawable/terminal"
+                android:drawableTint="@color/white"
                 android:drawablePadding="5dp"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/white"
                 android:ems="10"
                 android:inputType="textPersonName"
                 tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
@@ -69,8 +73,11 @@
                 android:id="@+id/password_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/white"
                 android:layout_marginBottom="10dp"
                 android:drawableStart="@drawable/key"
+                android:drawableTint="@color/white"
                 android:drawablePadding="5dp"
                 android:ems="10"
                 android:inputType="textPassword"
@@ -83,15 +90,16 @@
                 android:layout_gravity="end"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
-
+                android:backgroundTint="@color/bg2"
                 android:background="@drawable/default_border"
                 android:drawableEnd="@drawable/arrow_right"
+                android:drawableTint="@color/white"
                 android:drawablePadding="5dp"
                 android:padding="10dp"
                 android:text="@string/login_button"
                 android:textAllCaps="false"
                 android:textColor="@color/title_color"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -110,10 +118,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:layout_weight="0"
+                android:textColor="@color/white"
                 android:text="@string/no_account_question" />
 
             <TextView
                 android:id="@+id/register_link"
+                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"

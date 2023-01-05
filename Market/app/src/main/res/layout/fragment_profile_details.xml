@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg1">
 
    <ScrollView
         android:layout_width="match_parent"
@@ -39,8 +40,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         app:shapeAppearanceOverlay="@style/roundedImageViewRounded"
-                        app:strokeColor="@color/black"
-                        app:strokeWidth="2dp" />
+                        android:padding="2dp"
+                        app:strokeWidth="2dp"
+                        app:strokeColor="@color/bg2"/>
 
                     <ImageView
                         android:id="@+id/img"
@@ -53,6 +55,8 @@
                         android:layout_marginBottom="5dp"
                         android:padding="5dp"
                         android:background="@drawable/round_border"
+                        android:backgroundTint="@color/bg2"
+                        app:tint="@color/white"
                         android:src="@drawable/edit_3" />
 
                 </RelativeLayout>
@@ -83,11 +87,13 @@
                     android:layout_marginBottom="20dp"
                     android:drawableStart="@drawable/terminal"
                     android:drawablePadding="10dp"
+                    android:drawableTint="@color/white"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/white"
                     android:editable="false"
                     android:ems="10"
                     android:enabled="false"
                     android:inputType="textPersonName"
-                    android:textColor="@color/title_color"
                     android:textIsSelectable="true"
                     tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
 
@@ -106,11 +112,13 @@
                     android:layout_marginBottom="20dp"
                     android:drawableStart="@drawable/mail"
                     android:drawablePadding="10dp"
+                    android:drawableTint="@color/white"
+                    android:textColor="@color/white"
+                    android:backgroundTint="@color/white"
                     android:editable="false"
                     android:ems="10"
                     android:enabled="false"
                     android:inputType="textEmailAddress"
-                    android:textColor="@color/title_color"
                     android:textIsSelectable="true"
                     tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
@@ -138,9 +146,11 @@
                         android:layout_weight="1"
                         android:drawableStart="@drawable/map_pin_heavy"
                         android:drawablePadding="10dp"
+                        android:drawableTint="@color/white"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/white"
                         android:ems="10"
                         android:enabled="false"
-                        android:textColor="@color/title_color"
                         android:textIsSelectable="true"
                         tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
@@ -151,7 +161,9 @@
                         android:layout_marginTop="2dp"
                         android:layout_marginBottom="2dp"
                         android:background="@drawable/default_border"
+                        android:backgroundTint="@color/bg2"
                         android:text="@string/update_location_button"
+                        android:textColor="@color/white"
                         android:textAllCaps="false"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -165,11 +177,14 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:background="@drawable/default_border"
+                    android:backgroundTint="@color/bg2"
                     android:drawableStart="@drawable/log_out"
                     android:drawablePadding="5dp"
+                    android:drawableTint="@color/white"
                     android:paddingHorizontal="20dp"
                     android:paddingVertical="5dp"
                     android:text="@string/logout_option"
+                    android:textColor="@color/white"
                     android:textAllCaps="false"
                     android:textSize="16sp" />
 
@@ -182,11 +197,14 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="5dp"
                     android:background="@drawable/default_border"
+                    android:backgroundTint="@color/bg2"
                     android:drawableStart="@drawable/trash_2"
                     android:drawablePadding="5dp"
+                    android:drawableTint="@color/white"
                     android:paddingHorizontal="20dp"
                     android:paddingVertical="5dp"
                     android:text="@string/delete_account_option"
+                    android:textColor="@color/white"
                     android:textAllCaps="false"
                     android:textSize="16sp" />
             </LinearLayout>

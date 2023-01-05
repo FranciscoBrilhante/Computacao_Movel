@@ -28,15 +28,11 @@ import java.util.Locale;
 
 public class ProductViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ItemClickListener {
     private final TextView titleView;
-    //private final TextView descriptionView;
-    //private final TextView ratingTextView;
     private final TextView categoryTextView;
     private final TextView locationTextView;
     private final TextView priceTextView;
     private final TextView dateTextView;
     private final ImageSlider imageSlider;
-    //private final TextView nameTextView;
-    //private final ImageButton moreOptionsButton;
 
     private final RecyclerViewInterface recyclerViewInterface;
     private Product product;
@@ -70,21 +66,12 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         }else{
             categoryTextView.setText(product.getCategoryName());
         }
-        priceTextView.setText(String.format(Locale.ENGLISH, "%.0f€", product.getPrice()));
+
+        priceTextView.setText(String.format(Locale.ENGLISH, "%.2f€", product.getPrice()));
 
         String city = product.getProfileLocation();
-
-        //System.out.println("Produto:");
-        //System.out.println(product);
-        //System.out.println("Cidade:");
-        //System.out.println(product.getProfileLocation());
-
         if (city.equals("null")) city = rootView.getResources().getString(R.string.location_unknow_product);
         locationTextView.setText(city);
-
-        if (product.getProfileRating() == 0.0) {
-            //ratingTextView.setVisibility(View.INVISIBLE);
-        }
 
         DateFormat dateFormat = new SimpleDateFormat("dd/MM/yy", Locale.ENGLISH);
         String strDate = dateFormat.format(product.getDate().getTime());
@@ -116,7 +103,8 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
     public void onClick(View view) {
         if (view.getId() == rootView.getId() || view.getId() == R.id.image_slider) {
             recyclerViewInterface.onClick(product);
-        } else if (view.getId() == R.id.more_options) {
+        }
+        /*else if (view.getId() == R.id.more_options) {
             PopupMenu popupMenu = new PopupMenu(rootView.getContext(), view);
             MenuInflater inflater = popupMenu.getMenuInflater();
             inflater.inflate(R.menu.more_options_menu, popupMenu.getMenu());
@@ -132,7 +120,7 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
             });
 
             popupMenu.show();
-        }
+        }*/
 
     }
 

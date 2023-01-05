@@ -32,6 +32,7 @@
             android:textSize="12sp"
             app:drawableStartCompat="@drawable/hash"
             android:drawableTint="@color/title_color"/>
+
     </LinearLayout>
 
     <com.denzcoskun.imageslider.ImageSlider
@@ -44,7 +45,8 @@
         app:iss_delay="0"
         app:iss_period="1000"
         app:iss_placeholder="@drawable/loading_circle"
-        app:iss_error_image="@drawable/network_error"/>
+        app:iss_error_image="@drawable/network_error"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"

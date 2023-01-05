@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -50,7 +51,7 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
 
         RecyclerView recyclerView = binding.productsList;
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         viewModel.getProductsByProfileID((int) viewModel.getStoredCredentials().get("profile_id")).observe(requireActivity(),products -> {
             ownProducts=new ArrayList<>(products);
