@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Handler;
@@ -22,6 +23,7 @@ import com.example.market.marketDatabase.Image;
 import com.example.market.marketDatabase.MainRoomDatabase;
 import com.example.market.marketDatabase.Message;
 import com.example.market.marketDatabase.MessageDao;
+import com.example.market.marketDatabase.PriceRange;
 import com.example.market.marketDatabase.Product;
 import com.example.market.marketDatabase.ProductDao;
 import com.example.market.marketDatabase.Report;
@@ -468,6 +470,17 @@ public class MarketViewModel extends AndroidViewModel {
             contacts.add(contact);
         }
         return contacts;
+    }
+
+    public ArrayList<PriceRange> getDefaultPriceRanges(Context context) {
+        ArrayList<PriceRange> array = new ArrayList<>();
+        array.add(new PriceRange(null, null, context));
+        array.add(new PriceRange(null, 10.0, context));
+        array.add(new PriceRange(10.0, 50.0, context));
+        array.add(new PriceRange(50.0, 100.0, context));
+        array.add(new PriceRange(100.0, 500.0, context));
+        array.add(new PriceRange(500.0, null, context));
+        return array;
     }
 
 
