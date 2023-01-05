@@ -49,6 +49,7 @@ public class ContactViewHolder extends RecyclerView.ViewHolder implements View.O
                         .override(500, 500) //give resize dimension, you could calculate those
                         .centerCrop() // scale to fill the ImageView
                         .error(R.drawable.placeholder_avatar)
+                        .placeholder(R.drawable.placeholder_avatar)
                         .into(profileIcon);
             }catch (Exception ignored){
                 profileIcon.setImageDrawable(ContextCompat.getDrawable(rootView.getContext(), R.drawable.placeholder_avatar));

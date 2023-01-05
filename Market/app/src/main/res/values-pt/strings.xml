@@ -73,4 +73,6 @@
     <string name="clear_reports">Apagar denúncias</string>
     <string name="search_for_product_hint">Procure por um anúncio</string>
     <string name="search_for_contacts">Procure por alguem</string>
+    <string name="loading_location">A calcular localização...</string>
+    <string name="error_location">Localização indisponível</string>
 </resources>

@@ -70,6 +70,11 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
         binding.profilePhoto.setOnClickListener(this);
         binding.img.setOnClickListener(this);
 
+        binding.loadingLocation.setVisibility(View.GONE);
+        binding.closeLoadingLocation.setOnClickListener(this);
+        binding.locationError.setVisibility(View.GONE);
+        binding.closeErrorLocation.setOnClickListener(this);
+
         editPhotoRequestPermissionLauncher =
                 registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                     if (isGranted) {
@@ -114,6 +119,12 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
         }
         if (view == binding.img || view == binding.profilePhoto) {
             verifyStoragePermissions(getActivity());
+        }
+        if(view==binding.closeLoadingLocation){
+            binding.loadingLocation.setVisibility(View.GONE);
+        }
+        if(view==binding.closeErrorLocation){
+            binding.locationError.setVisibility(View.GONE);
         }
     }
 
@@ -168,6 +179,7 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
                     .override(1000, 1000) //give resize dimension, you could calculate those
                     .centerCrop() // scale to fill the ImageView
                     .error(R.drawable.placeholder_avatar)
+                    .placeholder(R.drawable.placeholder_avatar)
                     .into(binding.profilePhoto);
         }
     }
@@ -189,7 +201,9 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
                     viewModel.sendRequest("/profile/setlocation", "POST", null, params, true, false, true, ProfileDetailsFragment.this::onComplete);
                 } else {
                     System.out.println("Location unavailable");
+                    binding.locationError.setVisibility(View.VISIBLE);
                 }
+                binding.loadingLocation.setVisibility(View.GONE);
             }
         });
     }
@@ -200,6 +214,7 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
             String[] permissions = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
             requestPermissionLauncher.launch(permissions);
         } else {
+            binding.loadingLocation.setVisibility(View.VISIBLE);
             updateLocation();
         }
     }
@@ -210,11 +225,11 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
                 for (boolean value : isGranted.values()) {
                     if (!value) {
                         hasPermission = false;
-
                     }
                 }
                 if (hasPermission) {
                     updateLocation();
+                    binding.loadingLocation.setVisibility(View.VISIBLE);
                 }
             });
 
