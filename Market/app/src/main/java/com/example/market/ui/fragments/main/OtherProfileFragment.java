@@ -42,6 +42,9 @@ import com.example.market.databinding.FragmentProfileDetailsBinding;
 import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.marketDatabase.Image;
 import com.example.market.ui.activities.LoginActivity;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,6 +58,7 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
     private FragmentOtherProfileBinding binding;
     private MarketViewModel viewModel;
     private int profileID;
+    private GoogleMap map;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         profileID = OtherProfileFragmentArgs.fromBundle(getArguments()).getProfileId();
@@ -62,10 +66,12 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
         binding = FragmentOtherProfileBinding.inflate(inflater, container, false);
         binding.backButton.setOnClickListener(this);
+        binding.ratingBar.setNumStars(5);
 
         Map<String, Object> params=new LinkedHashMap<>();
         params.put("profile_id",Integer.toString(profileID));
         viewModel.sendRequest("/profile/info", "GET", params, null, false, false, true, this);
+
         return binding.getRoot();
     }
 
@@ -103,12 +109,15 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
         String city= data.getString("location");
         Double cityX = data.getDouble("cityX");
         Double cityY = data.getDouble("cityY");
+        Double rating =data.getDouble("rating");
 
         if (city.equals("null")) {
             city = getActivity().getResources().getString(R.string.location_undefined);
         }
-        System.out.println(username);
+
+        binding.locationLabel.setText(city);
         binding.nameView.setText(username);
+        binding.ratingLabel.setText(Double.toString(rating));
 
         if (photoURL.equals("null")) {
             binding.profilePhoto.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.placeholder_avatar));
@@ -123,7 +132,4 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
                     .into(binding.profilePhoto);
         }
     }
-
-
-
 }

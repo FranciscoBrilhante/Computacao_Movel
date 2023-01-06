@@ -84,20 +84,24 @@
 
             <TextView
                 android:id="@+id/review_label"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="20dp"
-                android:textColor="@color/title_color"
-                tools:text="leave a review!" />
+                android:text="@string/leave_a_review"
+                android:textColor="@color/title_color" />
 
             <RatingBar
                 android:id="@+id/ratingBar"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginTop="5dp"
-                android:numStars="5" />
+                android:numStars="5"
+                android:stepSize="0.1"
+                android:theme="@style/RatingBar" />
 
             <TextView
                 android:id="@+id/rating_label"

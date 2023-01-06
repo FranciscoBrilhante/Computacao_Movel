@@ -19,6 +19,14 @@ def add(request):
             stars=data['stars']
             userBeingReviewd=Profile.objects.get(pk=data['profile_id'])
             userReviewing=Profile.objects.get(user=request.user.pk)
+
+            querySet=Review.objects.filter(userReviewed=userBeingReviewd).filter(userReviewer=userReviewing)
+            if(querySet.exists()):
+                review=querySet.first()
+                review.stars=stars
+                review.save()
+                return JsonResponse({'status': 200})
+
             review=Review(stars=stars,userReviewed=userBeingReviewd,userReviewer=userReviewing,dateReviewed=timezone.now())
             review.save()
             return JsonResponse({'status': 200})

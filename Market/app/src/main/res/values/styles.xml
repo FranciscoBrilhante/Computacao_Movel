@@ -14,4 +14,9 @@
     <style name="AppSearchView" parent="Widget.AppCompat.SearchView" >
         <item name="android:textSize">18sp</item>
     </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">#080B17</item>
+        <item name="colorControlActivated">@color/bg3</item>
+    </style>
 </resources>
