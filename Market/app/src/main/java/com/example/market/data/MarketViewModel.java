@@ -138,7 +138,6 @@ public class MarketViewModel extends AndroidViewModel {
 
     public void addMessages(ArrayList<Message> messages) {
         MainRoomDatabase.databaseWriteExecutor.execute(() -> {
-            messageDao.deleteAll();
             for (Message message : messages) {
                 messageDao.insert(message);
             }

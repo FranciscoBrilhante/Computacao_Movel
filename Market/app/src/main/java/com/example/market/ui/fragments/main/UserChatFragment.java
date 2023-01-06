@@ -23,6 +23,7 @@ import com.example.market.data.MarketViewModel;
 import com.example.market.databinding.FragmentUserChatBinding;
 import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.marketDatabase.Message;
+import com.example.market.marketDatabase.Product;
 import com.example.market.ui.components.adapter.MessageListAdapter;
 import com.example.market.utils.MessageComparator;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -32,7 +33,9 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class UserChatFragment extends Fragment implements HTTTPCallback, View.OnClickListener {
@@ -40,6 +43,7 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
     private MarketViewModel viewModel;
     private int profileID;
     private MessageListAdapter adapter;
+    private ArrayList<Message> messages;
 
     @Nullable
     @Override
@@ -54,15 +58,18 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
 
         RecyclerView recyclerView = binding.messageList;
         recyclerView.setAdapter(adapter);
-        recyclerView.getItemAnimator().setChangeDuration(0);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
-        manager.setStackFromEnd(true);
+        manager.setReverseLayout(true);
+
+        //manager.setStackFromEnd(true);
         recyclerView.setLayoutManager(manager);
 
+        this.messages = new ArrayList<>();
+
         viewModel.getMessagesWithUser(profileID).observe(requireActivity(), messages -> {
-            messages.sort(new MessageComparator());
-            adapter.submitList(messages);
-            recyclerView.scrollToPosition(messages.size() - 1);
+            System.out.println("hello?");
+            System.out.println(messages.size());
+            filterAndSubmit(new ArrayList<>(messages));
         });
 
         Map<String, Object> params = new LinkedHashMap<>();
@@ -70,8 +77,8 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
         viewModel.sendRequest("/profile/info", "GET", params, null, false, false, true, this);
 
         viewModel.sendRequest("/message/withuser", "GET", params, null, false, false, true, this);
-        binding.backButton.setOnClickListener(this);
 
+        binding.backButton.setOnClickListener(this);
         binding.sendMessageButton.setOnClickListener(this);
         binding.profileName.setOnClickListener(this);
         binding.profileIcon.setOnClickListener(this);
@@ -93,8 +100,8 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
                     binding.profileName.setText(data.getString("username"));
                 }
             } else if (endpoint.equals(url2)) {
-                ArrayList<Message> messages = viewModel.messagesFromJSONObject(data);
-                viewModel.addMessages(messages);
+                ArrayList<Message> aux = viewModel.messagesFromJSONObject(data);
+                filterAndSubmit(aux);
             } else if (endpoint.equals(url3)) {
                 if (code == 200) {
                     Map<String, Object> params = new LinkedHashMap<>();
@@ -109,13 +116,13 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
 
     @Override
     public void onClick(View view) {
-        if (view == binding.backButton) {
+        if (view == binding.backButton) { // go back
             NavHostFragment navHostFragment =
                     (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
             NavController navController = navHostFragment.getNavController();
             navController.navigateUp();
         }
-        if (view == binding.sendMessageButton) {
+        if (view == binding.sendMessageButton) { //send message
             String text = binding.messageInput.getText().toString();
             if (text.length() > 0) {
                 binding.messageInput.getText().clear();
@@ -125,7 +132,7 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
                 viewModel.sendRequest("/message/send", "POST", null, params, true, false, true, this);
             }
         }
-        if (view == binding.profileIcon || view == binding.profileName) {
+        if (view == binding.profileIcon || view == binding.profileName) { //see profile
             NavHostFragment navHostFragment =
                     (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
             NavController navController = navHostFragment.getNavController();
@@ -157,5 +164,13 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
         } else {
             photoView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.placeholder_avatar));
         }
+    }
+
+    private void filterAndSubmit(ArrayList<Message> messagesToFilter) {
+        ArrayList<Message> aux = new ArrayList<>();
+
+        messagesToFilter.sort(new MessageComparator());
+        Collections.reverse(messagesToFilter);
+        adapter.submitList(messagesToFilter);
     }
 }

@@ -239,6 +239,7 @@ public class AdminViewProductFragment extends Fragment implements HTTTPCallback,
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 Map<String, Object> params = new LinkedHashMap<>();
                                 params.put("product_id", Integer.toString(id));
+                                viewModel.deleteProductByID(id);
                                 viewModel.sendRequest("/product/delete", "GET", params, null, false, false, true, AdminViewProductFragment.this::onComplete);
                             }
                         });

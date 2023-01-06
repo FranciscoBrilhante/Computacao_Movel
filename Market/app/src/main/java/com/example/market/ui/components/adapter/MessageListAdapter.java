@@ -52,7 +52,7 @@ public class MessageListAdapter extends ListAdapter<Message, MessageViewHolder> 
 
         @Override
         public boolean areContentsTheSame(@NonNull Message oldItem,@NonNull Message newItem){
-            return oldItem.getContent().equals(newItem.getContent()) && oldItem.getTimestamp().equals(newItem.getTimestamp());
+            return oldItem.getId()==newItem.getId();
         }
     }
 }

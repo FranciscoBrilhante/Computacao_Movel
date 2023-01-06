@@ -54,10 +54,10 @@ def getAll(request):
     profile=Profile.objects.get(user=user.pk)
 
     messages=Message.objects.filter(userTo=profile.pk)
-    messages_received=[{'profile_id':message.userFrom.pk,'content':message.content,'timestamp':message.dateSent} for message in messages]
+    messages_received=[{'profile_id':message.userFrom.pk,'content':message.content,'timestamp':message.dateSent,'message_id':message.pk} for message in messages]
 
     messages=Message.objects.filter(userFrom=profile.pk)
-    messages_sent=[{'profile_id':message.userTo.pk,'content':message.content,'timestamp':message.dateSent} for message in messages]
+    messages_sent=[{'profile_id':message.userTo.pk,'content':message.content,'timestamp':message.dateSent,'message_id':message.pk} for message in messages]
 
 
     return JsonResponse({'status': 200, 'received':messages_received,'sent':messages_sent})
@@ -79,10 +79,10 @@ def getByProfile(request):
                 return JsonResponse({'status': 400})
             
             messages=Message.objects.filter(userTo=profile.pk,userFrom=profile_pk)
-            messages_received=[{'profile_id':message.userFrom.pk,'content':message.content,'timestamp':message.dateSent} for message in messages]
+            messages_received=[{'profile_id':message.userFrom.pk,'content':message.content,'timestamp':message.dateSent,'message_id':message.pk} for message in messages]
 
             messages=Message.objects.filter(userFrom=profile.pk,userTo=profile_pk)
-            messages_sent=[{'profile_id':message.userTo.pk,'content':message.content,'timestamp':message.dateSent} for message in messages]
+            messages_sent=[{'profile_id':message.userTo.pk,'content':message.content,'timestamp':message.dateSent,'message_id':message.pk} for message in messages]
 
             return JsonResponse({'status': 200,'received':messages_received,'sent':messages_sent})
             

@@ -119,10 +119,11 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         String url6 = "/product/myproducts";
         try {
             String endpoint = (String) data.get("endpoint");
-            if (endpoint.equals(url1)) {
+
+            if (endpoint.equals(url1)) { //login response
                 code = (Integer) data.get("status");
                 if (code == 200) {
-                    if (data.getBoolean("is_staff")) {
+                    if (data.getBoolean("is_staff")) { //redirect to admin pages
                         Intent myIntent = new Intent(this, AdminActivity.class);
                         startActivity(myIntent);
                         return;
@@ -130,24 +131,27 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
                     viewModel.sendRequest("/category/all", "GET", null, null, false, false, true, this);
                     viewModel.sendRequest("/product/recommended", "GET", null, null, false, false, true, this);
                     viewModel.sendRequest("/product/myproducts", "GET", null, null, false, false, true, this);
-                } else {
+                } else { //redirect to login
                     viewModel.removeStoredCredentials();
                     Intent myIntent = new Intent(this, LoginActivity.class);
                     startActivity(myIntent);
                 }
-            } else if (endpoint.equals(url2)) {
+
+            } else if (endpoint.equals(url2)) { //received categories list
                 code = (Integer) data.get("status");
                 if (code == 200) {
                     ArrayList<Category> categories = viewModel.categoriesFromJSONObject(data);
                     viewModel.addCategories(categories);
                 }
-            } else if (endpoint.equals(url3)) {
+
+            } else if (endpoint.equals(url3)) { //received recommended products
                 code = (Integer) data.get("status");
                 if (code == 200) {
                     ArrayList<Product> products = viewModel.productsFromJSONObject(data);
                     viewModel.addProducts(products);
                 }
-            } else if (endpoint.equals(url4)) {
+
+            } else if (endpoint.equals(url4)) { //received all contacts
                 code = (Integer) data.get("status");
                 if (code == 200) {
                     ArrayList<Contact> contacts = viewModel.contactsFromJSONObject(data);
@@ -158,13 +162,14 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
                         viewModel.sendRequest("/message/withuser", "GET", params, null, false, false, true, this);
                     }
                 }
-            }else if (endpoint.equals(url5)) {
+            }else if (endpoint.equals(url5)) {//received messages from a contact
                 code = (Integer) data.get("status");
                 if (code == 200) {
                     ArrayList<Message> messages = viewModel.messagesFromJSONObject(data);
                     viewModel.addMessages(messages);
                 }
-            }else if (endpoint.equals(url6)) {
+
+            }else if (endpoint.equals(url6)) {//received products user is selling
                 code = (Integer) data.get("status");
                 if (code == 200) {
                     ArrayList<Product> products = viewModel.productsFromJSONObject(data);
@@ -191,11 +196,11 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
     private class ExtendedBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("sendToken")) {
+            if (intent.getAction().equals("sendToken")) { //new token generated ready to be sent to api
                 Map<String, Object> params = new LinkedHashMap<>();
                 params.put("token", intent.getExtras().get("token"));
                 viewModel.sendRequest("/message/token", "POST", null, params, true, false, true, MainActivity.this);
-            } else {//received notification
+            } else { //received notification
                 String title = intent.getExtras().getString("title");
                 String body = intent.getExtras().getString("body");
                 viewModel.sendRequest("/message/users", "GET", null, null, false, false, true, MainActivity.this::onComplete);
@@ -204,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
         }
     }
 
-    private void retrieveLastTokenAndSend() {
+    private void retrieveLastTokenAndSend() { //get last known token and send at beginning or runtime
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(new OnCompleteListener<String>() {
             @Override
             public void onComplete(@androidx.annotation.NonNull Task<String> task) {
