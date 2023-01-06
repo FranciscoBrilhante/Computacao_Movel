@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -72,6 +73,8 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
         binding.backButton.setOnClickListener(this);
 
         binding.sendMessageButton.setOnClickListener(this);
+        binding.profileName.setOnClickListener(this);
+        binding.profileIcon.setOnClickListener(this);
         binding.swipeRefreshLayout.setEnabled(false);
         return binding.getRoot();
     }
@@ -121,6 +124,13 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
                 params.put("content", text);
                 viewModel.sendRequest("/message/send", "POST", null, params, true, false, true, this);
             }
+        }
+        if (view == binding.profileIcon || view == binding.profileName) {
+            NavHostFragment navHostFragment =
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+            NavController navController = navHostFragment.getNavController();
+            NavDirections action = UserChatFragmentDirections.actionUserChatFragmentToOtherProfileFragment(profileID);
+            navController.navigate(action);
         }
     }
 

@@ -20,7 +20,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -99,12 +99,38 @@
                 android:layout_marginTop="5dp"
                 android:numStars="5" />
 
+            <TextView
+                android:id="@+id/rating_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/title_color"
+                app:drawableStartCompat="@drawable/star"
+                tools:text="4.5"
+                app:drawableTint="@color/white" />
+
+            <TextView
+                android:id="@+id/location_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:textColor="@color/title_color"
+                app:drawableStartCompat="@drawable/map_pin"
+                app:drawableTint="@color/white"
+                tools:text="Miami" />
+
             <com.google.android.gms.maps.MapView
                 android:id="@+id/mapView"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_marginHorizontal="20dp"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="10dp" />
 
         </LinearLayout>
     </ScrollView>
