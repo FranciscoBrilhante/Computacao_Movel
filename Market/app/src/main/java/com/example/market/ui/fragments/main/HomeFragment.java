@@ -70,6 +70,8 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.setRetainInstance(true);
+
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
         adapter = new ProductListAdapter(new ProductListAdapter.ProductDiff(), this);
         adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);

@@ -43,7 +43,7 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
     private MarketViewModel viewModel;
     private int profileID;
     private MessageListAdapter adapter;
-    private ArrayList<Message> messages;
+
 
     @Nullable
     @Override
@@ -61,10 +61,7 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         manager.setReverseLayout(true);
 
-        //manager.setStackFromEnd(true);
         recyclerView.setLayoutManager(manager);
-
-        this.messages = new ArrayList<>();
 
         viewModel.getMessagesWithUser(profileID).observe(requireActivity(), messages -> {
             System.out.println("hello?");

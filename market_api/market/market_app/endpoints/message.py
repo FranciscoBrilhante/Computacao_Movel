@@ -184,5 +184,5 @@ def sendNotification(message):
             title=f"{username} sent you a message",
             body=f"{message_content}",
     )
-    message= FCMMessage(notification=notification, token=token)
-    return messaging.send(message)
+    fcmMessage= FCMMessage(notification=notification, token=token)
+    return messaging.send(fcmMessage)

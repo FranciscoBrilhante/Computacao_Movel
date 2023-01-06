@@ -39,6 +39,7 @@ public class LoginFragment extends Fragment implements HTTTPCallback, View.OnCli
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        this.setRetainInstance(true);
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 
