@@ -22,6 +22,7 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -54,7 +55,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class OtherProfileFragment extends Fragment implements View.OnClickListener, HTTTPCallback {
+public class OtherProfileFragment extends Fragment implements View.OnClickListener, HTTTPCallback, RatingBar.OnRatingBarChangeListener {
     private FragmentOtherProfileBinding binding;
     private MarketViewModel viewModel;
     private int profileID;
@@ -67,10 +68,13 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
         binding = FragmentOtherProfileBinding.inflate(inflater, container, false);
         binding.backButton.setOnClickListener(this);
         binding.ratingBar.setNumStars(5);
+        binding.ratingBar.setOnRatingBarChangeListener(this);
 
         Map<String, Object> params=new LinkedHashMap<>();
         params.put("profile_id",Integer.toString(profileID));
         viewModel.sendRequest("/profile/info", "GET", params, null, false, false, true, this);
+
+        viewModel.sendRequest("/review/reviewgiven", "GET", params, null, false, false, true, this);
 
         return binding.getRoot();
     }
@@ -88,14 +92,19 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
     @Override
     public void onComplete(JSONObject data) {
         String url1 = "/profile/info";
-        String url2 = "/profile/setlocation";
-        String url3 = "/profile/setphoto";
+        String url2 = "/review/reviewgiven";
         try {
             int code = data.getInt("status");
             String endpoint = data.getString("endpoint");
             if (endpoint.equals(url1)) {
                 if (code == 200) {
                     populateProfileInfo(data);
+                }
+            }
+            if (endpoint.equals(url2)) {
+                if (code == 200) {
+                    double rating = data.getDouble("rating");
+                    binding.ratingBar.setRating((float) rating);
                 }
             }
         } catch (JSONException | NullPointerException e) {
@@ -131,5 +140,16 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
                     .placeholder(R.drawable.placeholder_avatar)
                     .into(binding.profilePhoto);
         }
+    }
+
+    @Override
+    public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
+        Map<String, Object> params=new LinkedHashMap<>();
+        params.put("profile_id",Integer.toString(profileID));
+
+        params.put("stars",String.valueOf(Math.round(rating)));
+        System.out.println(rating);
+        viewModel.sendRequest("/review/add", "POST", null, params, true, false, true, this);
+
     }
 }

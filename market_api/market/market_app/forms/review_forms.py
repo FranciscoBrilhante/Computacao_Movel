@@ -6,7 +6,7 @@ from django.utils.translation import gettext as _
 
 class Add(forms.Form):
     profile_id = forms.IntegerField()
-    stars=forms.IntegerField()
+    stars=forms.FloatField()
 
     def clean_profile_id(self):
         data = self.cleaned_data['profile_id']
