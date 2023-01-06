@@ -217,30 +217,29 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         }
     }
 
-    private void filterProductsAndSubmit(ArrayList<Product> products){
-        if(products==null){
-            adapter.submitList(new ArrayList<>());
-        }
+    private void filterProductsAndSubmit(ArrayList<Product> productsToFilter){
         ArrayList<Product> aux=new ArrayList<>();
-        for(Product product: products){
-            boolean toAdd=true;
-            if(!product.getTitle().toLowerCase(Locale.ROOT).contains(queryText.toLowerCase(Locale.ROOT))){
-                toAdd=false;
-            }
-            if(priceRangeSelected!=null){
-                if(priceRangeSelected.getMaxPrice()!=null && priceRangeSelected.getMaxPrice()<product.getPrice()){
+        if (productsToFilter != null) {
+            for(Product product: productsToFilter){
+                boolean toAdd=true;
+                if(!product.getTitle().toLowerCase(Locale.ROOT).contains(queryText.toLowerCase(Locale.ROOT))){
                     toAdd=false;
                 }
-                if(priceRangeSelected.getMinPrice()!=null && priceRangeSelected.getMinPrice()>product.getPrice()){
+                if(priceRangeSelected!=null){
+                    if(priceRangeSelected.getMaxPrice()!=null && priceRangeSelected.getMaxPrice()<product.getPrice()){
+                        toAdd=false;
+                    }
+                    if(priceRangeSelected.getMinPrice()!=null && priceRangeSelected.getMinPrice()>product.getPrice()){
+                        toAdd=false;
+                    }
+                }
+                if(categorySelected!=null && categorySelected.getId()!=-1 && categorySelected.getId()!=product.getCategory()){
                     toAdd=false;
                 }
-            }
-            if(categorySelected!=null && categorySelected.getId()!=-1 && categorySelected.getId()!=product.getCategory()){
-                toAdd=false;
-            }
 
-            if(toAdd){
-                aux.add(product);
+                if(toAdd){
+                    aux.add(product);
+                }
             }
         }
 

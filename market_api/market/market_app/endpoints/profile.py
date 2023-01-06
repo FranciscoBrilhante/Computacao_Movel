@@ -131,7 +131,7 @@ def personalInfo(request):
         url=photo.url
     else:
         url=None
-    return JsonResponse({'status': 200, 'username':username,'id': profile.id, 'email':email, 'location':location ,'photo':url})
+    return JsonResponse({'status': 200, 'username':username,'id': profile.id, 'email':email, 'location':location ,'photo':url,'rating': computeRating(profile.pk)})
 
 def delete(request):
     if not request.user.is_authenticated:
@@ -164,8 +164,11 @@ def info(request):
             return JsonResponse({'status': 200,
             'id':profile.pk, 
             'username':profile.user.username, 
+            'cityX':profile.cityX, 
+            'cityY':profile.cityY, 
             'location':translateLocation(profile.cityX,profile.cityY),
             'image':photo_url,
+            'rating': computeRating(profile.pk),
             })
             
         elif contains_error(form.errors.as_data(), 'resource not found'):

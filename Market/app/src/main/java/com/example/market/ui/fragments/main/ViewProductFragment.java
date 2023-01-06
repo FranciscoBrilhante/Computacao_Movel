@@ -71,6 +71,8 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
         binding.backButton.setOnClickListener(this);
         binding.messageButton.setOnClickListener(this);
         binding.sendMessageButton.setOnClickListener(this);
+        binding.photo.setOnClickListener(this);
+        binding.nameLabel.setOnClickListener(this);
         return binding.getRoot();
     }
 
@@ -236,6 +238,12 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
                 NavDirections action = ViewProductFragmentDirections.actionNavigationViewProductToUserChatFragment(profileID);
                 navController.navigate(action);
             }
+        }else if(view==binding.photo || view==binding.nameLabel){
+            NavHostFragment navHostFragment =
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+            NavController navController = navHostFragment.getNavController();
+            NavDirections action = ViewProductFragmentDirections.actionNavigationViewProductToOtherProfileFragment(profileID);
+            navController.navigate(action);
         }
     }
 }
