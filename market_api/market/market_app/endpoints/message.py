@@ -159,6 +159,7 @@ def sendNotification(message):
     message_content=message.content
     token=profileTo.notificationToken
     if token=="" or token==None:
+        print("it tried")
         return 
 
     cert_data={
