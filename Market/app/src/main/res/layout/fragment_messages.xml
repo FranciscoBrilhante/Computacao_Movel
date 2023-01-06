@@ -53,6 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="70dp"
+        android:layout_marginBottom="40dp"
         tools:context=".ui.activities.MainActivity">
 
         <androidx.recyclerview.widget.RecyclerView
