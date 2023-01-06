@@ -51,26 +51,41 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginTop="70dp"
+        android:layout_marginBottom="50dp">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="70dp"
             android:elevation="10dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/products_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/bg1"
-                android:scrollIndicators="none" />
+                android:scrollIndicators="none"
+                />
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/empty_view_admin"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/title_color"
+            android:paddingHorizontal="20dp"
+            android:textSize="18sp"
+            android:text="@string/no_products_admin"
+            android:gravity="center"
+            />
+
+    </FrameLayout>
 </FrameLayout>
 

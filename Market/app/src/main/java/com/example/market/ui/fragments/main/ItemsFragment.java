@@ -1,9 +1,11 @@
 package com.example.market.ui.fragments.main;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -42,6 +44,9 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
     private ArrayList<Product> ownProducts;
     private String textQuery="";
 
+    private TextView emptyView;
+    private RecyclerView recyclerView;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,13 +64,20 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
                              ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentItemsBinding.inflate(inflater, container, false);
-        RecyclerView recyclerView = binding.productsList;
+
+        emptyView = binding.emptyView;
+
+        recyclerView = binding.productsList;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         binding.createButton.setOnClickListener(this);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
         binding.searchInput.setOnQueryTextListener(this);
+
+        recyclerView.setVisibility(View.GONE);
+        emptyView.setVisibility(View.VISIBLE);
+
         return binding.getRoot();
     }
 
@@ -141,6 +153,18 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
         else{
             aux=new ArrayList<>(products);
         }
+
+        System.out.println(aux);
+
+        if (!aux.isEmpty()) {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+        else {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+
         adapter.submitList(aux);
     }
 
@@ -155,4 +179,5 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
         filterProductsAndSubmit(ownProducts);
         return false;
     }
+
 }

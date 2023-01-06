@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -55,6 +56,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     private CategorySpinnerAdapter categorySpinnerAdapter;
     private PriceRangeSpinnerAdapter priceRangeSpinnerAdapter;
 
+    private TextView emptyView;
+    private RecyclerView recyclerView;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,13 +87,14 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
 
-        RecyclerView recyclerView = binding.productsList;
+        emptyView = binding.emptyViewHome;
+
+        recyclerView = binding.productsList;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         binding.categorySpinner.setAdapter(categorySpinnerAdapter);
         binding.priceRangeSpinner.setAdapter(priceRangeSpinnerAdapter);
-
 
         binding.moreButton.setOnClickListener(this);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
@@ -97,6 +102,8 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         binding.priceRangeSpinner.setOnItemSelectedListener(priceRangeSpinnerListener);
         binding.categorySpinner.setOnItemSelectedListener(categorySpinnerListener);
 
+        recyclerView.setVisibility(View.GONE);
+        emptyView.setVisibility(View.VISIBLE);
 
         return binding.getRoot();
     }
@@ -186,6 +193,16 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
                 aux.add(product);
             }
         }
+
+        if (!aux.isEmpty()) {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+        else {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+
         adapter.submitList(aux);
     }
 
@@ -221,7 +238,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         }
     };
 
-    //pricerange selected changed
+    //price range selected changed
     private AdapterView.OnItemSelectedListener priceRangeSpinnerListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

@@ -62,21 +62,41 @@
         </LinearLayout>
     </LinearLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="70dp"
         android:layout_marginBottom="50dp"
-        >
+        android:background="@color/bg1">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/products_list"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/bg1"
-            android:layout_marginBottom="50dp"
+            android:elevation="10dp"
+            >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/products_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/bg1"
+                android:scrollIndicators="none"
+                />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/title_color"
+            android:paddingHorizontal="20dp"
+            android:textSize="18sp"
+            android:text="@string/no_products"
+            android:gravity="center"
             />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    </FrameLayout>
+
 
 </FrameLayout>

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -45,6 +46,8 @@ public class AdminHomeFragment extends Fragment implements RecyclerViewInterface
 
     private ArrayList<Product> productsReported;
 
+    private TextView emptyView;
+    private RecyclerView recyclerView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,12 +62,17 @@ public class AdminHomeFragment extends Fragment implements RecyclerViewInterface
         adapter = new AdminProductListAdapter(new AdminProductListAdapter.ProductDiff(), this, viewModel);
         adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
 
-        RecyclerView recyclerView = binding.productsList;
+        emptyView = binding.emptyViewAdmin;
+
+        recyclerView = binding.productsList;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         binding.swipeRefreshLayout.setOnRefreshListener(this);
         binding.searchInput.setOnQueryTextListener(this);
+
+        recyclerView.setVisibility(View.GONE);
+        emptyView.setVisibility(View.VISIBLE);
 
         viewModel.sendRequest("/report/allproductsreported", "GET", null, null, false, false, true, this);
         return binding.getRoot();
@@ -150,6 +158,16 @@ public class AdminHomeFragment extends Fragment implements RecyclerViewInterface
         else{
             aux=new ArrayList<>(products);
         }
+
+        if (!aux.isEmpty()) {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+        else {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+
         adapter.submitList(aux);
     }
 

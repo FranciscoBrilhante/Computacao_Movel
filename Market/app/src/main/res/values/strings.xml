@@ -75,4 +75,6 @@
     <string name="loading_location">Loading location...</string>
     <string name="error_location">Location unavailable</string>
     <string name="loading">Loading</string>
+    <string name="no_products">No products were found :(</string>
+    <string name="no_products_admin">No reported products were found :(</string>
 </resources>
