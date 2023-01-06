@@ -146,6 +146,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
+                    android:drawableEnd="@drawable/calendar"
+                    android:drawablePadding="5dp"
                     android:text="03/11/22"
                     android:textColor="@color/title_color"
                     android:textSize="16sp" />

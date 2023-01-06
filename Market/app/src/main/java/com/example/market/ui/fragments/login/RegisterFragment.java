@@ -32,7 +32,7 @@ import org.json.JSONObject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class RegisterFragment extends Fragment implements HTTTPCallback{
+public class RegisterFragment extends Fragment implements HTTTPCallback, View.OnClickListener {
 
     private FragmentRegisterBinding binding;
     private LoginViewModel viewModel;
@@ -42,11 +42,11 @@ public class RegisterFragment extends Fragment implements HTTTPCallback{
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         binding = FragmentRegisterBinding.inflate(inflater, container, false);
 
-        Button registerButton = binding.registerButton;
-        registerButton.setOnClickListener(this.registerListener);
 
-        TextView loginLink=binding.loginLink;
-        loginLink.setOnClickListener(this.loginLinkListener);
+        binding.registerButton.setOnClickListener(this);
+        binding.loginLink.setOnClickListener(this);
+        binding.loadingPopup.setVisibility(View.GONE);
+        binding.closeLoadingPopup.setOnClickListener(this);
         return binding.getRoot();
     }
 
@@ -61,9 +61,9 @@ public class RegisterFragment extends Fragment implements HTTTPCallback{
         Integer code;
         try {
             String endpoint = (String) data.get("endpoint");
+            code = (Integer) data.get("status");
             switch (endpoint) {
                 case "/profile/register":
-                    code = (Integer) data.get("status");
                     if (code == 200) {
                         String usernameInput = binding.usernameInput.getText().toString();
                         String passwordInput = binding.passwordInput.getText().toString();
@@ -74,11 +74,12 @@ public class RegisterFragment extends Fragment implements HTTTPCallback{
                         viewModel.sendPOSTRequest("/profile/login", params, true, false, this);
                     }
                     else{
+                        binding.loadingPopup.setVisibility(View.GONE);
                         Toast.makeText(getActivity().getApplicationContext(), R.string.register_fail_message, Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case "/profile/login":
-                    code = (Integer) data.get("status");
+                    binding.loadingPopup.setVisibility(View.GONE);
                     if (code == 200) {
                         Toast.makeText(getActivity().getApplicationContext(), R.string.register_success_message, Toast.LENGTH_SHORT).show();
                         SharedPreferences sharedPref = getActivity().getSharedPreferences("credentials",MODE_PRIVATE);
@@ -99,9 +100,16 @@ public class RegisterFragment extends Fragment implements HTTTPCallback{
         }
     }
 
-    private View.OnClickListener registerListener =new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+    @Override
+    public void onClick(View view) {
+        if(view==binding.loginLink){
+            NavHostFragment navHostFragment =
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+            NavController navController = navHostFragment.getNavController();
+            NavDirections action = RegisterFragmentDirections.actionNavigationRegisterToNavigationLogin();
+            navController.navigate(action);
+
+        }else if(view==binding.registerButton){
             String usernameInput = binding.usernameInput.getText().toString();
             String emailInput = binding.emailInput.getText().toString();
             String passwordInput = binding.passwordInput.getText().toString();
@@ -118,17 +126,10 @@ public class RegisterFragment extends Fragment implements HTTTPCallback{
             params.put("password", passwordInput);
 
             viewModel.sendPOSTRequest("/profile/register", params, false, false, RegisterFragment.this);
-        }
-    };
+            binding.loadingPopup.setVisibility(View.VISIBLE);
 
-    private View.OnClickListener loginLinkListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            NavHostFragment navHostFragment =
-                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
-            NavController navController = navHostFragment.getNavController();
-            NavDirections action = RegisterFragmentDirections.actionNavigationRegisterToNavigationLogin();
-            navController.navigate(action);
+        }else if(view==binding.closeLoadingPopup){
+            binding.loadingPopup.setVisibility(View.GONE);
         }
-    };
+    }
 }

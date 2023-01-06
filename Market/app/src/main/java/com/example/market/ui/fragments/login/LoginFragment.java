@@ -32,7 +32,7 @@ import org.json.JSONObject;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class LoginFragment extends Fragment implements HTTTPCallback {
+public class LoginFragment extends Fragment implements HTTTPCallback, View.OnClickListener {
 
     private FragmentLoginBinding binding;
     private LoginViewModel viewModel;
@@ -42,11 +42,11 @@ public class LoginFragment extends Fragment implements HTTTPCallback {
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
         binding = FragmentLoginBinding.inflate(inflater, container, false);
 
-        Button loginButton = binding.loginButton;
-        loginButton.setOnClickListener(this.loginListener);
+        binding.loginButton.setOnClickListener(this);
+        binding.registerLink.setOnClickListener(this);
+        binding.closeLoadingPopup.setOnClickListener(this);
+        binding.loadingPopup.setVisibility(View.GONE);
 
-        TextView registerLink = binding.registerLink;
-        registerLink.setOnClickListener(this.registerLinkListener);
         return binding.getRoot();
     }
 
@@ -58,14 +58,10 @@ public class LoginFragment extends Fragment implements HTTTPCallback {
 
     @Override
     public void onComplete(JSONObject data) {
-        Integer code = 400;
+        binding.loadingPopup.setVisibility((View.GONE));
         try {
-            code = (Integer) data.get("status");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        if (code == 200) {
-            try {
+            int code = (Integer) data.get("status");
+            if (code == 200) {
                 Toast.makeText(getActivity().getApplicationContext(), R.string.login_success_message, Toast.LENGTH_SHORT).show();
                 SharedPreferences sharedPref = getActivity().getSharedPreferences("credentials", MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
@@ -76,18 +72,23 @@ public class LoginFragment extends Fragment implements HTTTPCallback {
 
                 Intent myIntent = new Intent(getActivity(), MainActivity.class);
                 startActivity(myIntent);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), R.string.login_fail_message, Toast.LENGTH_SHORT).show();
             }
-        } else {
-            Toast.makeText(getActivity().getApplicationContext(), R.string.login_fail_message, Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-
     }
 
-    private View.OnClickListener loginListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
+    @Override
+    public void onClick(View view) {
+        if (view == binding.registerLink) {
+            NavHostFragment navHostFragment =
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+            NavController navController = navHostFragment.getNavController();
+            NavDirections action = LoginFragmentDirections.actionNavigationLoginToNavigationRegister();
+            navController.navigate(action);
+        } else if (view == binding.loginButton) {
             TextView usernameInput = binding.usernameInput;
             TextView passwordInput = binding.passwordInput;
 
@@ -96,17 +97,10 @@ public class LoginFragment extends Fragment implements HTTTPCallback {
             params.put("password", passwordInput.getText().toString());
 
             viewModel.sendPOSTRequest("/profile/login", params, true, false, LoginFragment.this);
-        }
-    };
+            binding.loadingPopup.setVisibility(View.VISIBLE);
 
-    private View.OnClickListener registerLinkListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            NavHostFragment navHostFragment =
-                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
-            NavController navController = navHostFragment.getNavController();
-            NavDirections action = LoginFragmentDirections.actionNavigationLoginToNavigationRegister();
-            navController.navigate(action);
+        } else if (view == binding.closeLoadingPopup) {
+            binding.loadingPopup.setVisibility((View.GONE));
         }
-    };
+    }
 }

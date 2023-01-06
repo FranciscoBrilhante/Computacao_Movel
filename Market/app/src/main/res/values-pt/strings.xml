@@ -75,4 +75,5 @@
     <string name="search_for_contacts">Procure por alguem</string>
     <string name="loading_location">A calcular localização...</string>
     <string name="error_location">Localização indisponível</string>
+    <string name="loading">A carrregar</string>
 </resources>

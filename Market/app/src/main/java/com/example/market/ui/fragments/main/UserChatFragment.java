@@ -138,6 +138,8 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
                             .load(fullURL)
                             .override(500, 500) //give resize dimension, you could calculate those
                             .centerCrop() // scale to fill the ImageView
+                            .placeholder(R.drawable.placeholder_avatar)
+                            .error(R.drawable.placeholder_avatar)
                             .into(photoView);
                 } catch (NullPointerException ignored) {
                 }
