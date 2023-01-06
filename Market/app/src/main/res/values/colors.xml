@@ -13,5 +13,5 @@
     <color name="bg4">#1C4980</color>
     <color name="title_color">#FFFFFF</color>
     <color name="subtext_color">#474747</color>
-
+    <color name="hide_bg">#AF000000</color>
 </resources>
