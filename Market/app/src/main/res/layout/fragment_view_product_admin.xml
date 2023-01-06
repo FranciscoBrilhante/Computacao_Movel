@@ -119,7 +119,7 @@
                     android:maxLines="1"
                     android:text="João Mário"
                     android:textColor="@color/title_color"
-                    android:textSize="16sp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/rating_label_view_product"
@@ -168,7 +168,7 @@
                     android:layout_height="wrap_content"
                     android:text="200€"
                     android:textColor="@color/title_color"
-                    android:textSize="24sp" />
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -183,11 +183,11 @@
                     android:drawablePadding="5dp"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
-                    android:maxWidth="300dp"
+                    android:maxWidth="250dp"
                     android:maxLines="1"
                     android:text="Coimbraasdasdasdasdasd"
                     android:textColor="@color/title_color"
-                    android:textSize="24sp"
+                    android:textSize="16sp"
                     app:drawableEndCompat="@drawable/map_pin_clear" />
             </LinearLayout>
 
@@ -214,11 +214,10 @@
                 android:layout_marginHorizontal="20dp"
                 android:background="@drawable/default_border"
                 android:backgroundTint="@color/bg1"
-                android:paddingTop="20dp"
-                android:paddingBottom="10dp"
+                android:paddingVertical="10dp"
                 android:text="TextView"
                 android:textColor="@color/title_color"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/reports_label"

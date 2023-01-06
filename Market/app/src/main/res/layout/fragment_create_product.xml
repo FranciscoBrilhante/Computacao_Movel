@@ -214,6 +214,7 @@
                     android:layout_marginStart="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/default_border"
+                    android:dropDownWidth="wrap_content"
                     />
 
             </LinearLayout>

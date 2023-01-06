@@ -117,7 +117,7 @@
                     android:maxLines="1"
                     tools:text="João Mário"
                     android:textColor="@color/title_color"
-                    android:textSize="16sp" />
+                    android:textSize="20sp" />
 
                 <TextView
                     android:id="@+id/rating_label_view_product"
@@ -166,7 +166,7 @@
                     android:layout_height="wrap_content"
                     tools:text="200€"
                     android:textColor="@color/title_color"
-                    android:textSize="24sp" />
+                    android:textSize="20sp" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -181,11 +181,11 @@
                     android:drawablePadding="5dp"
                     android:ellipsize="end"
                     android:gravity="center_vertical"
-                    android:maxWidth="300dp"
+                    android:maxWidth="250dp"
                     android:maxLines="1"
-                    tools:text="Coimbraasdasdasdasdasd"
+                    tools:text="Coimbra"
                     android:textColor="@color/title_color"
-                    android:textSize="24sp"
+                    android:textSize="16sp"
                     app:drawableEndCompat="@drawable/map_pin"
                     android:drawableTint="@color/white"/>
             </LinearLayout>
@@ -213,11 +213,10 @@
                 android:layout_marginHorizontal="20dp"
                 android:background="@drawable/default_border"
                 android:backgroundTint="@color/bg1"
-                android:paddingBottom="10dp"
-                android:paddingTop="20dp"
+                android:paddingVertical="10dp"
                 tools:text="TextView"
                 android:textColor="@color/title_color"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/send_message_button"
@@ -237,7 +236,7 @@
                 android:text="@string/send_message_button"
                 android:textColor="@color/title_color"
                 android:textAllCaps="false"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
