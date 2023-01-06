@@ -32,6 +32,7 @@ urlpatterns = [
     path('review/add',review.add),
     path('review/score',review.score),
     path('review/privatescore',review.privateScore),
+    path('review/reviewgiven',review.reviewGiven),
 
     path('report/add',report.add),
     path('report/byproduct',report.getAllByProduct),

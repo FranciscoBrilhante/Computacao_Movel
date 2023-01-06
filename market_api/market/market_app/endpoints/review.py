@@ -76,3 +76,29 @@ def privateScore(request):
         return JsonResponse({'status': 200, 'reviews':json_data})
 
     return JsonResponse({'status': 400})
+
+
+def reviewGiven(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({'status': 401}) 
+    if request.method == 'GET':
+        form = Score(request.GET)
+        if form.is_valid():
+            data = form.cleaned_data
+            
+            userBeingReviewd=Profile.objects.get(pk=data['profile_id'])
+            userReviewing=Profile.objects.get(user=request.user.pk)
+
+            querySet=Review.objects.filter(userReviewed=userBeingReviewd).filter(userReviewer=userReviewing)
+            if querySet.exists() :
+                review=querySet.first()
+                return JsonResponse({'status': 200,'rating':review.stars})
+            else:
+                return JsonResponse({'status': 200,'rating':0})
+
+        elif contains_error(form.errors.as_data(), 'resource not found'):
+                return JsonResponse({'status': 404})
+        elif contains_error(form.errors.as_data(), 'invalid'):
+                return JsonResponse({'status': 400})
+
+    return JsonResponse({'status': 400})
