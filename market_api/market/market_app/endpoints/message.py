@@ -35,8 +35,8 @@ def send(request):
             
             message=Message(userTo=Profile.objects.get(pk=profile_pk),userFrom=profile,content=content,dateSent=timezone.now())
             message.save()
-            responseFMC=sendNotification(message=message)
-            print(responseFMC)
+            sendNotification(message=message)
+            
             
             return JsonResponse({'status': 200})
             
