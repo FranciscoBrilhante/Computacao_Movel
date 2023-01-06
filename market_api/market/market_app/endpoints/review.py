@@ -38,7 +38,7 @@ def add(request):
 
     return JsonResponse({'status': 400})
     
-        
+
 def score(request):
     if not request.user.is_authenticated:
         return JsonResponse({'status': 401}) 

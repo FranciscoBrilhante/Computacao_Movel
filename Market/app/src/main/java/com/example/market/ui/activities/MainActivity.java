@@ -87,6 +87,10 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
             return;
         }
 
+        viewModel.deleteAllMessages();
+        viewModel.deleteAllProducts();
+        viewModel.deleteAllContacts();
+
         //send login request
         Map<String, Object> params = viewModel.getStoredCredentials();
         viewModel.sendRequest("/profile/login", "POST", null, params, true, true, false, this);

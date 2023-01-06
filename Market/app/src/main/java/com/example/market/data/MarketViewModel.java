@@ -152,6 +152,22 @@ public class MarketViewModel extends AndroidViewModel {
     }
 
     public void deleteAllMessages() {
+        MainRoomDatabase.databaseWriteExecutor.execute(()->{
+            messageDao.deleteAll();
+        });
+    }
+
+    public void deleteAllProducts() {
+        MainRoomDatabase.databaseWriteExecutor.execute(()->{
+            productDao.deleteAll();
+        });
+
+    }
+
+    public void deleteAllContacts() {
+        MainRoomDatabase.databaseWriteExecutor.execute(()->{
+            contactDao.deleteAll();
+        });
     }
 
     public boolean areCredentialsStored() {
@@ -482,6 +498,7 @@ public class MarketViewModel extends AndroidViewModel {
         array.add(new PriceRange(500.0, null, context));
         return array;
     }
+
 
 
 }

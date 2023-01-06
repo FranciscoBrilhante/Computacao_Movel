@@ -93,6 +93,7 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
     public void onComplete(JSONObject data) {
         String url1 = "/profile/info";
         String url2 = "/review/reviewgiven";
+        String url3 = "/review/add";
         try {
             int code = data.getInt("status");
             String endpoint = data.getString("endpoint");
@@ -105,6 +106,13 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
                 if (code == 200) {
                     double rating = data.getDouble("rating");
                     binding.ratingBar.setRating((float) rating);
+                }
+            }
+            if (endpoint.equals(url3)) {
+                if (code == 200) {
+                    Map<String, Object> params=new LinkedHashMap<>();
+                    params.put("profile_id",Integer.toString(profileID));
+                    viewModel.sendRequest("/profile/info", "GET", params, null, false, false, true, this);
                 }
             }
         } catch (JSONException | NullPointerException e) {
@@ -147,8 +155,7 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
         Map<String, Object> params=new LinkedHashMap<>();
         params.put("profile_id",Integer.toString(profileID));
 
-        params.put("stars",String.valueOf(Math.round(rating)));
-        System.out.println(rating);
+        params.put("stars",Float.toString(rating));
         viewModel.sendRequest("/review/add", "POST", null, params, true, false, true, this);
 
     }
