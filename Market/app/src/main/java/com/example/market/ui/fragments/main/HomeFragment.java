@@ -1,10 +1,12 @@
 package com.example.market.ui.fragments.main;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -61,6 +64,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     private TextView emptyView;
     private RecyclerView recyclerView;
 
+    private FrameLayout d4rkFrame;
     private Product productToReport;
 
     @Override
@@ -96,6 +100,8 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         recyclerView = binding.productsList;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+        d4rkFrame = binding.d4rkFrame;
 
         binding.categorySpinner.setAdapter(categorySpinnerAdapter);
         binding.priceRangeSpinner.setAdapter(priceRangeSpinnerAdapter);
@@ -145,6 +151,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     @Override
     public void report(Product product) {
         binding.reportDialog.setVisibility(View.VISIBLE);
+        d4rkFrame.setForeground(new ColorDrawable(ContextCompat.getColor(getContext(), R.color.hide_bg)));
         productToReport=product;
     }
 
@@ -165,6 +172,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
             binding.reportDialog.setVisibility(View.GONE);
             binding.reasonRadioGroup.clearCheck();
             binding.explainInput.setText("");
+            d4rkFrame.setForeground(null);
             productToReport=null;
         }else if(view==binding.confirmReportButton){
             RadioButton buttonSelected=binding.getRoot().findViewById(binding.reasonRadioGroup.getCheckedRadioButtonId());
@@ -177,6 +185,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
                 params.put("explain",explain);
                 viewModel.sendRequest("/report/add", "POST", null, params, true, false, true, this);
                 binding.reportDialog.setVisibility(View.GONE);
+                d4rkFrame.setForeground(null);
             }
             if(buttonSelected==null){
                 Toast.makeText(getActivity().getApplicationContext(), R.string.reason_required, Toast.LENGTH_SHORT).show();

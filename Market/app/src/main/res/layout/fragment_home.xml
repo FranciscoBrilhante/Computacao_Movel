@@ -5,123 +5,133 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg1"
-    tools:context=".ui.fragments.main.HomeFragment">
-
-    <LinearLayout
-        android:id="@+id/home_action_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        android:background="@drawable/action_bar_background"
-        android:backgroundTint="@color/bg1"
-        android:elevation="20dp"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingVertical="5dp">
-
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/search_input"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:background="@drawable/default_border"
-                android:backgroundTint="@color/white"
-                android:clickable="true"
-                android:inputType="textAutoComplete"
-                android:minWidth="250dp"
-                android:paddingVertical="3dp"
-                app:iconifiedByDefault="false"
-                app:queryBackground="@android:color/transparent"
-                app:queryHint="@string/search_for_product_hint"
-                app:searchIcon="@drawable/search"
-                app:theme="@style/AppSearchView"
-                tools:ignore="TouchTargetSizeCheck">
-
-            </androidx.appcompat.widget.SearchView>
-
-            <ImageButton
-                android:id="@+id/more_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginStart="20dp"
-                android:background="@drawable/clear_button_background"
-                android:gravity="center"
-                android:scaleType="fitCenter"
-                android:src="@drawable/chevron_down"
-                tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/more_filters_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="25dp"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <Spinner
-                android:id="@+id/category_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/default_border"
-                android:gravity="center" />
-
-            <Spinner
-                android:id="@+id/price_range_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/default_border"
-                android:gravity="center" />
-
-        </LinearLayout>
-
-    </LinearLayout>
+    tools:context=".ui.fragments.main.HomeFragment"
+>
 
     <FrameLayout
+        android:id="@+id/d4rk_frame"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="70dp"
-        android:layout_marginBottom="50dp">
+        android:foregroundTintMode="src_atop"
+        >
 
-        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh_layout"
+        <LinearLayout
+            android:id="@+id/home_action_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:background="@drawable/action_bar_background"
+            android:backgroundTint="@color/bg1"
+            android:elevation="20dp"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingVertical="5dp">
+
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/search_input"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/default_border"
+                    android:backgroundTint="@color/white"
+                    android:clickable="true"
+                    android:inputType="textAutoComplete"
+                    android:minWidth="250dp"
+                    android:paddingVertical="3dp"
+                    app:iconifiedByDefault="false"
+                    app:queryBackground="@android:color/transparent"
+                    app:queryHint="@string/search_for_product_hint"
+                    app:searchIcon="@drawable/search"
+                    app:theme="@style/AppSearchView"
+                    tools:ignore="TouchTargetSizeCheck">
+
+                </androidx.appcompat.widget.SearchView>
+
+                <ImageButton
+                    android:id="@+id/more_button"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="20dp"
+                    android:background="@drawable/clear_button_background"
+                    android:gravity="center"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/chevron_down"
+                    tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/more_filters_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="25dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <Spinner
+                    android:id="@+id/category_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/default_border"
+                    android:gravity="center" />
+
+                <Spinner
+                    android:id="@+id/price_range_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/default_border"
+                    android:gravity="center" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:elevation="10dp"
-            android:orientation="vertical">
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="50dp">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/products_list"
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/bg1"
-                android:scrollIndicators="none" />
+                android:elevation="10dp"
+                android:orientation="vertical">
 
-        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/products_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/bg1"
+                    android:scrollIndicators="none" />
 
-        <TextView
-            android:id="@+id/empty_view_home"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:paddingHorizontal="20dp"
-            android:text="@string/no_products"
-            android:textColor="@color/title_color"
-            android:textSize="18sp" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <TextView
+                android:id="@+id/empty_view_home"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingHorizontal="20dp"
+                android:text="@string/no_products"
+                android:textColor="@color/title_color"
+                android:textSize="18sp" />
+        </FrameLayout>
     </FrameLayout>
 
     <FrameLayout
@@ -133,18 +143,19 @@
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:background="@drawable/default_border"
-        android:backgroundTint="@color/bg2"
+        android:backgroundTint="@color/bg1"
         android:elevation="100dp"
         android:nestedScrollingEnabled="true"
         android:visibility="gone"
-        tools:visibility="visible">
+        tools:visibility="visible"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
             android:elevation="10dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
@@ -164,7 +175,7 @@
                 android:gravity="center"
                 android:text="@string/more_options_report"
                 android:textColor="@color/title_color"
-                android:textSize="16sp" />
+                android:textSize="20sp" />
         </LinearLayout>
 
         <ScrollView
@@ -262,7 +273,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/default_border"
-                        android:backgroundTint="@color/bg1"
+                        android:backgroundTint="@color/bg2"
                         android:ems="10"
                         android:gravity="start|top"
                         android:hint="@string/write_explain_prompt"
@@ -285,7 +296,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginBottom="20dp"
                     android:background="@drawable/default_border"
-                    android:backgroundTint="@color/bg1"
+                    android:backgroundTint="@color/bg2"
                     android:drawableStart="@drawable/alert_triangle"
                     android:drawablePadding="10dp"
                     android:drawableTint="@color/white"
@@ -293,6 +304,7 @@
                     android:includeFontPadding="false"
                     android:paddingHorizontal="20dp"
                     android:text="@string/more_options_report"
+                    android:textSize="18sp"
                     android:textAllCaps="false"
                     android:textColor="@color/title_color" />
             </LinearLayout>
