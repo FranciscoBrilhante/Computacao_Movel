@@ -78,4 +78,13 @@
     <string name="loading">A carrregar</string>
     <string name="no_products">Não foi encontrado nenhum produto :(</string>
     <string name="no_products_admin">Não foi encontrado nenhum produto reportado :(</string>
+    <string name="reason_fraud">Fraude</string>
+    <string name="reason_illegal">Atividade ilegal</string>
+    <string name="reason_racism">Racismo, sexismo ou outro tipo de descriminação</string>
+    <string name="reason_hate_speech">Discurso de ódio</string>
+    <string name="reason_missinformation">Desinformação</string>
+    <string name="reason_disrespectful">Desrespeitador, pouco civil, ou violação de privacidade</string>
+    <string name="reason_other">Outros</string>
+    <string name="write_explain_prompt">Inclua detalhes caso necessário</string>
+    <string name="report_success_message">Denúncia enviada</string>
 </resources>

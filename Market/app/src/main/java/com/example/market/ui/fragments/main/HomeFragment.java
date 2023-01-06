@@ -5,7 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -59,6 +61,8 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     private TextView emptyView;
     private RecyclerView recyclerView;
 
+    private Product productToReport;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,9 +103,12 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         binding.moreButton.setOnClickListener(this);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
         binding.searchInput.setOnQueryTextListener(this);
+        binding.closeReportDialog.setOnClickListener(this);
+        binding.confirmReportButton.setOnClickListener(this);
         binding.priceRangeSpinner.setOnItemSelectedListener(priceRangeSpinnerListener);
         binding.categorySpinner.setOnItemSelectedListener(categorySpinnerListener);
 
+        binding.reportDialog.setVisibility(View.GONE);
         recyclerView.setVisibility(View.GONE);
         emptyView.setVisibility(View.VISIBLE);
 
@@ -134,6 +141,12 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         navController.navigate(action);
     }
 
+    @Override
+    public void report(Product product) {
+        binding.reportDialog.setVisibility(View.VISIBLE);
+        productToReport=product;
+    }
+
     //user clicked in arrow to show more filter options
     @Override
     public void onClick(View view) {
@@ -147,14 +160,29 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
                 binding.moreButton.setImageResource(R.drawable.chevron_up);
                 actionBarExpanded = true;
             }
-
+        }else if(view==binding.closeReportDialog){
+            binding.reportDialog.setVisibility(View.GONE);
+            binding.reasonRadioGroup.clearCheck();
+            binding.explainInput.setText("");
+            productToReport=null;
+        }else if(view==binding.confirmReportButton){
+            RadioButton buttonSelected=binding.getRoot().findViewById(binding.reasonRadioGroup.getCheckedRadioButtonId());
+            if(buttonSelected!=null && productToReport!=null){
+                String reason=buttonSelected.getText().toString();
+                String explain = binding.explainInput.getText().toString();
+                Map<String,Object> params=new LinkedHashMap<>();
+                params.put("product_id",productToReport.getId());
+                params.put("reason",reason);
+                params.put("explain",explain);
+                viewModel.sendRequest("/report/add", "POST", null, params, true, false, true, this);
+            }
         }
     }
 
     @Override
     public void onComplete(JSONObject data) {
         String url1 = "/product/recommended";
-        String url2 = "/product/filter";
+        String url2 = "/report/add";
         try {
             int code = data.getInt("status");
             String endpoint = data.getString("endpoint");
@@ -164,6 +192,11 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
                     viewModel.addProducts(products);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
+            }
+            if (endpoint.equals(url2)) { // /product/recommended
+                if (code == 200) {
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.report_success_message, Toast.LENGTH_SHORT).show();
+                }
             }
         } catch (JSONException | ParseException e) {
             e.printStackTrace();

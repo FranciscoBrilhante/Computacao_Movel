@@ -7,7 +7,7 @@ from django.utils.translation import gettext as _
 class Add(forms.Form):
     product_id = forms.IntegerField()
     reason=forms.CharField(max_length=64)
-    explain=forms.CharField(max_length=2048)
+    explain=forms.CharField(max_length=2048,required=False)
     
     def clean_product_id(self):
         data = self.cleaned_data['product_id']

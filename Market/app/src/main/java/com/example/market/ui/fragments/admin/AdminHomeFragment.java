@@ -100,6 +100,11 @@ public class AdminHomeFragment extends Fragment implements RecyclerViewInterface
     }
 
     @Override
+    public void report(Product product) {
+
+    }
+
+    @Override
     public void onRefresh() {
         binding.swipeRefreshLayout.setRefreshing(true);
         viewModel.sendRequest("/report/allproductsreported", "GET", null, null, false, false, true, this);

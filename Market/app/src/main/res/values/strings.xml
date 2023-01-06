@@ -77,4 +77,13 @@
     <string name="loading">Loading</string>
     <string name="no_products">No products were found :(</string>
     <string name="no_products_admin">No reported products were found :(</string>
+    <string name="reason_fraud">Fraud</string>
+    <string name="reason_illegal">Illegal activity</string>
+    <string name="reason_racism">Racism, sexism, homophobia or other discrimination</string>
+    <string name="reason_hate_speech">Hate Speech</string>
+    <string name="reason_missinformation">Missinformation</string>
+    <string name="reason_disrespectful">Disrespectful, Uncivil, unkind or violation of someone\'s privacy</string>
+    <string name="reason_other">Others</string>
+    <string name="write_explain_prompt">Include details if needed</string>
+    <string name="report_success_message">Report sent</string>
 </resources>

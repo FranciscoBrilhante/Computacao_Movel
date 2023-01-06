@@ -88,7 +88,6 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
                 (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
         NavController navController = navHostFragment.getNavController();
         NavDirections action = ItemsFragmentDirections.actionNavigationItemsToNavigationViewProduct(product.getId());
-
         navController.navigate(action);
     }
 
@@ -99,6 +98,11 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
 
     @Override
     public void sendMessage(int profileID) {
+    }
+
+    @Override
+    public void report(Product product) {
+
     }
 
     @Override

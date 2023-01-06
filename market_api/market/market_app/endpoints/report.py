@@ -20,7 +20,7 @@ def add(request):
             product_id=data['product_id']
             reason=data['reason']
             explain=data['explain']
-
+            print(explain)
             product=Product.objects.get(pk=product_id)
             profile=Profile.objects.get(user=request.user.pk)
 

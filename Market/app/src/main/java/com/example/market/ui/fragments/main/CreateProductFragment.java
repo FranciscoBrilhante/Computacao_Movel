@@ -36,6 +36,7 @@ import com.example.market.interfaces.HTTTPCallback;
 import com.example.market.interfaces.ProductImageInterface;
 import com.example.market.marketDatabase.Category;
 import com.example.market.marketDatabase.Image;
+import com.example.market.marketDatabase.Product;
 import com.example.market.ui.components.adapter.CreateSpinnerAdapter;
 import com.example.market.ui.components.adapter.ImageListAdapter;
 
@@ -43,6 +44,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -124,11 +126,12 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
     public void onComplete(JSONObject data) {
         try {
             String url1 = "/product/add";
+            String url2 = "/product/myproducts";
             int code = data.getInt("status");
             String endpoint = data.getString("endpoint");
             if (endpoint.equals(url1)) {
-
                 if (code == 200) {
+                    viewModel.sendRequest("/product/myproducts", "GET", null, null, false, false, true, this);
                     if (productImages.size() > 0) {
                         int productID = data.getInt("id");
                         viewModel.sendProductPhotos(productID, productImages);
@@ -138,8 +141,13 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
                     NavController navController = navHostFragment.getNavController();
                     navController.navigateUp();
                 }
+            }else if (endpoint.equals(url2)) {
+                if (code == 200) {
+                    ArrayList<Product> products = viewModel.productsFromJSONObject(data);
+                    viewModel.addProducts(products);
+                }
             }
-        } catch (JSONException | IOException e) {
+        } catch (JSONException | IOException | ParseException e) {
             e.printStackTrace();
         }
     }

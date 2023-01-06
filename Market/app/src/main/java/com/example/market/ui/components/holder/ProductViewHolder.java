@@ -6,6 +6,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -51,15 +52,22 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         locationTextView = itemView.findViewById(R.id.city_label);
         priceTextView = itemView.findViewById(R.id.price_label);
         dateTextView = itemView.findViewById(R.id.date_label);
+        ImageButton reportButton = itemView.findViewById(R.id.report_button);
 
         itemView.setOnClickListener(this);
+        reportButton.setOnClickListener(this);
     }
 
     public void bind(Product product) {
         this.product = product;
         String lang = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
+        String title=product.getTitle();
+        Double priceData=product.getPrice();
+        String price=String.format(Locale.ENGLISH, "%.2f€", priceData);
+        String city = product.getProfileLocation();
 
-        titleView.setText(product.getTitle());
+        titleView.setText(title);
+        priceTextView.setText(price);
 
         if (lang.equals("pt")) {
             categoryTextView.setText(product.getCategoryNamePT());
@@ -67,9 +75,6 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
             categoryTextView.setText(product.getCategoryName());
         }
 
-        priceTextView.setText(String.format(Locale.ENGLISH, "%.2f€", product.getPrice()));
-
-        String city = product.getProfileLocation();
         if (city.equals("null")) city = rootView.getResources().getString(R.string.location_unknow_product);
         locationTextView.setText(city);
 
@@ -78,7 +83,6 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
         dateTextView.setText(strDate);
 
         ArrayList<SlideModel> imageList = new ArrayList<SlideModel>();
-
         if (product.getImages().size() > 0) {
             for (String imgURL : product.getImages()) {
                 String fullURL = "https://" + BuildConfig.API_ADDRESS + imgURL;
@@ -104,25 +108,9 @@ public class ProductViewHolder extends RecyclerView.ViewHolder implements View.O
     public void onClick(View view) {
         if (view.getId() == rootView.getId() || view.getId() == R.id.image_slider) {
             recyclerViewInterface.onClick(product);
+        }else if(view.getId()==R.id.report_button){
+            recyclerViewInterface.report(this.product);
         }
-        /*else if (view.getId() == R.id.more_options) {
-            PopupMenu popupMenu = new PopupMenu(rootView.getContext(), view);
-            MenuInflater inflater = popupMenu.getMenuInflater();
-            inflater.inflate(R.menu.more_options_menu, popupMenu.getMenu());
-            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem menuItem) {
-                    if(menuItem.getItemId()==R.id.more_options_send_message){
-                        recyclerViewInterface.sendMessage(product.getProfile());
-                        return true;
-                    }
-                    return false;
-                }
-            });
-
-            popupMenu.show();
-        }*/
-
     }
 
     @Override
