@@ -343,6 +343,8 @@ public class MarketViewModel extends AndroidViewModel {
         JSONArray array = data.getJSONArray("received");
         for (int i = 0; i < array.length(); i++) {
             JSONObject elem = array.getJSONObject(i);
+
+            int messageID = elem.getInt("message_id");
             int profileID = elem.getInt("profile_id");
             String content = elem.getString("content");
             String timestamp = elem.getString("timestamp");
@@ -354,12 +356,14 @@ public class MarketViewModel extends AndroidViewModel {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(d);
 
-            Message message = new Message(content, calendar, profileID, myProfileID);
+            Message message = new Message(messageID,content, calendar, profileID, myProfileID);
             messages.add(message);
         }
         array = data.getJSONArray("sent");
         for (int i = 0; i < array.length(); i++) {
             JSONObject elem = array.getJSONObject(i);
+
+            int messageID = elem.getInt("message_id");
             int profileID = elem.getInt("profile_id");
             String content = elem.getString("content");
             String timestamp = elem.getString("timestamp");
@@ -371,7 +375,7 @@ public class MarketViewModel extends AndroidViewModel {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(d);
 
-            Message message = new Message(content, calendar, myProfileID, profileID);
+            Message message = new Message(messageID,content, calendar, myProfileID, profileID);
             messages.add(message);
         }
         return messages;

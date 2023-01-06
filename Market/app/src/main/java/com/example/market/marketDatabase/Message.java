@@ -9,7 +9,7 @@ import java.util.Calendar;
 
 @Entity(tableName = "message_table")
 public class Message {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = false)
     private int id;
 
     @ColumnInfo(name = "content")
@@ -24,7 +24,8 @@ public class Message {
     @ColumnInfo(name = "receiver")
     private int receiver;
 
-    public Message(String content, Calendar timestamp, int sender, int receiver) {
+    public Message(int id, String content, Calendar timestamp, int sender, int receiver) {
+        this.id=id;
         this.content = content;
         this.timestamp = timestamp;
         this.sender = sender;
