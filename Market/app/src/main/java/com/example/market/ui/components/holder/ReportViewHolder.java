@@ -44,14 +44,40 @@ public class ReportViewHolder extends RecyclerView.ViewHolder{
     public void bind(Report report) {
         this.report = report;
         String lang = Resources.getSystem().getConfiguration().getLocales().get(0).getLanguage();
+        String reason=report.getReason();
+        String reasonTranslated=translateReason(reason);
 
-        reasonTextView.setText(report.getReason());
+        reasonTextView.setText(reasonTranslated);
         detailsTextView.setText(report.getExplain());
+        if(report.getExplain().equals("")){
+            rootView.findViewById(R.id.details_label).setVisibility(View.GONE);
+            rootView.findViewById(R.id.details).setVisibility(View.GONE);
+        }
     }
 
     public static ReportViewHolder create(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_report, parent, false);
         return new ReportViewHolder(view);
+    }
+
+    public String translateReason(String reason){
+        switch (reason){
+            case "Fraud":
+                return rootView.getResources().getString(R.string.reason_fraud);
+            case "Illegal activity":
+                return rootView.getResources().getString(R.string.reason_illegal);
+            case "Racism, sexism, homophobia or other discrimination":
+                return rootView.getResources().getString(R.string.reason_racism);
+            case "Hate Speech":
+                return rootView.getResources().getString(R.string.reason_hate_speech);
+            case "Missinformation":
+                return rootView.getResources().getString(R.string.reason_missinformation);
+            case "Disrespectful, Uncivil, unkind or violation of someone's privacy":
+                return rootView.getResources().getString(R.string.reason_disrespectful);
+            case "Others":
+                return rootView.getResources().getString(R.string.reason_other);
+        }
+        return reason;
     }
 }
 

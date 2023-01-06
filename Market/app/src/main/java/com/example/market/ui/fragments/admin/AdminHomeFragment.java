@@ -126,7 +126,7 @@ public class AdminHomeFragment extends Fragment implements RecyclerViewInterface
             }
             if (endpoint.equals(url2)) {
                 if (code == 200) {
-                    Toast.makeText(getActivity().getApplicationContext(), R.string.successfull_deletion_message, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity().getApplicationContext(), R.string.successfull_deletion_product_message, Toast.LENGTH_SHORT).show();
                     viewModel.sendRequest("/report/allproductsreported", "GET", null, null, false, false, true, this);
                 }
             }

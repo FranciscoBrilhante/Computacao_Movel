@@ -141,6 +141,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         navController.navigate(action);
     }
 
+    //user wants to report a product
     @Override
     public void report(Product product) {
         binding.reportDialog.setVisibility(View.VISIBLE);
@@ -175,6 +176,10 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
                 params.put("reason",reason);
                 params.put("explain",explain);
                 viewModel.sendRequest("/report/add", "POST", null, params, true, false, true, this);
+                binding.reportDialog.setVisibility(View.GONE);
+            }
+            if(buttonSelected==null){
+                Toast.makeText(getActivity().getApplicationContext(), R.string.reason_required, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -204,6 +209,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     }
 
     private void filterProductsAndSubmit(ArrayList<Product> products){
+        if(products==null){
+            adapter.submitList(new ArrayList<>());
+        }
         ArrayList<Product> aux=new ArrayList<>();
         for(Product product: products){
             boolean toAdd=true;

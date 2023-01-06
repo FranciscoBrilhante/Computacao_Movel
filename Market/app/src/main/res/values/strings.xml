@@ -86,4 +86,5 @@
     <string name="reason_other">Others</string>
     <string name="write_explain_prompt">Include details if needed</string>
     <string name="report_success_message">Report sent</string>
+    <string name="reason_required">Select one of the reasons listed</string>
 </resources>

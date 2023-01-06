@@ -27,9 +27,9 @@
             android:drawableTint="@color/title_color"
             android:ellipsize="end"
             android:gravity="center"
-            android:maxWidth="150dp"
+            android:maxWidth="100dp"
             android:maxLines="1"
-            android:text="eletronics"
+            tools:text="eletronics"
             android:textColor="@color/title_color"
             android:textSize="12sp"
             app:drawableStartCompat="@drawable/hash" />
@@ -74,7 +74,7 @@
             android:layout_marginStart="10dp"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="Blackview BL8800 Pro"
+            tools:text="Blackview BL8800 Pro"
             android:textColor="@color/title_color"
             android:textSize="18sp" />
 
@@ -87,7 +87,7 @@
             android:ellipsize="end"
             android:fontFamily="@font/inter_bold"
             android:maxLines="1"
-            android:text="200€"
+            tools:text="200€"
             android:textColor="@color/title_color"
             android:textSize="14sp" />
 
@@ -99,7 +99,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:text="Coimbra"
+            tools:text="Coimbra"
             android:textColor="@color/grey_font"
             android:textSize="12sp" />
 
@@ -120,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:text="03/11/22"
+                    tools:text="03/11/22"
                     android:textColor="@color/grey_font"
                     android:textSize="12sp" />
             </LinearLayout>
@@ -136,7 +136,7 @@
                     android:id="@+id/report_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="15 Reports"
+                    tools:text="15 Reports"
                     android:textAlignment="textEnd"
                     android:textColor="@color/title_color"
                     android:textSize="12sp" />

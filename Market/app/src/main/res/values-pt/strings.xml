@@ -87,4 +87,5 @@
     <string name="reason_other">Outros</string>
     <string name="write_explain_prompt">Inclua detalhes caso necessário</string>
     <string name="report_success_message">Denúncia enviada</string>
+    <string name="reason_required">Selecione um motivo de entre os listados</string>
 </resources>
