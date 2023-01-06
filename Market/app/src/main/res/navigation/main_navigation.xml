@@ -66,6 +66,9 @@
         <action
             android:id="@+id/action_navigation_view_product_to_userChatFragment"
             app:destination="@id/userChatFragment" />
+        <action
+            android:id="@+id/action_navigation_view_product_to_otherProfileFragment"
+            app:destination="@id/otherProfileFragment" />
     </fragment>
 
     <fragment
@@ -85,12 +88,27 @@
         <action
             android:id="@+id/action_navigation_messages_to_userChatFragment"
             app:destination="@id/userChatFragment" />
+        <action
+            android:id="@+id/action_navigation_messages_to_otherProfileFragment"
+            app:destination="@id/otherProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/userChatFragment"
         android:name="com.example.market.ui.fragments.main.UserChatFragment"
         android:label="UserChatFragment"
         tools:layout="@layout/fragment_user_chat">
+        <argument
+            android:name="profile_id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_userChatFragment_to_otherProfileFragment"
+            app:destination="@id/otherProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/otherProfileFragment"
+        android:name="com.example.market.ui.fragments.main.OtherProfileFragment"
+        android:label="OtherProfileFragment"
+        tools:layout="@layout/fragment_other_profile">
         <argument
             android:name="profile_id"
             app:argType="integer" />

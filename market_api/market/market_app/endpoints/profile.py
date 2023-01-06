@@ -164,6 +164,8 @@ def info(request):
             return JsonResponse({'status': 200,
             'id':profile.pk, 
             'username':profile.user.username, 
+            'cityX':profile.cityX, 
+            'cityY':profile.cityY, 
             'location':translateLocation(profile.cityX,profile.cityY),
             'image':photo_url,
             })
