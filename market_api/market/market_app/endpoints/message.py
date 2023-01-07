@@ -181,11 +181,11 @@ def sendNotification(message):
     except:
         pass
 
-        notification=Notification(
-                title=f"{username} sent you a message",
-                body=f"{message_content}",
-        )
-        fcmMessage= FCMMessage(notification=notification, token=token)
+    notification=Notification(
+            title=f"{username} sent you a message",
+            body=f"{message_content}",
+    )
+    fcmMessage= FCMMessage(notification=notification, token=token)
     
     try:
         msg_id = messaging.send(fcmMessage)
