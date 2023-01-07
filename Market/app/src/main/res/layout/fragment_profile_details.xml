@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:gravity="center"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:paddingHorizontal="20dp"
                 android:paddingVertical="3dp">
 
@@ -61,6 +61,21 @@
                         app:tint="@color/white" />
 
                 </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/rating_label_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_marginTop="20dp"
+                    android:drawablePadding="10dp"
+                    android:gravity="center"
+                    android:textColor="@color/title_color"
+                    android:text="0.0"
+                    app:drawableStartCompat="@drawable/star"
+                    tools:text="4.5"
+                    app:drawableTint="@color/white" />
+
             </LinearLayout>
 
             <LinearLayout
