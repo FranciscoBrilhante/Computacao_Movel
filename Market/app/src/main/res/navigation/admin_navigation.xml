@@ -9,14 +9,14 @@
     <fragment
         android:id="@+id/navigation_home_admin"
         android:name="com.example.market.ui.fragments.admin.AdminHomeFragment"
-        android:label="HomeFragment"
+        android:label="AdminHomeFragment"
         tools:layout="@layout/fragment_home_admin">
         <action
             android:id="@+id/action_navigation_home_to_navigation_view_product2"
             app:destination="@id/navigation_view_product2" />
         <action
             android:id="@+id/action_navigation_items_to_navigation_view_product"
-            app:destination="@id/navigation_view_product" >
+            app:destination="@id/navigation_view_product">
             <argument
                 android:name="owner"
                 android:defaultValue="true" />

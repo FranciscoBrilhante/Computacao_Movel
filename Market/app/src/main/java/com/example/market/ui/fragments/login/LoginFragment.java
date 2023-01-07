@@ -86,7 +86,7 @@ public class LoginFragment extends Fragment implements HTTTPCallback, View.OnCli
     public void onClick(View view) {
         if (view == binding.registerLink) {
             NavHostFragment navHostFragment =
-                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_login);
             NavController navController = navHostFragment.getNavController();
             NavDirections action = LoginFragmentDirections.actionNavigationLoginToNavigationRegister();
             navController.navigate(action);

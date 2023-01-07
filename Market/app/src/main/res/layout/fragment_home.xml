@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg1"
-    tools:context=".ui.fragments.main.HomeFragment"
->
+    tools:context=".ui.fragments.main.HomeFragment">
 
     <FrameLayout
         android:id="@+id/d4rk_frame"

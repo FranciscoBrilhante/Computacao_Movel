@@ -22,6 +22,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDestination;
@@ -252,5 +253,16 @@ public class AdminActivity extends AppCompatActivity implements HTTTPCallback {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
         // notificationId is a unique int for each notification that you must define
         notificationManager.notify(0, builder.build());
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_admin);
+        if(navHostFragment!=null){
+            String currentFragmentLabel= Navigation.findNavController(this, R.id.nav_host_fragment_activity_admin).getCurrentDestination().getLabel().toString();
+            if(!currentFragmentLabel.equals("HomeFragment")){
+                super.onBackPressed();
+            }
+        }
     }
 }

@@ -2,9 +2,11 @@ package com.example.market.ui.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavGraph;
 import androidx.navigation.NavInflater;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.os.Bundle;
@@ -26,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         NavHostFragment navHostFragment =
-                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_login);
         NavController navController = navHostFragment.getNavController();
         NavInflater inflater=navController.getNavInflater();
         NavGraph graph=inflater.inflate(R.navigation.login_navigation);
@@ -35,6 +37,17 @@ public class LoginActivity extends AppCompatActivity {
         //hide default toolbar
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_login);
+        if(navHostFragment!=null){
+            String currentFragmentLabel= Navigation.findNavController(this, R.id.nav_host_fragment_activity_login).getCurrentDestination().getLabel().toString();
+            if(!currentFragmentLabel.equals("LoginFragment")){
+                super.onBackPressed();
+            }
         }
     }
 }

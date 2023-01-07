@@ -92,7 +92,7 @@ def reviewGiven(request):
             querySet=Review.objects.filter(userReviewed=userBeingReviewd).filter(userReviewer=userReviewing)
             if querySet.exists() :
                 review=querySet.first()
-                return JsonResponse({'status': 200,'rating':review.stars})
+                return JsonResponse({'status': 200,'rating': review.stars})
             else:
                 return JsonResponse({'status': 200,'rating':0})
 

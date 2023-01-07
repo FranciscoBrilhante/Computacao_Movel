@@ -125,6 +125,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         recyclerView.setVisibility(View.GONE);
         emptyView.setVisibility(View.VISIBLE);
 
+        binding.moreFiltersView.setVisibility(View.GONE);
+        binding.moreButton.setImageResource(R.drawable.chevron_down);
+        actionBarExpanded = false;
         return binding.getRoot();
     }
 
@@ -248,6 +251,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
                 if(categorySelected!=null && categorySelected.getId()!=-1 && categorySelected.getId()!=product.getCategory()){
                     toAdd=false;
                 }
+                if(product.getProfileName().equals(viewModel.getStoredCredentials().get("username"))){
+                    toAdd=false;
+                }
 
                 if(toAdd){
                     aux.add(product);
@@ -311,4 +317,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         public void onNothingSelected(AdapterView<?> parent) {
         }
     };
+
+
 }

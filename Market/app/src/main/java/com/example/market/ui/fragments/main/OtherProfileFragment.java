@@ -52,6 +52,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -72,6 +73,9 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
         binding.backButton.setOnClickListener(this);
         binding.ratingBar.setNumStars(5);
         binding.ratingBar.setOnRatingBarChangeListener(this);
+
+        binding.reviewLabel.setVisibility(View.GONE);
+        binding.ratingBar.setVisibility(View.GONE);
 
         Map<String, Object> params=new LinkedHashMap<>();
         params.put("profile_id",Integer.toString(profileID));
@@ -111,7 +115,9 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
             if (endpoint.equals(url2)) {
                 if (code == 200) {
                     double rating = data.getDouble("rating");
-                    binding.ratingBar.setRating((float) rating);
+                    String ratingStr=String.format(Locale.ENGLISH,"%.1f", rating);
+                    float ratingF=Float.parseFloat(ratingStr);
+                    binding.ratingBar.setRating(ratingF);
                 }
             }
             if (endpoint.equals(url3)) {
@@ -133,14 +139,23 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
         Double cityX = data.getDouble("cityX");
         Double cityY = data.getDouble("cityY");
         Double rating =data.getDouble("rating");
+        String ratingStr=String.format(Locale.ENGLISH,"%.1f", rating);
 
         if (city.equals("null")) {
             city = getActivity().getResources().getString(R.string.location_undefined);
         }
 
+        if(username.equals(viewModel.getStoredCredentials().get("username"))){
+            binding.reviewLabel.setVisibility(View.GONE);
+            binding.ratingBar.setVisibility(View.GONE);
+        }
+        else {
+            binding.reviewLabel.setVisibility(View.VISIBLE);
+            binding.ratingBar.setVisibility(View.VISIBLE);
+        }
         binding.locationLabel.setText(city);
         binding.nameView.setText(username);
-        binding.ratingLabel.setText(Double.toString(rating));
+        binding.ratingLabel.setText(ratingStr);
 
         if (photoURL.equals("null")) {
             binding.profilePhoto.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.placeholder_avatar));

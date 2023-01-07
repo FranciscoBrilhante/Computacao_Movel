@@ -86,7 +86,8 @@ public class RegisterFragment extends Fragment implements HTTTPCallback, View.On
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString("username", binding.usernameInput.getText().toString());
                         editor.putString("password", binding.passwordInput.getText().toString());
-                        editor.putBoolean("is_admin", false);
+                        editor.putBoolean("is_admin", data.getBoolean("is_staff"));
+                        editor.putInt("profile_id", data.getInt("profile_id"));
                         editor.apply();
 
                         Intent myIntent = new Intent(getActivity(), MainActivity.class);
@@ -105,7 +106,7 @@ public class RegisterFragment extends Fragment implements HTTTPCallback, View.On
     public void onClick(View view) {
         if(view==binding.loginLink){
             NavHostFragment navHostFragment =
-                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_login);
             NavController navController = navHostFragment.getNavController();
             NavDirections action = RegisterFragmentDirections.actionNavigationRegisterToNavigationLogin();
             navController.navigate(action);
