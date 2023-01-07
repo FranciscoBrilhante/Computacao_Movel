@@ -77,7 +77,8 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
 
         viewModel.sendRequest("/message/withuser", "GET", params, null, false, false, true, this);
 
-        if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
+        if ((Boolean) viewModel.getStoredCredentials().get("is_admin"))
+            fragId = R.id.nav_host_fragment_activity_admin;
         else fragId = R.id.nav_host_fragment_activity_main;
 
         binding.backButton.setOnClickListener(this);
@@ -111,7 +112,7 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
                     viewModel.sendRequest("/message/withuser", "GET", params, null, false, false, true, this);
                 }
             }
-        } catch (JSONException | ParseException e) {
+        } catch (JSONException | ParseException| NullPointerException e) {
             e.printStackTrace();
         }
     }
@@ -143,7 +144,7 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
         }
     }
 
-    private void initializeProfilePhoto(JSONObject data) throws JSONException {
+    private void initializeProfilePhoto(JSONObject data) throws JSONException, NullPointerException {
         ShapeableImageView photoView = binding.profileIcon;
         int code = (Integer) data.get("status");
         if (code == 200) {
@@ -151,17 +152,14 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
             if (photoURL.equals("null")) {
                 photoView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.placeholder_avatar));
             } else {
-                try {
-                    String fullURL = "https://" + BuildConfig.API_ADDRESS + photoURL;
-                    Glide.with(getActivity().getApplicationContext())
-                            .load(fullURL)
-                            .override(500, 500) //give resize dimension, you could calculate those
-                            .centerCrop() // scale to fill the ImageView
-                            .placeholder(R.drawable.placeholder_avatar)
-                            .error(R.drawable.placeholder_avatar)
-                            .into(photoView);
-                } catch (NullPointerException ignored) {
-                }
+                String fullURL = "https://" + BuildConfig.API_ADDRESS + photoURL;
+                Glide.with(getActivity().getApplicationContext())
+                        .load(fullURL)
+                        .override(500, 500) //give resize dimension, you could calculate those
+                        .centerCrop() // scale to fill the ImageView
+                        .placeholder(R.drawable.placeholder_avatar)
+                        .error(R.drawable.placeholder_avatar)
+                        .into(photoView);
             }
         } else {
             photoView.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.placeholder_avatar));
