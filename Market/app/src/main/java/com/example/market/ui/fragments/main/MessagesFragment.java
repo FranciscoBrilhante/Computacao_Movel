@@ -55,14 +55,15 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
         adapter.setHasStableIds(true); //prevent blinking on refresh (combined with getItemID inside adapter class
 
         viewModel.getAllContacts().observe(requireActivity(), contacts -> {
-            this.ownContacts=new ArrayList<>(contacts);
+            this.ownContacts = new ArrayList<>(contacts);
             filterContactsAndSubmit(this.ownContacts);
             System.out.println(this.ownContacts.size());
         });
 
-        if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
+        if ((Boolean) viewModel.getStoredCredentials().get("is_admin"))
+            fragId = R.id.nav_host_fragment_activity_admin;
         else fragId = R.id.nav_host_fragment_activity_main;
-        viewModel.sendRequest("/message/users","GET",null,null,false,false,true,this);
+        viewModel.sendRequest("/message/users", "GET", null, null, false, false, true, this);
     }
 
     @Nullable
@@ -77,7 +78,6 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
 
         binding.searchInput.setOnQueryTextListener(this);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
-
 
 
         recyclerView.setVisibility(View.GONE);
@@ -97,7 +97,7 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
     @Override
     public void onRefresh() {
         binding.swipeRefreshLayout.setRefreshing(true);
-        viewModel.sendRequest("/message/users","GET",null,null,false,false,true,this);
+        viewModel.sendRequest("/message/users", "GET", null, null, false, false, true, this);
     }
 
     @Override
@@ -108,40 +108,38 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
             String endpoint = data.getString("endpoint");
             if (endpoint.equals(url1)) {
                 if (code == 200) {
-                    this.ownContacts= viewModel.contactsFromJSONObject(data);
+                    this.ownContacts = viewModel.contactsFromJSONObject(data);
                     viewModel.addContacts(this.ownContacts);
                     //filterContactsAndSubmit(this.ownContacts);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
             }
-        } catch (JSONException | ParseException e) {
+        } catch (JSONException | ParseException | NullPointerException e) {
             e.printStackTrace();
         }
     }
 
-    private void filterContactsAndSubmit(ArrayList<Contact> contacts){
-        ArrayList<Contact> aux=new ArrayList<>();
-        if(contacts==null){
+    private void filterContactsAndSubmit(ArrayList<Contact> contacts) {
+        ArrayList<Contact> aux = new ArrayList<>();
+        if (contacts == null) {
             adapter.submitList(aux);
             return;
         }
         contacts.sort(new ContactComparator());
-        if (textQuery!=null){
-            for(Contact contact:contacts){
-                if(contact.getProfileName().toLowerCase().contains(textQuery.toLowerCase())){
+        if (textQuery != null) {
+            for (Contact contact : contacts) {
+                if (contact.getProfileName().toLowerCase().contains(textQuery.toLowerCase())) {
                     aux.add(contact);
                 }
             }
-        }
-        else{
-            aux=new ArrayList<>(contacts);
+        } else {
+            aux = new ArrayList<>(contacts);
         }
 
-        if (!aux.isEmpty()) {
+        if (!aux.isEmpty() && recyclerView != null && emptyView != null) {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
-        }
-        else {
+        } else if (recyclerView != null && emptyView != null) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }
@@ -156,7 +154,7 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        textQuery=newText;
+        textQuery = newText;
         filterContactsAndSubmit(ownContacts);
         return false;
     }

@@ -77,6 +77,8 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
         binding.closeLoadingLocation.setOnClickListener(this);
         binding.locationError.setVisibility(View.GONE);
         binding.closeErrorLocation.setOnClickListener(this);
+        binding.loadingPopup.setVisibility(View.GONE);
+        binding.closeLoadingPopup.setOnClickListener(this);
 
         editPhotoRequestPermissionLauncher =
                 registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
@@ -133,6 +135,9 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
         if(view==binding.closeErrorLocation){
             binding.locationError.setVisibility(View.GONE);
         }
+        if(view==binding.closeLoadingPopup){
+            binding.loadingPopup.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -154,6 +159,9 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
                 }
             }
             if (endpoint.equals(url2) || endpoint.equals(url3)) {
+                getActivity().runOnUiThread(() -> {
+                    binding.loadingPopup.setVisibility(View.GONE);
+                });
                 if (code == 200) {
                     viewModel.sendRequest("/profile/personalinfo", "GET", null, null, false, false, true, this);
                 }
@@ -281,6 +289,7 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            binding.loadingPopup.setVisibility(View.VISIBLE);
             if (data.getData() != null) {
                 Uri mImageUri = data.getData();
                 String[] imageProjection = {MediaStore.Images.Media.DATA};

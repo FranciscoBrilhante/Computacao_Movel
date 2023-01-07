@@ -60,8 +60,8 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     private Category categorySelected;
     private PriceRange priceRangeSelected;
 
-    private ArrayList<Product> masterProductsList=new ArrayList<>();
-    private final ArrayList<Product> products=new ArrayList<>();
+    private ArrayList<Product> masterProductsList = new ArrayList<>();
+    private final ArrayList<Product> products = new ArrayList<>();
 
     private CategorySpinnerAdapter categorySpinnerAdapter;
     private PriceRangeSpinnerAdapter priceRangeSpinnerAdapter;
@@ -99,7 +99,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         });
 
         viewModel.getAllProducts().observe(requireActivity(), products -> {
-            masterProductsList=new ArrayList<>(products);
+            masterProductsList = new ArrayList<>(products);
             filterProductsAndSubmit(masterProductsList);
         });
 
@@ -251,7 +251,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     }
 
     private void filterProductsAndSubmit(ArrayList<Product> productsToFilter) {
-        if(productsToFilter.isEmpty()){
+        if (productsToFilter.isEmpty()) {
             return;
         }
         productsToFilter.sort(new ProductDateComparator());
@@ -276,29 +276,28 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
             }
 
             if (toAdd) {
-                if(!doesListContain(this.products,product)){
+                if (!doesListContain(this.products, product)) {
                     this.products.add(product);
-                    adapter.notifyItemInserted(this.products.size()-1);
+                    adapter.notifyItemInserted(this.products.size() - 1);
                 }
-            }
-            else{
+            } else {
                 Iterator<Product> iter = this.products.iterator();
-                int i=0;
-                while(iter.hasNext()) {
+                int i = 0;
+                while (iter.hasNext()) {
                     Product originalProduct = iter.next();
                     if (originalProduct.getId() == product.getId()) {
                         iter.remove(); // Removes the 'current' item
                         adapter.notifyItemRemoved(i);
                     }
-                    i+=1;
+                    i += 1;
                 }
             }
         }
 
-        if (!this.products.isEmpty() && recyclerView!=null && emptyView!=null) {
+        if (!this.products.isEmpty() && recyclerView != null && emptyView != null) {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
-        } else if(recyclerView!=null && emptyView!=null){
+        } else if (recyclerView != null && emptyView != null) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }
@@ -377,24 +376,24 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         }
     };
 
-    private boolean doesListContain(ArrayList<Product> products, Product productToAdd){
-        boolean contains=false;
-        for(Product product:products){
-            if(productToAdd.getId()==product.getId()){
-                contains=true;
+    private boolean doesListContain(ArrayList<Product> products, Product productToAdd) {
+        boolean contains = false;
+        for (Product product : products) {
+            if (productToAdd.getId() == product.getId()) {
+                contains = true;
             }
         }
-        return  contains;
+        return contains;
     }
 
-    private int removeProduct(ArrayList<Product> products, Product productToRemove){
-        int i=0;
-        for(Product product:products){
-            if(productToRemove.getId()==product.getId()){
+    private int removeProduct(ArrayList<Product> products, Product productToRemove) {
+        int i = 0;
+        for (Product product : products) {
+            if (productToRemove.getId() == product.getId()) {
                 products.remove(i);
                 return i;
             }
-            i+=1;
+            i += 1;
         }
         return -1;
     }

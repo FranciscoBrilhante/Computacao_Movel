@@ -42,7 +42,7 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
     private OwnProductListAdapter adapter;
 
     private ArrayList<Product> ownProducts;
-    private String textQuery="";
+    private String textQuery = "";
 
     private TextView emptyView;
     private RecyclerView recyclerView;
@@ -56,12 +56,13 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
         adapter = new OwnProductListAdapter(new OwnProductListAdapter.ProductDiff(), this);
         adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
 
-        viewModel.getProductsByProfileID((int) viewModel.getStoredCredentials().get("profile_id")).observe(requireActivity(),products -> {
-            this.ownProducts=new ArrayList<>(products);
+        viewModel.getProductsByProfileID((int) viewModel.getStoredCredentials().get("profile_id")).observe(requireActivity(), products -> {
+            this.ownProducts = new ArrayList<>(products);
             filterProductsAndSubmit(ownProducts);
         });
 
-        if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
+        if ((Boolean) viewModel.getStoredCredentials().get("is_admin"))
+            fragId = R.id.nav_host_fragment_activity_admin;
         else fragId = R.id.nav_host_fragment_activity_main;
     }
 
@@ -119,7 +120,7 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
             if (endpoint.equals(url1)) {
                 if (code == 200) {
                     ArrayList<Product> products = viewModel.productsFromJSONObject(data);
-                    this.ownProducts=products;
+                    this.ownProducts = products;
                     viewModel.addProducts(ownProducts);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
@@ -146,30 +147,28 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
         viewModel.sendRequest("/product/myproducts", "GET", null, null, false, false, true, this);
     }
 
-    private void filterProductsAndSubmit(ArrayList<Product> products){
-        if(products==null){
+    private void filterProductsAndSubmit(ArrayList<Product> products) {
+        if (products == null) {
             return;
         }
-        ArrayList<Product> aux=new ArrayList<>();
+        ArrayList<Product> aux = new ArrayList<>();
         products.sort(new ProductDateComparator());
-        if (textQuery!=null){
-            for(Product product:products){
-                if(product.getTitle().toLowerCase().contains(textQuery.toLowerCase())){
+        if (textQuery != null) {
+            for (Product product : products) {
+                if (product.getTitle().toLowerCase().contains(textQuery.toLowerCase())) {
                     aux.add(product);
                 }
             }
-        }
-        else{
-            aux=new ArrayList<>(products);
+        } else {
+            aux = new ArrayList<>(products);
         }
 
         System.out.println(aux);
 
-        if (!aux.isEmpty() && recyclerView!=null && emptyView!=null) {
+        if (!aux.isEmpty() && recyclerView != null && emptyView != null) {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
-        }
-        else if(recyclerView!=null && emptyView!=null) {
+        } else if (recyclerView != null && emptyView != null) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }
@@ -184,7 +183,7 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        textQuery=newText;
+        textQuery = newText;
         filterProductsAndSubmit(ownProducts);
         return false;
     }

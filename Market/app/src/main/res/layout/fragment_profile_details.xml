@@ -298,7 +298,8 @@
         android:minWidth="200dp"
         android:orientation="horizontal"
         android:paddingHorizontal="20dp"
-        android:visibility="gone">
+        android:visibility="gone"
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/error_icon"
@@ -333,6 +334,64 @@
 
         <ImageView
             android:id="@+id/close_error_location"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:srcCompat="@drawable/x"
+            app:tint="@color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/loading_popup"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="100dp"
+        android:animateLayoutChanges="false"
+        android:background="@drawable/default_border"
+        android:backgroundTint="@color/bg4"
+        android:elevation="100dp"
+        android:gravity="center"
+        android:minWidth="200dp"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/loading_gif"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="#000A2647"
+            android:backgroundTint="#00FFFFFF"
+            android:scaleType="fitCenter"
+            android:src="@drawable/loading_animation"
+            app:tint="#ECCB54" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/loading_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:text="@string/loading"
+            android:textColor="@color/bg3"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"></LinearLayout>
+
+        <ImageView
+            android:id="@+id/close_loading_popup"
             android:layout_width="20dp"
             android:layout_height="20dp"
             app:srcCompat="@drawable/x"

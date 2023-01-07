@@ -111,7 +111,9 @@ public class AdminActivity extends AppCompatActivity implements HTTTPCallback {
                 code = (Integer) data.get("status");
                 if (code == 200) {
                     viewModel.sendRequest("/category/all", "GET", null, null, false, false, true, this);
-                    viewModel.sendRequest("/product/recommended", "GET", null, null, false, false, true, this);
+                    Map<String, Object> params=new LinkedHashMap<>();
+                    params.put("page",Integer.toString(1));
+                    viewModel.sendRequest("/product/recommended", "GET", params, null, false, false, true, this);
                     viewModel.sendRequest("/product/myproducts", "GET", null, null, false, false, true, this);
                 } else {
                     viewModel.removeStoredCredentials();

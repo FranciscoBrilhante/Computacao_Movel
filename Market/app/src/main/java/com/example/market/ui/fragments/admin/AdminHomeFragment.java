@@ -89,8 +89,8 @@ public class AdminHomeFragment extends Fragment implements RecyclerViewInterface
 
     @Override
     public void delete(Product product) {
-        Map<String,Object> params=new LinkedHashMap<>();
-        params.put("product_id",Integer.toString(product.getId()));
+        Map<String, Object> params = new LinkedHashMap<>();
+        params.put("product_id", Integer.toString(product.getId()));
         viewModel.sendRequest("/product/delete", "GET", params, null, false, false, true, this);
         viewModel.deleteProductByID(product.getId());
     }
@@ -142,35 +142,33 @@ public class AdminHomeFragment extends Fragment implements RecyclerViewInterface
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        textQuery=newText;
+        textQuery = newText;
         filterProductsAndSubmit(productsReported);
         return false;
     }
 
-    private void filterProductsAndSubmit(ArrayList<Product> products){
-        ArrayList<Product> aux=new ArrayList<>();
-        if(products==null){
+    private void filterProductsAndSubmit(ArrayList<Product> products) {
+        ArrayList<Product> aux = new ArrayList<>();
+        if (products == null) {
             adapter.submitList(aux);
             return;
         }
 
         products.sort(new ProductDateComparator());
-        if (textQuery!=null){
-            for(Product product:products){
-                if(product.getTitle().toLowerCase().contains(textQuery.toLowerCase())){
+        if (textQuery != null) {
+            for (Product product : products) {
+                if (product.getTitle().toLowerCase().contains(textQuery.toLowerCase())) {
                     aux.add(product);
                 }
             }
-        }
-        else{
-            aux=new ArrayList<>(products);
+        } else {
+            aux = new ArrayList<>(products);
         }
 
-        if (!aux.isEmpty()) {
+        if (!aux.isEmpty() && recyclerView != null && emptyView != null) {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
-        }
-        else {
+        } else if (recyclerView != null && emptyView != null) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }
