@@ -89,4 +89,5 @@
     <string name="report_success_message">Denúncia enviada</string>
     <string name="reason_required">Selecione um motivo de entre os listados</string>
     <string name="leave_a_review">Dê uma classificação!</string>
+    <string name="notification_title_string">Mensagem nova de %1$s</string>
 </resources>

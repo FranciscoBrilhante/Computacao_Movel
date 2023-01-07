@@ -182,6 +182,8 @@ def sendNotification(message):
         notification=Notification(
                 title=f"{username} sent you a message",
                 body=f"{message_content}",
+                title_loc_key = "notification_title_string",
+                title_loc_args= [username],
         )
         fcmMessage= FCMMessage(notification=notification, token=token)
         
