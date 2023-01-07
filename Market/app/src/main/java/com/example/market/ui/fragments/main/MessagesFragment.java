@@ -45,36 +45,43 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
 
     private int fragId;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
-        binding = FragmentMessagesBinding.inflate(inflater, container, false);
 
         adapter = new ContactListAdapter(new ContactListAdapter.ContactDiff(), this);
         adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
         adapter.setHasStableIds(true); //prevent blinking on refresh (combined with getItemID inside adapter class
 
+        viewModel.getAllContacts().observe(requireActivity(), contacts -> {
+            this.ownContacts=new ArrayList<>(contacts);
+            filterContactsAndSubmit(this.ownContacts);
+            System.out.println(this.ownContacts.size());
+        });
+
+        if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
+        else fragId = R.id.nav_host_fragment_activity_main;
+        viewModel.sendRequest("/message/users","GET",null,null,false,false,true,this);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        binding = FragmentMessagesBinding.inflate(inflater, container, false);
         emptyView = binding.emptyView;
         recyclerView = binding.messagesList;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        viewModel.getAllContacts().observe(requireActivity(), contacts -> {
-            ownContacts=new ArrayList<>(contacts);
-            filterContactsAndSubmit(ownContacts);
-        });
-
         binding.searchInput.setOnQueryTextListener(this);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
-        viewModel.sendRequest("/message/users","GET",null,null,false,false,true,this);
 
-        if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
-        else fragId = R.id.nav_host_fragment_activity_main;
+
 
         recyclerView.setVisibility(View.GONE);
         emptyView.setVisibility(View.VISIBLE);
-
         return binding.getRoot();
     }
 
@@ -101,9 +108,9 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
             String endpoint = data.getString("endpoint");
             if (endpoint.equals(url1)) {
                 if (code == 200) {
-                    ArrayList<Contact> contacts = viewModel.contactsFromJSONObject(data);
-                    ownContacts=contacts;
-                    filterContactsAndSubmit(ownContacts);
+                    this.ownContacts= viewModel.contactsFromJSONObject(data);
+                    viewModel.addContacts(this.ownContacts);
+                    //filterContactsAndSubmit(this.ownContacts);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
             }
@@ -113,10 +120,11 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
     }
 
     private void filterContactsAndSubmit(ArrayList<Contact> contacts){
+        ArrayList<Contact> aux=new ArrayList<>();
         if(contacts==null){
+            adapter.submitList(aux);
             return;
         }
-        ArrayList<Contact> aux=new ArrayList<>();
         contacts.sort(new ContactComparator());
         if (textQuery!=null){
             for(Contact contact:contacts){

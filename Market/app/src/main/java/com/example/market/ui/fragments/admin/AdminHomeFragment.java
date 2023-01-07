@@ -1,6 +1,7 @@
 package com.example.market.ui.fragments.admin;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,18 +52,19 @@ public class AdminHomeFragment extends Fragment implements RecyclerViewInterface
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
+        adapter = new AdminProductListAdapter(new AdminProductListAdapter.ProductDiff(), this, viewModel);
+        adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
+        adapter.setHasStableIds(true);
+
+        viewModel.sendRequest("/report/allproductsreported", "GET", null, null, false, false, true, this);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
+
         binding = FragmentHomeAdminBinding.inflate(inflater, container, false);
-
-        adapter = new AdminProductListAdapter(new AdminProductListAdapter.ProductDiff(), this, viewModel);
-        adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
-
         emptyView = binding.emptyViewAdmin;
-
         recyclerView = binding.productsList;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -73,7 +75,6 @@ public class AdminHomeFragment extends Fragment implements RecyclerViewInterface
         recyclerView.setVisibility(View.GONE);
         emptyView.setVisibility(View.VISIBLE);
 
-        viewModel.sendRequest("/report/allproductsreported", "GET", null, null, false, false, true, this);
         return binding.getRoot();
     }
 
@@ -147,10 +148,12 @@ public class AdminHomeFragment extends Fragment implements RecyclerViewInterface
     }
 
     private void filterProductsAndSubmit(ArrayList<Product> products){
+        ArrayList<Product> aux=new ArrayList<>();
         if(products==null){
+            adapter.submitList(aux);
             return;
         }
-        ArrayList<Product> aux=new ArrayList<>();
+
         products.sort(new ProductDateComparator());
         if (textQuery!=null){
             for(Product product:products){

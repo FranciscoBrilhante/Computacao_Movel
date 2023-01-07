@@ -176,7 +176,7 @@ def recommended(request):
         return JsonResponse({'status': 401}) 
 
     
-    p = Paginator(Product.objects.order_by('name'), 10)
+    p = Paginator(Product.objects.order_by('-dateCreated'), 10)
     page1 = p.page(1).object_list
 
     json_data=[{

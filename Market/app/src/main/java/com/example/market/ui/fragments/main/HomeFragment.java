@@ -36,6 +36,7 @@ import com.example.market.marketDatabase.Product;
 import com.example.market.ui.components.adapter.CategorySpinnerAdapter;
 import com.example.market.ui.components.adapter.PriceRangeSpinnerAdapter;
 import com.example.market.ui.components.adapter.ProductListAdapter;
+import com.example.market.utils.ProductDateComparator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -235,6 +236,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     private void filterProductsAndSubmit(ArrayList<Product> productsToFilter){
         ArrayList<Product> aux=new ArrayList<>();
         if (productsToFilter != null) {
+            products.sort(new ProductDateComparator());
             for(Product product: productsToFilter){
                 boolean toAdd=true;
                 if(!product.getTitle().toLowerCase(Locale.ROOT).contains(queryText.toLowerCase(Locale.ROOT))){

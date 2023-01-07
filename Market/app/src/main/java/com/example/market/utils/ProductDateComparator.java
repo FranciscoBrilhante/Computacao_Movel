@@ -9,6 +9,6 @@ public class ProductDateComparator implements Comparator<Product> {
 
     @Override
     public int compare(Product o1, Product o2) {
-        return o1.getDate().compareTo(o2.getDate());
+        return o2.getDate().compareTo(o1.getDate());
     }
 }
