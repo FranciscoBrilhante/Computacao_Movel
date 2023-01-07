@@ -45,6 +45,8 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
     private MessageListAdapter adapter;
     private ArrayList<Message> messages;
 
+    private int fragId;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -77,6 +79,9 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
         viewModel.sendRequest("/profile/info", "GET", params, null, false, false, true, this);
 
         viewModel.sendRequest("/message/withuser", "GET", params, null, false, false, true, this);
+
+        if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
+        else fragId = R.id.nav_host_fragment_activity_main;
 
         binding.backButton.setOnClickListener(this);
         binding.sendMessageButton.setOnClickListener(this);
@@ -118,7 +123,7 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
     public void onClick(View view) {
         if (view == binding.backButton) { // go back
             NavHostFragment navHostFragment =
-                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
             NavController navController = navHostFragment.getNavController();
             navController.navigateUp();
         }
@@ -134,7 +139,7 @@ public class UserChatFragment extends Fragment implements HTTTPCallback, View.On
         }
         if (view == binding.profileIcon || view == binding.profileName) { //see profile
             NavHostFragment navHostFragment =
-                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
             NavController navController = navHostFragment.getNavController();
             NavDirections action = UserChatFragmentDirections.actionUserChatFragmentToOtherProfileFragment(profileID);
             navController.navigate(action);

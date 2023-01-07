@@ -73,7 +73,6 @@ public class MarketViewModel extends AndroidViewModel {
     private final ContactDao contactDao;
     private final MessageDao messageDao;
 
-
     private final Executor executor = Executors.newSingleThreadExecutor();
     private final Handler handler = new Handler(Looper.getMainLooper());
     private static java.net.CookieManager msCookieManager = new java.net.CookieManager();
@@ -181,10 +180,12 @@ public class MarketViewModel extends AndroidViewModel {
         SharedPreferences sharedPref = application.getSharedPreferences("credentials", MODE_PRIVATE);
         String username = sharedPref.getString("username", null);
         String password = sharedPref.getString("password", null);
+        Boolean isAdmin = sharedPref.getBoolean("is_admin", false);
         int profileID = sharedPref.getInt("profile_id", -1);
         map.put("username", username);
         map.put("password", password);
         map.put("profile_id", profileID);
+        map.put("is_admin", isAdmin);
         return map;
     }
 
@@ -194,6 +195,7 @@ public class MarketViewModel extends AndroidViewModel {
         editor.remove("username");
         editor.remove("password");
         editor.remove("profile_id");
+        editor.remove("is_admin");
         editor.commit();
     }
 
@@ -501,7 +503,4 @@ public class MarketViewModel extends AndroidViewModel {
         array.add(new PriceRange(500.0, null, context));
         return array;
     }
-
-
-
 }

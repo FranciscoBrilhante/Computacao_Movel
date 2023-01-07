@@ -78,6 +78,7 @@ public class AdminViewProductFragment extends Fragment implements HTTTPCallback,
 
         adapter = new ReportListAdapter(new ReportListAdapter.ReportDiff());
         //adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
+
         RecyclerView recyclerView = binding.reports;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -107,7 +108,7 @@ public class AdminViewProductFragment extends Fragment implements HTTTPCallback,
                     viewModel.sendRequest(url2, "GET", params, null, false, false, true, this);
                 } else {
                     NavHostFragment navHostFragment =
-                            (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                            (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_admin);
                     NavController navController = navHostFragment.getNavController();
                     NavDirections action = ViewProductFragmentDirections.actionNavigationViewProductToNavigationHome();
                     navController.navigate(action);

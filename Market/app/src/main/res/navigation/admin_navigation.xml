@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
     android:label="DashboardFragment"
-    app:startDestination="@id/navigation_home_admin">
+    app:startDestination="@id/navigation_home">
+
     <fragment
         android:id="@+id/navigation_home_admin"
         android:name="com.example.market.ui.fragments.admin.AdminHomeFragment"
@@ -12,10 +13,17 @@
         tools:layout="@layout/fragment_home_admin">
         <action
             android:id="@+id/action_navigation_home_to_navigation_view_product2"
-            app:destination="@id/navigation_view_product" />
+            app:destination="@id/navigation_view_product2" />
+        <action
+            android:id="@+id/action_navigation_items_to_navigation_view_product"
+            app:destination="@id/navigation_view_product" >
+            <argument
+                android:name="owner"
+                android:defaultValue="true" />
+        </action>
     </fragment>
     <fragment
-        android:id="@+id/navigation_view_product"
+        android:id="@+id/navigation_view_product2"
         android:name="com.example.market.ui.fragments.admin.AdminViewProductFragment"
         android:label="ViewProductFragment"
         tools:layout="@layout/fragment_view_product_admin">
@@ -23,4 +31,116 @@
             android:name="id"
             app:argType="integer" />
     </fragment>
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.market.ui.fragments.main.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_view_product"
+            app:destination="@id/navigation_view_product" >
+            <argument
+                android:name="owner"
+                app:argType="boolean"/>
+        </action>
+        <action
+            android:id="@+id/action_navigation_home_to_userChatFragment"
+            app:destination="@id/userChatFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_items"
+        android:name="com.example.market.ui.fragments.main.ItemsFragment"
+        android:label="ItemsFragment"
+        tools:layout="@layout/fragment_items" >
+        <action
+            android:id="@+id/action_navigation_items_to_navigation_view_product"
+            app:destination="@id/navigation_view_product" >
+            <argument
+                android:name="owner"
+                android:defaultValue="true" />
+        </action>
+        <action
+            android:id="@+id/action_navigation_items_to_navigation_create_product"
+            app:destination="@id/navigation_create_product" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_profile_details"
+        android:name="com.example.market.ui.fragments.main.ProfileDetailsFragment"
+        android:label="ProfileDetailsFragment"
+        tools:layout="@layout/fragment_profile_details" />
+
+    <fragment
+        android:id="@+id/navigation_view_product"
+        android:name="com.example.market.ui.fragments.main.ViewProductFragment"
+        android:label="ViewProductFragment"
+        tools:layout="@layout/fragment_view_product" >
+        <action
+            android:id="@+id/action_navigation_view_product_to_navigation_items"
+            app:destination="@id/navigation_items" />
+        <action
+            android:id="@+id/action_navigation_view_product_to_navigation_home"
+            app:destination="@id/navigation_home" />
+        <action
+            android:id="@+id/action_navigation_view_product_to_navigation_admin_home"
+            app:destination="@id/navigation_home_admin" />
+        <argument
+            android:name="owner"
+            app:argType="boolean" />
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_navigation_view_product_to_userChatFragment"
+            app:destination="@id/userChatFragment" />
+        <action
+            android:id="@+id/action_navigation_view_product_to_otherProfileFragment"
+            app:destination="@id/otherProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_create_product"
+        android:name="com.example.market.ui.fragments.main.CreateProductFragment"
+        android:label="CreateProductFragment"
+        tools:layout="@layout/fragment_create_product">
+        <action
+            android:id="@+id/action_navigation_create_product_to_navigation_items"
+            app:destination="@id/navigation_items" />
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_messages"
+        android:name="com.example.market.ui.fragments.main.MessagesFragment"
+        android:label="MessagesFragment"
+        tools:layout="@layout/fragment_messages">
+        <action
+            android:id="@+id/action_navigation_messages_to_userChatFragment"
+            app:destination="@id/userChatFragment" />
+        <action
+            android:id="@+id/action_navigation_messages_to_otherProfileFragment"
+            app:destination="@id/otherProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userChatFragment"
+        android:name="com.example.market.ui.fragments.main.UserChatFragment"
+        android:label="UserChatFragment"
+        tools:layout="@layout/fragment_user_chat">
+        <argument
+            android:name="profile_id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_userChatFragment_to_otherProfileFragment"
+            app:destination="@id/otherProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/otherProfileFragment"
+        android:name="com.example.market.ui.fragments.main.OtherProfileFragment"
+        android:label="OtherProfileFragment"
+        tools:layout="@layout/fragment_other_profile">
+        <argument
+            android:name="profile_id"
+            app:argType="integer" />
+    </fragment>
+
 </navigation>

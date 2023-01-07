@@ -60,6 +60,9 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
     private MarketViewModel viewModel;
     private int profileID;
     private GoogleMap map;
+
+    private int fragId;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         profileID = OtherProfileFragmentArgs.fromBundle(getArguments()).getProfileId();
@@ -76,6 +79,9 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
 
         viewModel.sendRequest("/review/reviewgiven", "GET", params, null, false, false, true, this);
 
+        if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
+        else fragId = R.id.nav_host_fragment_activity_main;
+
         return binding.getRoot();
     }
 
@@ -83,7 +89,7 @@ public class OtherProfileFragment extends Fragment implements View.OnClickListen
     public void onClick(View view) {
         if(view==binding.backButton){
             NavHostFragment navHostFragment =
-                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
             NavController navController = navHostFragment.getNavController();
             navController.navigateUp();
         }

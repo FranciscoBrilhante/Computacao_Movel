@@ -67,6 +67,8 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     private FrameLayout d4rkFrame;
     private Product productToReport;
 
+    private int fragId;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +90,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
             this.products=new ArrayList<>(products);
             filterProductsAndSubmit(this.products);
         });
+
+        if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
+        else fragId = R.id.nav_host_fragment_activity_main;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -125,9 +130,12 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     @Override
     public void onClick(Product product) {
         boolean isOwner = product.getProfileName().equals(viewModel.getStoredCredentials().get("username"));
+
         NavHostFragment navHostFragment =
-                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
         NavController navController = navHostFragment.getNavController();
+
+
         NavDirections action = HomeFragmentDirections.actionNavigationHomeToNavigationViewProduct(isOwner, product.getId());
         navController.navigate(action);
     }
@@ -140,9 +148,11 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     //user clicked in send message in product options
     @Override
     public void sendMessage(int profileID) {
+
         NavHostFragment navHostFragment =
-                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
         NavController navController = navHostFragment.getNavController();
+
         NavDirections action = HomeFragmentDirections.actionNavigationHomeToUserChatFragment(profileID);
         navController.navigate(action);
     }

@@ -67,6 +67,7 @@ public class LoginFragment extends Fragment implements HTTTPCallback, View.OnCli
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString("username", binding.usernameInput.getText().toString());
                 editor.putString("password", binding.passwordInput.getText().toString());
+                editor.putBoolean("is_admin", data.getBoolean("is_staff"));
                 editor.putInt("profile_id", data.getInt("profile_id"));
                 editor.apply();
 

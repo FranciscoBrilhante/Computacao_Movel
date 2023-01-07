@@ -59,6 +59,8 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
     private static final int PICK_IMAGE_REQUEST = 345345;
     ActivityResultLauncher<String> editPhotoRequestPermissionLauncher;
 
+    private int fragId;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
@@ -85,6 +87,10 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
                 });
 
         viewModel.sendRequest("/profile/personalinfo", "GET", null, null, false, false, true, this);
+
+        if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
+        else fragId = R.id.nav_host_fragment_activity_main;
+
         return binding.getRoot();
     }
 
@@ -141,7 +147,7 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
                     populateProfileInfo(data);
                 } else {
                     NavHostFragment navHostFragment =
-                            (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                            (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
                     NavController navController = navHostFragment.getNavController();
                     navController.navigateUp();
                 }

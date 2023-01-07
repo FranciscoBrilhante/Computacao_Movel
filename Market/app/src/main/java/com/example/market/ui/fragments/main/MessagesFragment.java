@@ -39,6 +39,8 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
     private ArrayList<Contact> ownContacts;
     private String textQuery;
 
+    private int fragId;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -61,13 +63,17 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
         binding.searchInput.setOnQueryTextListener(this);
         binding.swipeRefreshLayout.setOnRefreshListener(this);
         viewModel.sendRequest("/message/users","GET",null,null,false,false,true,this);
+
+        if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
+        else fragId = R.id.nav_host_fragment_activity_main;
+
         return binding.getRoot();
     }
 
     @Override
     public void onClick(int profileID) {
         NavHostFragment navHostFragment =
-                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
         NavController navController = navHostFragment.getNavController();
         NavDirections action = MessagesFragmentDirections.actionNavigationMessagesToUserChatFragment(profileID);
         navController.navigate(action);

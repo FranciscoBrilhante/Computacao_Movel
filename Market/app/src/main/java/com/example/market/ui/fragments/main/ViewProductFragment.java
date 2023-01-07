@@ -49,6 +49,7 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
     private FragmentViewProductBinding binding;
     private MarketViewModel viewModel;
 
+    private int fragId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +68,9 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
             binding.messageButton.setImageResource(R.drawable.trash_2);
             binding.sendMessageButton.setVisibility(View.GONE);
         }
+
+        if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
+        else fragId = R.id.nav_host_fragment_activity_main;
 
         binding.backButton.setOnClickListener(this);
         binding.messageButton.setOnClickListener(this);
@@ -95,7 +99,7 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
                     viewModel.sendRequest(url2, "GET", params, null, false, false, true, this);
                 } else {
                     NavHostFragment navHostFragment =
-                            (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                            (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
                     NavController navController = navHostFragment.getNavController();
                     NavDirections action = ViewProductFragmentDirections.actionNavigationViewProductToNavigationHome();
                     navController.navigate(action);
@@ -106,7 +110,7 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
                 viewModel.deleteProductByID(id);
                 Toast.makeText(getActivity().getApplicationContext(), R.string.successfull_deletion_product_message, Toast.LENGTH_SHORT).show();
                 NavHostFragment navHostFragment =
-                        (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                        (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
                 NavController navController = navHostFragment.getNavController();
                 navController.navigateUp();
             }
@@ -198,7 +202,7 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
     public void onClick(View view) {
         if (view == binding.backButton) {
             NavHostFragment navHostFragment =
-                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
             NavController navController = navHostFragment.getNavController();
             navController.navigateUp();
         }
@@ -224,7 +228,7 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
             } else {
                 if (profileID != 0) {
                     NavHostFragment navHostFragment =
-                            (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                            (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
                     NavController navController = navHostFragment.getNavController();
                     NavDirections action = ViewProductFragmentDirections.actionNavigationViewProductToUserChatFragment(profileID);
                     navController.navigate(action);
@@ -233,14 +237,14 @@ public class ViewProductFragment extends Fragment implements HTTTPCallback, View
         } else if (view == binding.sendMessageButton) {
             if (profileID != 0) {
                 NavHostFragment navHostFragment =
-                        (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                        (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
                 NavController navController = navHostFragment.getNavController();
                 NavDirections action = ViewProductFragmentDirections.actionNavigationViewProductToUserChatFragment(profileID);
                 navController.navigate(action);
             }
         }else if(view==binding.photo || view==binding.nameLabel){
             NavHostFragment navHostFragment =
-                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
             NavController navController = navHostFragment.getNavController();
             NavDirections action = ViewProductFragmentDirections.actionNavigationViewProductToOtherProfileFragment(profileID);
             navController.navigate(action);

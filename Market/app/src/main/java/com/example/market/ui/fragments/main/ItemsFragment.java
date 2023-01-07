@@ -47,6 +47,8 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
     private TextView emptyView;
     private RecyclerView recyclerView;
 
+    private int fragId;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +60,9 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
             this.ownProducts=new ArrayList<>(products);
             filterProductsAndSubmit(ownProducts);
         });
+
+        if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
+        else fragId = R.id.nav_host_fragment_activity_main;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -85,7 +90,7 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
     @Override
     public void onClick(Product product) {
         NavHostFragment navHostFragment =
-                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
         NavController navController = navHostFragment.getNavController();
         NavDirections action = ItemsFragmentDirections.actionNavigationItemsToNavigationViewProduct(product.getId());
         navController.navigate(action);
@@ -128,7 +133,7 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
     @Override
     public void onClick(View view) {
         NavHostFragment navHostFragment =
-                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
         NavController navController = navHostFragment.getNavController();
         NavDirections action = ItemsFragmentDirections.actionNavigationItemsToNavigationCreateProduct();
 

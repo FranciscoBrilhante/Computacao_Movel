@@ -60,6 +60,7 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
     private static final int PICK_IMAGE_REQUEST = 345345;
     ActivityResultLauncher<String> requestPermissionLauncher;
 
+    private int fragId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -99,6 +100,9 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
                     }
                 });
 
+        if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
+        else fragId = R.id.nav_host_fragment_activity_main;
+
         return binding.getRoot();
     }
 
@@ -106,7 +110,7 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
     public void onClick(View view) {
         if (view == binding.backButton) {
             NavHostFragment navHostFragment =
-                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                    (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
             NavController navController = navHostFragment.getNavController();
             navController.navigateUp();
         }
@@ -137,7 +141,7 @@ public class CreateProductFragment extends Fragment implements View.OnClickListe
                         viewModel.sendProductPhotos(productID, productImages);
                     }
                     NavHostFragment navHostFragment =
-                            (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                            (NavHostFragment) getActivity().getSupportFragmentManager().findFragmentById(fragId);
                     NavController navController = navHostFragment.getNavController();
                     navController.navigateUp();
                 }

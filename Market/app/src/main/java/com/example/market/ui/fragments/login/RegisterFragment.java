@@ -86,6 +86,7 @@ public class RegisterFragment extends Fragment implements HTTTPCallback, View.On
                         SharedPreferences.Editor editor = sharedPref.edit();
                         editor.putString("username", binding.usernameInput.getText().toString());
                         editor.putString("password", binding.passwordInput.getText().toString());
+                        editor.putBoolean("is_admin", false);
                         editor.apply();
 
                         Intent myIntent = new Intent(getActivity(), MainActivity.class);
