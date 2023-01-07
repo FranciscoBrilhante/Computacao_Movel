@@ -199,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
             if (intent.getAction().equals("sendToken")) { //new token generated ready to be sent to api
                 Map<String, Object> params = new LinkedHashMap<>();
                 params.put("token", intent.getExtras().get("token"));
+                System.out.println("new Token");
                 viewModel.sendRequest("/message/token", "POST", null, params, true, false, true, MainActivity.this);
             } else { //received notification
                 String title = intent.getExtras().getString("title");
@@ -216,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements HTTTPCallback {
                 if (!task.isSuccessful()) {
                     System.out.println("Unable to get last token");
                 }
-
+                System.out.println("new token retrieve");
                 String token = task.getResult();
                 Map<String, Object> params = new LinkedHashMap<>();
                 params.put("token", token);

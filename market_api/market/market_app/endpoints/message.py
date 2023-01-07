@@ -187,5 +187,5 @@ def sendNotification(message):
         
         msg_id = messaging.send(fcmMessage)
 
-    except:
-        print("Error on FCM Send Message")
+    except Exception as e:
+        print(e)
