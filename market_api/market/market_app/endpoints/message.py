@@ -35,8 +35,8 @@ def send(request):
             
             message=Message(userTo=Profile.objects.get(pk=profile_pk),userFrom=profile,content=content,dateSent=timezone.now())
             message.save()
-            responseFMC=sendNotification(message=message)
-            print(responseFMC)
+            sendNotification(message=message)
+            
             
             return JsonResponse({'status': 200})
             
@@ -159,6 +159,7 @@ def sendNotification(message):
     message_content=message.content
     token=profileTo.notificationToken
     if token=="" or token==None:
+        print("it tried")
         return 
 
     cert_data={
@@ -177,12 +178,14 @@ def sendNotification(message):
     try:
         certificate = Certificate(cert_data)
         firebase_admin.initialize_app(credential=certificate)
-    except:
-        pass
+    
+        notification=Notification(
+                title=f"{username} sent you a message",
+                body=f"{message_content}",
+        )
+        fcmMessage= FCMMessage(notification=notification, token=token)
+        
+        msg_id = messaging.send(fcmMessage)
 
-    notification=Notification(
-            title=f"{username} sent you a message",
-            body=f"{message_content}",
-    )
-    message= FCMMessage(notification=notification, token=token)
-    return messaging.send(message)
+    except:
+        print("Error on FCM Send Message")
