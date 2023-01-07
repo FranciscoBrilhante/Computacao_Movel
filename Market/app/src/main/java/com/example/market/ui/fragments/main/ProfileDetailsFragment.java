@@ -47,6 +47,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -167,6 +168,8 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
         String email = data.getString("email");
         String photoURL = data.getString("photo");
         String city = data.getString("location");
+        Double rating =data.getDouble("rating");
+        String ratingStr=String.format(Locale.ENGLISH,"%.1f", rating);
 
         if (city.equals("null")) {
             city = getActivity().getResources().getString(R.string.location_undefined);
@@ -175,6 +178,7 @@ public class ProfileDetailsFragment extends Fragment implements View.OnClickList
         binding.usernameInput.setText(username);
         binding.emailInput.setText(email);
         binding.locationInput.setText(city);
+        binding.ratingLabelProfile.setText(ratingStr);
 
         if (photoURL.equals("null")) {
             binding.profilePhoto.setImageDrawable(ContextCompat.getDrawable(getActivity(), R.drawable.placeholder_avatar));
