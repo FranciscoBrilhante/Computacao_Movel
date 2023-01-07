@@ -170,10 +170,10 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         productToReport=product;
     }
 
-    //user clicked in arrow to show more filter options
+
     @Override
     public void onClick(View view) {
-        if (view == binding.moreButton) {
+        if (view == binding.moreButton) {//user clicked in arrow to show more filter options
             if (actionBarExpanded) {
                 binding.moreFiltersView.setVisibility(View.GONE);
                 binding.moreButton.setImageResource(R.drawable.chevron_down);
@@ -280,6 +280,8 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         viewModel.sendRequest("/product/recommended", "GET", null, null, false, false, true, this);
     }
 
+
+    //search text changed by user
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;

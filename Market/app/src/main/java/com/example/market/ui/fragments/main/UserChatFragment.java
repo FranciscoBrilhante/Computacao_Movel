@@ -41,10 +41,9 @@ import java.util.Map;
 public class UserChatFragment extends Fragment implements HTTTPCallback, View.OnClickListener {
     private FragmentUserChatBinding binding;
     private MarketViewModel viewModel;
-    private int profileID;
     private MessageListAdapter adapter;
 
-
+    private int profileID;
     private int fragId;
 
     @Nullable
