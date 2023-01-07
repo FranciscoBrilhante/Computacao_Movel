@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +40,9 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
     private ArrayList<Contact> ownContacts;
     private String textQuery;
 
+    private RecyclerView recyclerView;
+    private TextView emptyView;
+
     private int fragId;
 
     @Nullable
@@ -51,7 +55,8 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
         adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
         adapter.setHasStableIds(true); //prevent blinking on refresh (combined with getItemID inside adapter class
 
-        RecyclerView recyclerView = binding.messagesList;
+        emptyView = binding.emptyView;
+        recyclerView = binding.messagesList;
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -66,6 +71,9 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
 
         if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
         else fragId = R.id.nav_host_fragment_activity_main;
+
+        recyclerView.setVisibility(View.GONE);
+        emptyView.setVisibility(View.VISIBLE);
 
         return binding.getRoot();
     }
@@ -120,6 +128,16 @@ public class MessagesFragment extends Fragment implements ContactRecyclerViewInt
         else{
             aux=new ArrayList<>(contacts);
         }
+
+        if (!aux.isEmpty()) {
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyView.setVisibility(View.GONE);
+        }
+        else {
+            recyclerView.setVisibility(View.GONE);
+            emptyView.setVisibility(View.VISIBLE);
+        }
+
         adapter.submitList(aux);
     }
 
