@@ -82,7 +82,6 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setRetainInstance(true);
 
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
         adapter = new ProductListAdapter(new ProductListAdapter.ProductDiff(), this);
@@ -296,10 +295,10 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
             }
         }
 
-        if (!this.products.isEmpty()) {
+        if (!this.products.isEmpty() && recyclerView!=null && emptyView!=null) {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
-        } else {
+        } else if(recyclerView!=null && emptyView!=null){
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }

@@ -165,11 +165,11 @@ public class ItemsFragment extends Fragment implements RecyclerViewInterface, HT
 
         System.out.println(aux);
 
-        if (!aux.isEmpty()) {
+        if (!aux.isEmpty() && recyclerView!=null && emptyView!=null) {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         }
-        else {
+        else if(recyclerView!=null && emptyView!=null) {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }
