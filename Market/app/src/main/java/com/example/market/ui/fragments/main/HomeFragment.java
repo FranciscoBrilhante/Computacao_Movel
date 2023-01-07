@@ -43,6 +43,7 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -58,7 +59,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     private String queryText = "";
     private Category categorySelected;
     private PriceRange priceRangeSelected;
-    private ArrayList<Product> products;
+
+    private ArrayList<Product> masterProductsList=new ArrayList<>();
+    private final ArrayList<Product> products=new ArrayList<>();
 
     private CategorySpinnerAdapter categorySpinnerAdapter;
     private PriceRangeSpinnerAdapter priceRangeSpinnerAdapter;
@@ -72,11 +75,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     private int fragId;
 
     //sprinkles de magia (aka Palhinha gameplay)
-    private int previousTotal = 0;
     private boolean loading = true;
-    private int visibleThreshold = 1;
-    int firstVisibleItem, visibleItemCount, totalItemCount;
-    int page=1;
+    int pastVisibleItems, visibleItemCount, totalItemCount;
+    int page = 1;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,7 +87,8 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         viewModel = new ViewModelProvider(this).get(MarketViewModel.class);
         adapter = new ProductListAdapter(new ProductListAdapter.ProductDiff(), this);
         adapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
-
+        adapter.setHasStableIds(true);
+        adapter.submitList(this.products);
         categorySpinnerAdapter = new CategorySpinnerAdapter(getContext(), new ArrayList<>());
         priceRangeSpinnerAdapter = new PriceRangeSpinnerAdapter(getContext(), viewModel.getDefaultPriceRanges(getContext()));
 
@@ -98,8 +100,8 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         });
 
         viewModel.getAllProducts().observe(requireActivity(), products -> {
-            this.products = new ArrayList<>(products);
-            filterProductsAndSubmit(this.products);
+            masterProductsList=new ArrayList<>(products);
+            filterProductsAndSubmit(masterProductsList);
         });
 
         if ((Boolean) viewModel.getStoredCredentials().get("is_admin"))
@@ -116,7 +118,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
 
         recyclerView = binding.productsList;
         recyclerView.setAdapter(adapter);
-        layoutManager=new GridLayoutManager(getActivity(), 2);
+        layoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addOnScrollListener(this.scrollListener);
 
@@ -231,7 +233,11 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
             if (endpoint.equals(url1)) { // /product/recommended
                 if (code == 200) {
                     ArrayList<Product> products = viewModel.productsFromJSONObject(data);
-                    viewModel.addProducts(products);
+                    if (!products.isEmpty()) {
+                        loading = true;
+                    }
+                    masterProductsList.addAll(products);
+                    filterProductsAndSubmit(masterProductsList);
                 }
                 binding.swipeRefreshLayout.setRefreshing(false);
             }
@@ -246,51 +252,66 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     }
 
     private void filterProductsAndSubmit(ArrayList<Product> productsToFilter) {
-        ArrayList<Product> aux = new ArrayList<>();
-        if (productsToFilter != null) {
-            products.sort(new ProductDateComparator());
-            for (Product product : productsToFilter) {
-                boolean toAdd = true;
-                if (!product.getTitle().toLowerCase(Locale.ROOT).contains(queryText.toLowerCase(Locale.ROOT))) {
+        if(productsToFilter.isEmpty()){
+            return;
+        }
+        productsToFilter.sort(new ProductDateComparator());
+        for (Product product : productsToFilter) {
+            boolean toAdd = true;
+            if (!product.getTitle().toLowerCase(Locale.ROOT).contains(queryText.toLowerCase(Locale.ROOT))) {
+                toAdd = false;
+            }
+            if (priceRangeSelected != null) {
+                if (priceRangeSelected.getMaxPrice() != null && priceRangeSelected.getMaxPrice() < product.getPrice()) {
                     toAdd = false;
                 }
-                if (priceRangeSelected != null) {
-                    if (priceRangeSelected.getMaxPrice() != null && priceRangeSelected.getMaxPrice() < product.getPrice()) {
-                        toAdd = false;
-                    }
-                    if (priceRangeSelected.getMinPrice() != null && priceRangeSelected.getMinPrice() > product.getPrice()) {
-                        toAdd = false;
-                    }
-                }
-                if (categorySelected != null && categorySelected.getId() != -1 && categorySelected.getId() != product.getCategory()) {
+                if (priceRangeSelected.getMinPrice() != null && priceRangeSelected.getMinPrice() > product.getPrice()) {
                     toAdd = false;
                 }
-                if (product.getProfileName().equals(viewModel.getStoredCredentials().get("username"))) {
-                    toAdd = false;
-                }
+            }
+            if (categorySelected != null && categorySelected.getId() != -1 && categorySelected.getId() != product.getCategory()) {
+                toAdd = false;
+            }
+            if (product.getProfileName().equals(viewModel.getStoredCredentials().get("username"))) {
+                toAdd = false;
+            }
 
-                if (toAdd) {
-                    aux.add(product);
+            if (toAdd) {
+                if(!doesListContain(this.products,product)){
+                    this.products.add(product);
+                    adapter.notifyItemInserted(this.products.size()-1);
+                }
+            }
+            else{
+                Iterator<Product> iter = this.products.iterator();
+                int i=0;
+                while(iter.hasNext()) {
+                    Product originalProduct = iter.next();
+                    if (originalProduct.getId() == product.getId()) {
+                        iter.remove(); // Removes the 'current' item
+                        adapter.notifyItemRemoved(i);
+                    }
+                    i+=1;
                 }
             }
         }
 
-        if (!aux.isEmpty()) {
+        if (!this.products.isEmpty()) {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
         } else {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }
-
-        adapter.submitList(aux);
     }
 
     //user forced page refresh
     @Override
     public void onRefresh() {
         binding.swipeRefreshLayout.setRefreshing(true);
-        viewModel.sendRequest("/product/recommended", "GET", null, null, false, false, true, this);
+        Map<String, Object> params = new LinkedHashMap<>();
+        params.put("page", Integer.toString(1));
+        viewModel.sendRequest("/product/recommended", "GET", params, null, false, false, true, this);
     }
 
 
@@ -303,7 +324,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     @Override
     public boolean onQueryTextChange(String newText) {//query text changed
         this.queryText = newText;
-        filterProductsAndSubmit(this.products);
+        filterProductsAndSubmit(this.masterProductsList);
         return true;
     }
 
@@ -312,7 +333,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             categorySelected = (Category) binding.categorySpinner.getSelectedItem();
-            filterProductsAndSubmit(HomeFragment.this.products);
+            filterProductsAndSubmit(HomeFragment.this.masterProductsList);
         }
 
         @Override
@@ -325,7 +346,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             priceRangeSelected = (PriceRange) binding.priceRangeSpinner.getSelectedItem();
-            filterProductsAndSubmit(HomeFragment.this.products);
+            filterProductsAndSubmit(HomeFragment.this.masterProductsList);
         }
 
         @Override
@@ -333,31 +354,49 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         }
     };
 
-    private final RecyclerView.OnScrollListener scrollListener=new RecyclerView.OnScrollListener() {
+    private final RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+
+
         @Override
         public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-            visibleItemCount = binding.productsList.getChildCount();
-            totalItemCount = layoutManager.getItemCount();
-            firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+            if (dy > 0) { //check for scroll down
+                visibleItemCount = layoutManager.getChildCount();
+                totalItemCount = layoutManager.getItemCount();
+                pastVisibleItems = layoutManager.findFirstVisibleItemPosition();
 
-            if (loading) {
-                if (totalItemCount > previousTotal) {
-                    loading = false;
-                    previousTotal = totalItemCount;
+                if (loading) {
+                    if ((visibleItemCount + pastVisibleItems) >= totalItemCount) {
+                        loading = false;
+                        System.out.println("Yaeye! end called");
+                        page += 1;
+                        Map<String, Object> params = new LinkedHashMap<>();
+                        params.put("page", Integer.toString(page));
+                        viewModel.sendRequest("/product/recommended", "GET", params, null, false, false, true, HomeFragment.this::onComplete);
+                    }
                 }
-            }
-            if (!loading && (totalItemCount - visibleItemCount)
-                    <= (firstVisibleItem + visibleThreshold)) {
-                // End has been reached
-
-                System.out.println("Yaeye! end called");
-
-                // Do something
-
-                loading = true;
             }
         }
     };
 
+    private boolean doesListContain(ArrayList<Product> products, Product productToAdd){
+        boolean contains=false;
+        for(Product product:products){
+            if(productToAdd.getId()==product.getId()){
+                contains=true;
+            }
+        }
+        return  contains;
+    }
+
+    private int removeProduct(ArrayList<Product> products, Product productToRemove){
+        int i=0;
+        for(Product product:products){
+            if(productToRemove.getId()==product.getId()){
+                products.remove(i);
+                return i;
+            }
+            i+=1;
+        }
+        return -1;
+    }
 }

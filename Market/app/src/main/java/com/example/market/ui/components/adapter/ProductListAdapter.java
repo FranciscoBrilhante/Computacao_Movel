@@ -55,7 +55,7 @@ public class ProductListAdapter extends ListAdapter<Product, ProductViewHolder> 
 
         @Override
         public boolean areContentsTheSame(@NonNull Product oldItem,@NonNull Product newItem){
-            return oldItem.getTitle().equals(newItem.getTitle()) && oldItem.getDescription().equals(newItem.getDescription());
+            return oldItem.getId()==newItem.getId();
         }
     }
 }
