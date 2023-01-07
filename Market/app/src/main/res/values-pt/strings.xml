@@ -72,12 +72,13 @@
     <string name="details_label">detalhes</string>
     <string name="clear_reports">Apagar denúncias</string>
     <string name="search_for_product_hint">Procure por um anúncio</string>
-    <string name="search_for_contacts">Procure por alguem</string>
+    <string name="search_for_contacts">Procure por alguém</string>
     <string name="loading_location">A calcular localização...</string>
     <string name="error_location">Localização indisponível</string>
     <string name="loading">A carrregar</string>
     <string name="no_products">Não foi encontrado nenhum produto :(</string>
     <string name="no_products_admin">Não foi encontrado nenhum produto reportado :(</string>
+    <string name="no_chats">Não foram encontradas mensagens</string>
     <string name="reason_fraud">Fraude</string>
     <string name="reason_illegal">Atividade ilegal</string>
     <string name="reason_racism">Racismo, sexismo ou outro tipo de descriminação</string>

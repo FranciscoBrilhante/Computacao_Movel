@@ -48,20 +48,38 @@
         </LinearLayout>
     </LinearLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="70dp"
-        android:layout_marginBottom="40dp"
-        tools:context=".ui.activities.MainActivity">
+        android:layout_marginBottom="40dp">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/messages_list"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingBottom="20dp"
-            android:paddingLeft="12dp"
-            android:background="@color/bg1"/>
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+            tools:context=".ui.activities.MainActivity">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/messages_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="20dp"
+                android:paddingLeft="12dp"
+                android:background="@color/bg1"/>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <TextView
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/title_color"
+            android:paddingHorizontal="20dp"
+            android:textSize="18sp"
+            android:text="@string/no_chats"
+            android:gravity="center"
+            />
+
+    </FrameLayout>
+
 </FrameLayout>
