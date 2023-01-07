@@ -178,14 +178,16 @@ def sendNotification(message):
     try:
         certificate = Certificate(cert_data)
         firebase_admin.initialize_app(credential=certificate)
-    
+    except:
+        pass
+
         notification=Notification(
                 title=f"{username} sent you a message",
                 body=f"{message_content}",
         )
         fcmMessage= FCMMessage(notification=notification, token=token)
-        
+    
+    try:
         msg_id = messaging.send(fcmMessage)
-
     except Exception as e:
         print(e)
