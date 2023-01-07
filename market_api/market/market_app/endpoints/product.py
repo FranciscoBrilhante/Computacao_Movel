@@ -175,28 +175,41 @@ def recommended(request):
     if not request.user.is_authenticated:
         return JsonResponse({'status': 401}) 
 
-    
-    p = Paginator(Product.objects.order_by('-dateCreated'), 10)
-    page1 = p.page(1).object_list
+    if request.method == 'GET':
+        form = Page(request.GET)
+        if form.is_valid():
+            data = form.cleaned_data
+            page=data['page']
+            
+            if page<=0:
+                return JsonResponse({'status': 200, 'products':[]})
 
-    json_data=[{
-        'id':product.pk, 
-        'title':product.name, 
-        'description':product.description,
-        'category':product.category.pk,
-        'price':product.price,
-        'profile':product.userSelling.pk,
-        'date':product.dateCreated,
-        'category_name':product.category.name,
-        'category_name_pt':product.category.namePT,
-        'profile_location':translateLocation(product.userSelling.cityX,product.userSelling.cityY),
-        'profile_name':product.userSelling.user.username,
-        'images':[productImage.image.url for productImage in ProductImage.objects.filter(product=product.pk)],
-        'rating': computeRating(product.userSelling),
-    } for product in page1]
+            p = Paginator(Product.objects.order_by('-dateCreated'), 10)
 
-    return JsonResponse({'status': 200, 'products':json_data})
+            try:
+                page1 = p.page(page).object_list
+            except:
+                return JsonResponse({'status': 200, 'products':[]})  
 
+            json_data=[{
+                'id':product.pk, 
+                'title':product.name, 
+                'description':product.description,
+                'category':product.category.pk,
+                'price':product.price,
+                'profile':product.userSelling.pk,
+                'date':product.dateCreated,
+                'category_name':product.category.name,
+                'category_name_pt':product.category.namePT,
+                'profile_location':translateLocation(product.userSelling.cityX,product.userSelling.cityY),
+                'profile_name':product.userSelling.user.username,
+                'images':[productImage.image.url for productImage in ProductImage.objects.filter(product=product.pk)],
+                'rating': computeRating(product.userSelling),
+            } for product in page1]
+
+            return JsonResponse({'status': 200, 'products':json_data})
+
+    return JsonResponse({'status': 400})
 
 def myProducts(request):
     if not request.user.is_authenticated:

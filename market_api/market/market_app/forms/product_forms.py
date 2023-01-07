@@ -49,3 +49,6 @@ class Filter(forms.Form):
     searchText=forms.CharField(required=False)
 
 
+class Page(forms.Form):
+    page=forms.IntegerField()
+

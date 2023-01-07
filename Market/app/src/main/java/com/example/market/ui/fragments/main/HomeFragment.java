@@ -52,6 +52,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     private FragmentHomeBinding binding;
     private MarketViewModel viewModel;
     private ProductListAdapter adapter;
+    private GridLayoutManager layoutManager;
     private boolean actionBarExpanded = false;
 
     private String queryText = "";
@@ -70,6 +71,13 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
 
     private int fragId;
 
+    //sprinkles de magia (aka Palhinha gameplay)
+    private int previousTotal = 0;
+    private boolean loading = true;
+    private int visibleThreshold = 1;
+    int firstVisibleItem, visibleItemCount, totalItemCount;
+    int page=1;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +90,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         categorySpinnerAdapter = new CategorySpinnerAdapter(getContext(), new ArrayList<>());
         priceRangeSpinnerAdapter = new PriceRangeSpinnerAdapter(getContext(), viewModel.getDefaultPriceRanges(getContext()));
 
-        viewModel.getAllCategories().observe(requireActivity(),categories -> {
+        viewModel.getAllCategories().observe(requireActivity(), categories -> {
             categorySpinnerAdapter.clear();
             categorySpinnerAdapter.add(new Category(-1, "Any Category", "Qualquer Categoria"));
             categorySpinnerAdapter.addAll(categories);
@@ -90,11 +98,12 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         });
 
         viewModel.getAllProducts().observe(requireActivity(), products -> {
-            this.products=new ArrayList<>(products);
+            this.products = new ArrayList<>(products);
             filterProductsAndSubmit(this.products);
         });
 
-        if ((Boolean) viewModel.getStoredCredentials().get("is_admin")) fragId = R.id.nav_host_fragment_activity_admin;
+        if ((Boolean) viewModel.getStoredCredentials().get("is_admin"))
+            fragId = R.id.nav_host_fragment_activity_admin;
         else fragId = R.id.nav_host_fragment_activity_main;
     }
 
@@ -107,7 +116,9 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
 
         recyclerView = binding.productsList;
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        layoutManager=new GridLayoutManager(getActivity(), 2);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.addOnScrollListener(this.scrollListener);
 
         d4rkFrame = binding.d4rkFrame;
 
@@ -151,6 +162,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     public void delete(Product product) {
 
     }
+
     //user clicked in send message in product options
     @Override
     public void sendMessage(int profileID) {
@@ -168,7 +180,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     public void report(Product product) {
         binding.reportDialog.setVisibility(View.VISIBLE);
         d4rkFrame.setForeground(new ColorDrawable(ContextCompat.getColor(getContext(), R.color.hide_bg)));
-        productToReport=product;
+        productToReport = product;
     }
 
 
@@ -184,26 +196,26 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
                 binding.moreButton.setImageResource(R.drawable.chevron_up);
                 actionBarExpanded = true;
             }
-        }else if(view==binding.closeReportDialog){
+        } else if (view == binding.closeReportDialog) {
             binding.reportDialog.setVisibility(View.GONE);
             binding.reasonRadioGroup.clearCheck();
             binding.explainInput.setText("");
             d4rkFrame.setForeground(null);
-            productToReport=null;
-        }else if(view==binding.confirmReportButton){
-            RadioButton buttonSelected=binding.getRoot().findViewById(binding.reasonRadioGroup.getCheckedRadioButtonId());
-            if(buttonSelected!=null && productToReport!=null){
-                String reason=buttonSelected.getText().toString();
+            productToReport = null;
+        } else if (view == binding.confirmReportButton) {
+            RadioButton buttonSelected = binding.getRoot().findViewById(binding.reasonRadioGroup.getCheckedRadioButtonId());
+            if (buttonSelected != null && productToReport != null) {
+                String reason = buttonSelected.getText().toString();
                 String explain = binding.explainInput.getText().toString();
-                Map<String,Object> params=new LinkedHashMap<>();
-                params.put("product_id",productToReport.getId());
-                params.put("reason",reason);
-                params.put("explain",explain);
+                Map<String, Object> params = new LinkedHashMap<>();
+                params.put("product_id", productToReport.getId());
+                params.put("reason", reason);
+                params.put("explain", explain);
                 viewModel.sendRequest("/report/add", "POST", null, params, true, false, true, this);
                 binding.reportDialog.setVisibility(View.GONE);
                 d4rkFrame.setForeground(null);
             }
-            if(buttonSelected==null){
+            if (buttonSelected == null) {
                 Toast.makeText(getActivity().getApplicationContext(), R.string.reason_required, Toast.LENGTH_SHORT).show();
             }
         }
@@ -233,31 +245,31 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         }
     }
 
-    private void filterProductsAndSubmit(ArrayList<Product> productsToFilter){
-        ArrayList<Product> aux=new ArrayList<>();
+    private void filterProductsAndSubmit(ArrayList<Product> productsToFilter) {
+        ArrayList<Product> aux = new ArrayList<>();
         if (productsToFilter != null) {
             products.sort(new ProductDateComparator());
-            for(Product product: productsToFilter){
-                boolean toAdd=true;
-                if(!product.getTitle().toLowerCase(Locale.ROOT).contains(queryText.toLowerCase(Locale.ROOT))){
-                    toAdd=false;
+            for (Product product : productsToFilter) {
+                boolean toAdd = true;
+                if (!product.getTitle().toLowerCase(Locale.ROOT).contains(queryText.toLowerCase(Locale.ROOT))) {
+                    toAdd = false;
                 }
-                if(priceRangeSelected!=null){
-                    if(priceRangeSelected.getMaxPrice()!=null && priceRangeSelected.getMaxPrice()<product.getPrice()){
-                        toAdd=false;
+                if (priceRangeSelected != null) {
+                    if (priceRangeSelected.getMaxPrice() != null && priceRangeSelected.getMaxPrice() < product.getPrice()) {
+                        toAdd = false;
                     }
-                    if(priceRangeSelected.getMinPrice()!=null && priceRangeSelected.getMinPrice()>product.getPrice()){
-                        toAdd=false;
+                    if (priceRangeSelected.getMinPrice() != null && priceRangeSelected.getMinPrice() > product.getPrice()) {
+                        toAdd = false;
                     }
                 }
-                if(categorySelected!=null && categorySelected.getId()!=-1 && categorySelected.getId()!=product.getCategory()){
-                    toAdd=false;
+                if (categorySelected != null && categorySelected.getId() != -1 && categorySelected.getId() != product.getCategory()) {
+                    toAdd = false;
                 }
-                if(product.getProfileName().equals(viewModel.getStoredCredentials().get("username"))){
-                    toAdd=false;
+                if (product.getProfileName().equals(viewModel.getStoredCredentials().get("username"))) {
+                    toAdd = false;
                 }
 
-                if(toAdd){
+                if (toAdd) {
                     aux.add(product);
                 }
             }
@@ -266,8 +278,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         if (!aux.isEmpty()) {
             recyclerView.setVisibility(View.VISIBLE);
             emptyView.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             recyclerView.setVisibility(View.GONE);
             emptyView.setVisibility(View.VISIBLE);
         }
@@ -297,7 +308,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     }
 
     //category selected changed
-    private AdapterView.OnItemSelectedListener categorySpinnerListener = new AdapterView.OnItemSelectedListener() {
+    private final AdapterView.OnItemSelectedListener categorySpinnerListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             categorySelected = (Category) binding.categorySpinner.getSelectedItem();
@@ -310,7 +321,7 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
     };
 
     //price range selected changed
-    private AdapterView.OnItemSelectedListener priceRangeSpinnerListener = new AdapterView.OnItemSelectedListener() {
+    private final AdapterView.OnItemSelectedListener priceRangeSpinnerListener = new AdapterView.OnItemSelectedListener() {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
             priceRangeSelected = (PriceRange) binding.priceRangeSpinner.getSelectedItem();
@@ -322,5 +333,31 @@ public class HomeFragment extends Fragment implements RecyclerViewInterface, Vie
         }
     };
 
+    private final RecyclerView.OnScrollListener scrollListener=new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            visibleItemCount = binding.productsList.getChildCount();
+            totalItemCount = layoutManager.getItemCount();
+            firstVisibleItem = layoutManager.findFirstVisibleItemPosition();
+
+            if (loading) {
+                if (totalItemCount > previousTotal) {
+                    loading = false;
+                    previousTotal = totalItemCount;
+                }
+            }
+            if (!loading && (totalItemCount - visibleItemCount)
+                    <= (firstVisibleItem + visibleThreshold)) {
+                // End has been reached
+
+                System.out.println("Yaeye! end called");
+
+                // Do something
+
+                loading = true;
+            }
+        }
+    };
 
 }
